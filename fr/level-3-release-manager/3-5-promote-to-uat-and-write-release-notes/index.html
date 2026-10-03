@@ -1,0 +1,2431 @@
+
+<!doctype html>
+<html lang="fr" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Protégez ce que l'UAT garde pour elle avec package-no-overwrite, promouvez integration vers UAT, lisez ses deployment actions et écrivez les notes de version.">
+      
+      
+      
+        <link rel="canonical" href="https://sfdx-hardis-training.github.io/fr/level-3-release-manager/3-5-promote-to-uat-and-write-release-notes/">
+      
+      
+        <link rel="prev" href="../3-4-merge-colliding-pull-requests/">
+      
+      
+        <link rel="next" href="../3-6-release-to-production-and-read-dora-metrics/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../../theme/images/badge-mark.svg">
+      <meta name="generator" content="zensical-0.0.67">
+    
+    
+      
+        <title>Lab 3.5 - Promouvoir en UAT et écrire les notes de version - Salesforce DevOps with sfdx-hardis</title>
+      
+    
+    
+      
+        
+      
+      <link rel="stylesheet" href="../../../assets/stylesheets/modern/main.4ae390e2.min.css">
+      
+        
+          
+        
+        <link rel="stylesheet" href="../../../assets/stylesheets/modern/palette.96d1a7e4.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+    
+    
+      <link rel="stylesheet" href="../../../theme/stylesheets/extra.css">
+    
+    <script>__md_scope=new URL("../../..",location),__md_scope.pathname.endsWith("/")||(__md_scope=new URL(__md_scope.pathname+"/",location)),__md_hash=e=>[...e].reduce(((e,t)=>(e<<5)-e+t.charCodeAt(0)),0),__md_get=(e,t=localStorage,_=__md_scope)=>JSON.parse(t.getItem(_.pathname+"."+e)),__md_set=(e,t,_=localStorage,a=__md_scope)=>{try{_.setItem(a.pathname+"."+e,JSON.stringify(t))}catch(e){}},document.documentElement.setAttribute("data-platform",navigator.platform)</script>
+    
+      
+  
+
+
+  
+  
+
+<script id="__analytics">function __md_analytics(){function e(){dataLayer.push(arguments)}window.dataLayer=window.dataLayer||[],e("js",new Date),e("config","G-SE20CZ58E1"),document.addEventListener("DOMContentLoaded",(function(){document.forms.search&&document.forms.search.query.addEventListener("blur",(function(){this.value&&e("event","search",{search_term:this.value})}));document$.subscribe((function(){var t=document.forms.feedback;if(void 0!==t)for(var a of t.querySelectorAll("[type=submit]"))a.addEventListener("click",(function(a){a.preventDefault();var n=document.location.pathname,d=this.getAttribute("data-md-value");e("event","feedback",{page:n,data:d}),t.firstElementChild.disabled=!0;var r=t.querySelector(".md-feedback__note [data-md-value='"+d+"']");r&&(r.hidden=!1)})),t.hidden=!1})),location$.subscribe((function(t){e("config","G-SE20CZ58E1",{page_path:t.pathname})}))}));var t=document.createElement("script");t.async=!0,t.src="https://www.googletagmanager.com/gtag/js?id=G-SE20CZ58E1",document.getElementById("__analytics").insertAdjacentElement("afterEnd",t)}</script>
+  
+    <script>"undefined"!=typeof __md_analytics&&__md_analytics()</script>
+  
+
+    
+    
+  
+  
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Salesforce DevOps with sfdx-hardis">
+  <meta property="og:locale" content="fr">
+  <meta property="og:title" content="Lab 3.5 - Promouvoir en UAT et écrire les notes de version">
+  <meta property="og:description" content="Protégez ce que l'UAT garde pour elle avec package-no-overwrite, promouvez integration vers UAT, lisez ses deployment actions et écrivez les notes de version.">
+  <meta property="og:url" content="https://sfdx-hardis-training.github.io/fr/level-3-release-manager/3-5-promote-to-uat-and-write-release-notes/">
+  <meta property="og:image" content="https://sfdx-hardis-training.github.io/_assets/social/course.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="Lab 3.5 - Promouvoir en UAT et écrire les notes de version">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Lab 3.5 - Promouvoir en UAT et écrire les notes de version">
+  <meta name="twitter:description" content="Protégez ce que l'UAT garde pour elle avec package-no-overwrite, promouvez integration vers UAT, lisez ses deployment actions et écrivez les notes de version.">
+  <meta name="twitter:image" content="https://sfdx-hardis-training.github.io/_assets/social/course.png">
+
+  <script>
+    (function () {
+      var here = "fr";
+      var alternates = {"en":"en/level-3-release-manager/3-5-promote-to-uat-and-write-release-notes/","fr":"fr/level-3-release-manager/3-5-promote-to-uat-and-write-release-notes/"};
+      var base = new URL("../../.." || ".", window.location.href).pathname;
+      try {
+        var asked = new URLSearchParams(window.location.search).get("lang");
+        if (asked) {
+          document.cookie =
+            "course-language=" + encodeURIComponent(asked) + "; path=" + base + "; max-age=31536000; samesite=lax";
+        }
+        var cookie = document.cookie.split("; ").filter(function (one) {
+          return one.indexOf("course-language=") === 0;
+        })[0];
+        if (!cookie) {
+          return;
+        }
+        var preferred = asked || decodeURIComponent(cookie.slice("course-language=".length));
+        if (!preferred || preferred === here) {
+          return;
+        }
+        var target = alternates[preferred];
+        if (typeof target !== "string") {
+          return;
+        }
+        var url = new URL(target, new URL(base, window.location.href)).pathname;
+        if (url !== window.location.pathname) {
+          window.location.replace(url + window.location.search + window.location.hash);
+        }
+      } catch (error) {
+        // A browser with no cookies stays where it is, which is the page asked for
+      }
+    })();
+  </script>
+
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="custom" data-md-color-accent="custom">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer" aria-label="Navigation"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#lab-35-promouvoir-en-uat-et-ecrire-les-notes-de-version" class="md-skip">
+          Aller au contenu
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+        <aside class="md-banner">
+          <div class="md-banner__inner md-grid md-typeset">
+            
+            
+      <strong>Ce niveau est en phase de relecture.</strong> Il est complet et a été déroulé de bout
+      en bout, et maintenant il a besoin de vous. Si une étape ne fonctionne pas, ou si l'écran ne
+      correspond pas à ce que dit la page, merci de
+      <a href="#__comments">laisser un commentaire en bas de cette page</a>. C'est le moyen le plus
+      rapide de faire corriger le problème, et cela aide la personne suivante.
+    
+          </div>
+          
+        </aside>
+      
+    </div>
+    
+    
+      
+
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="En-tête">
+    <a href="/fr/" title="Salesforce DevOps with sfdx-hardis" class="md-header__button md-logo" aria-label="Salesforce DevOps with sfdx-hardis" data-md-component="logo">
+      
+  <img src="../../../theme/images/cloudity-text-logo-white.svg" alt="Salesforce DevOps with sfdx-hardis">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer" aria-label="Navigation">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-menu" viewBox="0 0 24 24"><path d="M4 5h16M4 12h16M4 19h16"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Salesforce DevOps with sfdx-hardis
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Lab 3.5 - Promouvoir en UAT et écrire les notes de version
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="none" data-md-color-scheme="default" data-md-color-primary="custom" data-md-color-accent="custom"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="none" data-md-color-scheme="slate" data-md-color-primary="custom" data-md-color-accent="custom"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+      
+
+
+
+  
+
+  
+    
+    
+  
+
+<div class="md-header__option">
+  <div class="md-select md-select--language">
+    <button class="md-header__button md-header__button--flag" aria-label="Sélectionner la langue">
+      
+        <img src="../../../theme/images/flags/fr.svg" alt="Français" class="md-select__flag md-select__flag--current">
+      
+    </button>
+    <div class="md-select__inner">
+      <ul class="md-select__list">
+        
+          
+          <li class="md-select__item"><a href="../../../en/level-3-release-manager/3-5-promote-to-uat-and-write-release-notes/" hreflang="en" data-course-home="/" class="md-select__link">
+              
+                <img src="../../../theme/images/flags/gb.svg" alt="" class="md-select__flag">
+              
+              English
+            </a>
+          </li>
+        
+          
+          <li class="md-select__item"><a href="././" hreflang="fr" data-course-home="/fr/" class="md-select__link">
+              
+                <img src="../../../theme/images/flags/fr.svg" alt="" class="md-select__flag">
+              
+              Français
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</div>
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search" aria-label="Recherche">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-search" viewBox="0 0 24 24"><path d="m21 21-4.34-4.34"/><circle cx="11" cy="11" r="8"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog" aria-label="Recherche">
+  <button type="button" class="md-search__button">
+    Recherche
+  </button>
+</div>
+      
+    
+    <div class="md-header__source">
+      
+        <a href="https://github.com/hardisgroupcom/sfdx-hardis-training" title="Aller au dépôt" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.3.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2026 Fonticons, Inc.--><path fill="currentColor" d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    hardisgroupcom/sfdx-hardis-training
+  </div>
+</a>
+      
+    </div>
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0" data-course-lang="fr" data-course-base="../../.." data-course-alt-en="en/level-3-release-manager/3-5-promote-to-uat-and-write-release-notes/" data-course-alt-fr="fr/level-3-release-manager/3-5-promote-to-uat-and-write-release-notes/">
+  <label class="md-nav__title" for="__drawer">
+    <a href="/fr/" title="Salesforce DevOps with sfdx-hardis" class="md-nav__button md-logo" aria-label="Salesforce DevOps with sfdx-hardis" data-md-component="logo">
+      
+  <img src="../../../theme/images/cloudity-text-logo-white.svg" alt="Salesforce DevOps with sfdx-hardis">
+
+    </a>
+    Salesforce DevOps with sfdx-hardis
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/hardisgroupcom/sfdx-hardis-training" title="Aller au dépôt" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.3.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2026 Fonticons, Inc.--><path fill="currentColor" d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    hardisgroupcom/sfdx-hardis-training
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+      
+    
+      
+      
+      
+    
+      
+      
+      
+    
+      
+      
+      
+    
+      
+      
+      
+    
+      
+      
+      
+    
+      
+      
+      
+    
+      
+      
+      
+        
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Accueil
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+      
+    
+      
+      
+      
+        
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_9" >
+        
+          
+          <label class="md-nav__link" for="__nav_9" id="__nav_9_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Niveau 1 - Contributeur Salesforce DevOps, les bases
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        
+          <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_9_label" aria-expanded="false">
+            <label class="md-nav__title" for="__nav_9">
+              <span class="md-nav__icon md-icon"></span>
+              
+  
+  Niveau 1 - Contributeur Salesforce DevOps, les bases
+
+            </label>
+            <ul class="md-nav__list" data-md-scrollfix>
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../level-1-contributor-basics/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Commencer ici
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../level-1-contributor-basics/1-1-install-vs-code-and-sfdx-hardis/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Lab 1.1 - Installer VS Code, Git et sfdx-hardis
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../level-1-contributor-basics/1-2-create-your-dev-hub-scratch-orgs-and-pipeline/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Lab 1.2 - Créer votre Dev Hub, vos scratch orgs et votre pipeline CI/CD
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../level-1-contributor-basics/1-3-start-a-user-story-on-a-git-branch/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Lab 1.3 - Démarrer une User Story sur sa propre branche Git
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../level-1-contributor-basics/1-4-build-a-custom-field-in-your-org/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Lab 1.4 - Construire un champ personnalisé dans votre org Salesforce
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../level-1-contributor-basics/1-5-retrieve-commit-and-publish-your-changes/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Lab 1.5 - Récupérer, commiter et publier vos modifications Salesforce
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../level-1-contributor-basics/1-6-pull-request-deployment-check-and-merge/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Lab 1.6 - Ouvrir une Pull Request, passer le contrôle de déploiement, merger
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../level-1-contributor-basics/1-7-capstone-deliver-a-user-story-on-your-own/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Lab 1.7 - Épreuve finale : livrer une User Story tout seul
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+            </ul>
+          </nav>
+        
+      
+    </li>
+  
+
+      
+    
+      
+      
+      
+        
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_10" >
+        
+          
+          <label class="md-nav__link" for="__nav_10" id="__nav_10_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Niveau 2 - Contributeur Salesforce DevOps avancé
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        
+          <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_10_label" aria-expanded="false">
+            <label class="md-nav__title" for="__nav_10">
+              <span class="md-nav__icon md-icon"></span>
+              
+  
+  Niveau 2 - Contributeur Salesforce DevOps avancé
+
+            </label>
+            <ul class="md-nav__list" data-md-scrollfix>
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../level-2-contributor-advanced/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Commencer ici
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../level-2-contributor-advanced/2-1-backpromote-your-teammates-work/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Lab 2.1 - Backpromote : remettre votre org de dev au niveau de l'équipe
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../level-2-contributor-advanced/2-2-fix-a-missing-dependency-deployment-error/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Lab 2.2 - Corriger une erreur de déploiement due à une dépendance manquante
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../level-2-contributor-advanced/2-3-fix-broken-records-with-an-apex-deployment-action/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Lab 2.3 - Réparer des enregistrements cassés avec une deployment action Apex
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../level-2-contributor-advanced/2-4-ship-reference-data-and-a-batch-with-deployment-actions/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Lab 2.4 - Livrer des données de référence et un batch avec des deployment actions
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../level-2-contributor-advanced/2-5-pass-code-quality-and-apex-test-coverage/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Lab 2.5 - Passer la barrière de qualité de code et la couverture de tests Apex
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../level-2-contributor-advanced/2-6-permission-sets-and-profiles/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Lab 2.6 - Permission sets, profils, et pourquoi une autorisation disparaît
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../level-2-contributor-advanced/2-7-resolve-a-git-merge-conflict/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Lab 2.7 - Résoudre un conflit de merge Git avec un collègue
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../level-2-contributor-advanced/2-8-recover-from-committing-the-wrong-metadata/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Lab 2.8 - Se remettre d'avoir commité la mauvaise métadonnée
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../level-2-contributor-advanced/2-9-capstone-deliver-a-user-story-that-has-it-all/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Lab 2.9 - Épreuve finale : livrer une User Story qui a tout
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+            </ul>
+          </nav>
+        
+      
+    </li>
+  
+
+      
+    
+      
+      
+      
+        
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_11" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_11" id="__nav_11_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Niveau 3 - Release manager Salesforce DevOps
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        
+          <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_11_label" aria-expanded="true">
+            <label class="md-nav__title" for="__nav_11">
+              <span class="md-nav__icon md-icon"></span>
+              
+  
+  Niveau 3 - Release manager Salesforce DevOps
+
+            </label>
+            <ul class="md-nav__list" data-md-scrollfix>
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Commencer ici
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../3-1-configure-the-pipeline-up-to-production/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Lab 3.1 - Configurer la pipeline CI/CD jusqu'à la production
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../3-2-review-a-contributor-pull-request/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Lab 3.2 - Relire et merger la Pull Request d'un contributeur
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../3-3-deploy-to-integration-and-read-the-log/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Lab 3.3 - Lire le log de déploiement, et ce que .forceignore lui cache
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../3-4-merge-colliding-pull-requests/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Lab 3.4 - Trois Pull Requests se percutent : choisir l'ordre de merge
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Lab 3.5 - Promouvoir en UAT et écrire les notes de version
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="././" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Lab 3.5 - Promouvoir en UAT et écrire les notes de version
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+
+<nav class="md-nav md-nav--secondary" aria-label="Table des matières">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table des matières
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#la-situation" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        La situation
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#avant-de-commencer" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Avant de commencer
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#les-etapes" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Les étapes
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Les étapes">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-voir-ce-que-vous-etes-sur-le-point-de-livrer" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        1. Voir ce que vous êtes sur le point de livrer
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-proteger-ce-que-luat-garde-pour-elle" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        2. Protéger ce que l'UAT garde pour elle
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-creer-la-pull-request-de-promotion" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        3. Créer la Pull Request de promotion
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#4-lire-les-deployment-actions-quelle-transporte" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        4. Lire les deployment actions qu'elle transporte
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#5-merger-et-regarder-le-deploiement" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        5. Merger et regarder le déploiement
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#6-verifier-avec-des-yeux-de-testeur" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        6. Vérifier avec des yeux de testeur
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#7-generer-les-notes-de-version" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        7. Générer les notes de version
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#ce-que-vous-devez-voir" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Ce que vous devez voir
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#verifiez-votre-travail" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Vérifiez votre travail
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#pour-aller-plus-loin" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Pour aller plus loin
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../3-6-release-to-production-and-read-dora-metrics/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Lab 3.6 - Livrer en production et lire vos métriques DORA
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../3-7-hotfix-and-retrofit/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Lab 3.7 - La production est cassée : hotfix et retrofit
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../3-8-monitor-your-production-org/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Lab 3.8 - Monitorer votre org de production
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../3-9-generate-the-project-documentation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Lab 3.9 - Générer la documentation du projet Salesforce
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../3-10-promote-a-subset-with-promotion-branches/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Lab 3.10 - Promouvoir un sous-ensemble avec les promotion branches (Beta)
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../3-11-capstone-run-a-weekly-release-cycle/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Lab 3.11 - Épreuve finale : mener un cycle de release hebdomadaire
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+            </ul>
+          </nav>
+        
+      
+    </li>
+  
+
+      
+    
+      
+      
+      
+        
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../help/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Aide
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+      
+    
+      
+      
+      
+        
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../BACKLOG/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Backlog
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+      
+    
+      
+      
+      
+        
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../badges/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Badges
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+      
+    
+      
+      
+      
+        
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="https://sfdx-hardis.cloudity.com/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  sfdx-hardis documentation
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+      
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  
+                    
+                    
+                    
+                      
+                    
+                    
+                      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+                      <div class="md-sidebar-button__wrapper">
+                        <label class="md-sidebar-button" for="__toc"></label>
+                      </div>
+                    
+                  
+                  <div class="md-sidebar__inner">
+                    
+
+
+<nav class="md-nav md-nav--secondary" aria-label="Table des matières">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table des matières
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#la-situation" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        La situation
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#avant-de-commencer" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Avant de commencer
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#les-etapes" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Les étapes
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Les étapes">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-voir-ce-que-vous-etes-sur-le-point-de-livrer" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        1. Voir ce que vous êtes sur le point de livrer
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-proteger-ce-que-luat-garde-pour-elle" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        2. Protéger ce que l'UAT garde pour elle
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-creer-la-pull-request-de-promotion" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        3. Créer la Pull Request de promotion
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#4-lire-les-deployment-actions-quelle-transporte" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        4. Lire les deployment actions qu'elle transporte
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#5-merger-et-regarder-le-deploiement" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        5. Merger et regarder le déploiement
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#6-verifier-avec-des-yeux-de-testeur" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        6. Vérifier avec des yeux de testeur
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#7-generer-les-notes-de-version" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        7. Générer les notes de version
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#ce-que-vous-devez-voir" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Ce que vous devez voir
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#verifiez-votre-travail" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Vérifiez votre travail
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#pour-aller-plus-loin" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Pour aller plus loin
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+  
+    <a href="https://github.com/hardisgroupcom/sfdx-hardis-training/edit/main/labs/fr/level-3-release-manager/3-5-promote-to-uat-and-write-release-notes.md" title="Editer cette page" class="md-content__button md-icon" rel="edit">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-file-pen" viewBox="0 0 24 24"><path d="M12.659 22H18a2 2 0 0 0 2-2V8a2.4 2.4 0 0 0-.706-1.706l-3.588-3.588A2.4 2.4 0 0 0 14 2H6a2 2 0 0 0-2 2v9.34"/><path d="M14 2v5a1 1 0 0 0 1 1h5M10.378 12.622a1 1 0 0 1 3 3.003L8.36 20.637a2 2 0 0 1-.854.506l-2.867.837a.5.5 0 0 1-.62-.62l.836-2.869a2 2 0 0 1 .506-.853z"/></svg>
+    </a>
+  
+  
+
+
+<h1 id="lab-35-promouvoir-en-uat-et-ecrire-les-notes-de-version">Lab 3.5 - Promouvoir en UAT et écrire les notes de version<a class="headerlink" href="#lab-35-promouvoir-en-uat-et-ecrire-les-notes-de-version" title="Permanent link">&para;</a></h1>
+<p><strong>Niveau</strong> : 3 Release Manager</p>
+<p><strong>Durée</strong> : ~35 min</p>
+<p><strong>Vous allez</strong> : protéger un réglage que l'UAT garde pour elle, faire votre première promotion entre
+deux branches majeures, lire les deployment actions qu'elle transporte, et produire le document que
+le métier lit vraiment.</p>
+<h2 id="la-situation">La situation<a class="headerlink" href="#la-situation" title="Permanent link">&para;</a></h2>
+<p>Tout ce que l'équipe a construit cette semaine est dans <code>integration</code>. Les testeurs métier
+travaillent en UAT. Lundi matin, ils s'attendent à y trouver le travail de la semaine, avec une note
+disant ce qui a changé.</p>
+<p>Une promotion entre branches majeures n'est pas une Pull Request de contributeur. Elle transporte
+plusieurs stories à la fois, elle peut transporter des deployment actions déclarées des semaines plus
+tôt par des personnes différentes, et l'org dans laquelle elle déploie contient de vrais testeurs.</p>
+<h2 id="avant-de-commencer">Avant de commencer<a class="headerlink" href="#avant-de-commencer" title="Permanent link">&para;</a></h2>
+<ul class="task-list">
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <a href="../3-4-merge-colliding-pull-requests/">Lab 3.4</a> terminé : US-018 et US-019 mergées dans <code>integration</code></li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>helios-uat</code> connectée : la scratch org créée au Niveau 1, configurée comme org de <code>uat</code> depuis</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> Authentification JWT fonctionnelle pour <code>uat</code> (<a href="../3-1-configure-the-pipeline-up-to-production/">Lab 3.1</a>)</li>
+</ul>
+<h2 id="les-etapes">Les étapes<a class="headerlink" href="#les-etapes" title="Permanent link">&para;</a></h2>
+<h3 id="1-voir-ce-que-vous-etes-sur-le-point-de-livrer">1. Voir ce que vous êtes sur le point de livrer<a class="headerlink" href="#1-voir-ce-que-vous-etes-sur-le-point-de-livrer" title="Permanent link">&para;</a></h3>
+<p>Ouvrez le panneau <strong>DevOps Pipeline</strong> et cliquez sur le nœud <code>integration</code> du diagramme. Une fenêtre
+s'ouvre sur cette branche, intitulée <strong>Pull Requests in integration</strong>.</p>
+<p><a class="glightbox" data-type="image" href="../../../_assets/annotated/vscode/pipeline-branch-modal-level3--what-it-carries.png"><img alt="La fenêtre de branche d'integration, listant ce qu'elle transporte" src="../../../_assets/annotated/vscode/pipeline-branch-modal-level3--what-it-carries.png" /></a></p>
+<p><strong>Pull Requests</strong> <span class="pill-ref pill-ref-1">(1)</span> est la liste qui compte : chaque Pull Request mergée dans <code>integration</code>
+depuis la dernière promotion vers <code>uat</code>, avec qui l'a mergée et quand. Cette liste <strong>est</strong> la
+livraison. Lisez-la avant de créer quoi que ce soit : si une story qui s'y trouve ne doit pas sortir
+cette semaine, c'est le moment, pas après le déploiement.</p>
+<p><strong>Deployment Actions</strong> <span class="pill-ref pill-ref-2">(2)</span> est la liste des actions que ces Pull Requests transportaient,
+rassemblées au même endroit, et l'étape 4 y revient. <strong>Tickets</strong> à côté est la même chose pour les
+stories, chacune avec son titre, lu depuis le backlog que le projet déclare comme son système de
+ticketing. Un quatrième onglet, <strong>Apex Tests</strong>, n'apparaît que sur un projet qui active
+<code>enableDeploymentApexTestClasses</code>, et celui-ci ne le fait pas.</p>
+<p>Le pied de page contient les deux boutons qu'utilise l'étape 7 : <span class="pill-ref pill-ref-3">(3)</span> génère les notes de ce qui a
+déjà été promu, <span class="pill-ref pill-ref-4">(4)</span> prévisualise les notes de ce qui ne l'a pas été.</p>
+<div class="admonition note">
+<p class="admonition-title">Vide, avec un sélecteur Go Live à la place ?</p>
+<p>La fenêtre montre ce qui attend d'être promu <strong>vers l'étage suivant</strong>. Une branche qui n'a pas
+d'étage suivant, c'est-à-dire dont <code>mergeTargets</code> est vide, n'a rien à promouvoir : le panneau
+montre donc un sélecteur <strong>Go Live</strong> <span class="pill-ref pill-ref-1">(1)</span> et les notes de version d'un go-live déjà mergé
+dedans, à la place :</p>
+<p><a class="glightbox" data-type="image" href="../../../_assets/annotated/vscode/pipeline-branch-modal-uat--no-merge-target.png"><img alt="La même fenêtre sur une branche sans cible de merge" src="../../../_assets/annotated/vscode/pipeline-branch-modal-uat--no-merge-target.png" /></a></p>
+<p>Sur <code>main</code>, c'est la vue normale et elle le restera toujours : la production est la fin du
+pipeline.</p>
+<p>Sur <code>integration</code>, cela veut dire que le fichier de branche a perdu sa cible de merge, qu'il
+avait depuis le Lab 1.2. Cliquez sur <strong>Training: Level 3 &gt; Set up my training environment</strong>, qui
+la réécrit. Il rafraîchit l'org et l'URL de connexion d'un fichier qui existe déjà et laisse le
+reste tranquille, ce que vous avez posé au Lab 3.1 survit donc.</p>
+</div>
+<h3 id="2-proteger-ce-que-luat-garde-pour-elle">2. Protéger ce que l'UAT garde pour elle<a class="headerlink" href="#2-proteger-ce-que-luat-garde-pour-elle" title="Permanent link">&para;</a></h3>
+<p>Un composant de l'application Helios est censé être différent dans chaque org : le remote site
+setting <code>Helios_Warehouse</code>, l'adresse du système de stock de l'entrepôt avec lequel les lots de
+panneaux sont réservés. La production parle au vrai entrepôt, l'UAT au système de test de
+l'entrepôt. Un admin a posé cette adresse en UAT à la main, et le repository porte celle de
+production.</p>
+<p>Voyez-le vous-même : dans <code>helios-uat</code>, <strong>Setup &gt; Remote Site Settings</strong>, ouvrez <code>Helios_Warehouse</code>,
+<strong>Edit</strong>, et mettez <strong>Remote Site URL</strong> à <code>https://warehouse-test.helios.invalid</code>, comme l'a fait
+l'admin UAT. <strong>Save</strong>.</p>
+<p>Passons à la promotion. Elle envoie le package entier, remote site setting compris, et remettrait
+l'adresse de production en UAT sans un mot. Le <strong>gestionnaire d'écrasement</strong> est fait exactement pour
+cela : tout ce qui est listé dans <code>manifest/package-no-overwrite.xml</code> est retiré du déploiement quand
+l'org cible le possède déjà, et créé quand elle ne l'a pas.</p>
+<p>Helios a déjà ce fichier : c'est la liste avec laquelle démarre tout projet sfdx-hardis. Elle protège
+les composants qu'une org garde pour elle presque partout, rapports et tableaux de bord maintenus en
+production, connected apps, named credentials, certificats. Les remote site settings n'y sont pas
+encore, et vous n'avez pas à écrire de XML pour les ajouter. Dans le panneau <strong>DevOps Pipeline</strong>,
+ouvrez le menu <strong>Deployment packages</strong>, celui qui ouvrait <strong>Package XML</strong> au <a href="../../level-1-contributor-basics/1-5-retrieve-commit-and-publish-your-changes/">Lab 1.5</a>, et choisissez
+<strong>No Overwrite</strong>. Le visualiseur de package s'ouvre sur cette liste. Activez le <strong>Edit mode</strong>
+<span class="pill-ref pill-ref-1">(1)</span>, puis cliquez sur <strong>Add Type</strong> <span class="pill-ref pill-ref-2">(2)</span>.</p>
+<p><a class="glightbox" data-type="image" href="../../../_assets/annotated/vscode/package-no-overwrite-edit--add-type.png"><img alt="Le visualiseur de package sur la liste no-overwrite par défaut, en mode édition" src="../../../_assets/annotated/vscode/package-no-overwrite-edit--add-type.png" /></a></p>
+<p>Tapez <code>RemoteSiteSetting</code>, le nom que Salesforce donne à ce type de composant, dans <strong>Metadata Type
+API Name</strong> <span class="pill-ref pill-ref-1">(1)</span>, et cliquez sur <strong>Add</strong> <span class="pill-ref pill-ref-2">(2)</span>.</p>
+<p><a class="glightbox" data-type="image" href="../../../_assets/annotated/vscode/package-no-overwrite-add-type--type.png"><img alt="La fenêtre Add Metadata Type du visualiseur de package" src="../../../_assets/annotated/vscode/package-no-overwrite-add-type--type.png" /></a></p>
+<p>La nouvelle ligne <strong>RemoteSiteSetting</strong> a un bouton <strong>Add member</strong> : cliquez dessus, tapez
+<code>Helios_Warehouse</code>, et <strong>Add</strong>. Le visualiseur a ajouté un bloc <code>RemoteSiteSetting</code> à
+<code>manifest/package-no-overwrite.xml</code> pour vous. Le fichier a la forme de <code>manifest/package.xml</code> : un
+bloc par type de composant, ses membres listés par nom, ou <code>*</code> pour tous. <strong>Edit File</strong> l'ouvre en
+texte, si vous voulez le voir.</p>
+<p>Puis <strong>Training: Level 3</strong> &gt; <strong>Publish my pipeline configuration</strong>, et mergez sa Pull Request une
+fois verte, comme au <a href="../3-1-configure-the-pipeline-up-to-production/">Lab 3.1</a> : la liste de ce qui ne doit jamais être écrasé est de la configuration
+de pipeline, comme le reste.</p>
+<div class="admonition note">
+<p class="admonition-title">Créé là où il manque, jamais écrasé là où il est</p>
+<p>Une org neuve, une sandbox fraîche par exemple, n'a pas encore de <code>Helios_Warehouse</code>, et le
+déploiement le crée depuis le repository. À partir de là il appartient à cette org. Le gestionnaire
+d'écrasement ne compare pas les versions : présent veut dire protégé.</p>
+</div>
+<h3 id="3-creer-la-pull-request-de-promotion">3. Créer la Pull Request de promotion<a class="headerlink" href="#3-creer-la-pull-request-de-promotion" title="Permanent link">&para;</a></h3>
+<p>Dans le diagramme <strong>DevOps Pipeline</strong>, la flèche d'<code>integration</code> vers <code>uat</code> porte une pastille
+<strong>+ PR</strong> <span class="pill-ref pill-ref-1">(1)</span>. Cliquez dessus : GitHub s'ouvre sur une nouvelle Pull Request d'<code>integration</code> vers
+<code>uat</code>, les deux branches déjà renseignées.</p>
+<p><a class="glightbox" data-type="image" href="../../../_assets/annotated/vscode/devops-pipeline-level3--create-promotion.png"><img alt="La pastille + PR sur la flèche d'integration vers uat" src="../../../_assets/annotated/vscode/devops-pipeline-level3--create-promotion.png" /></a></p>
+<p>La pastille est là parce qu'aucune Pull Request n'est ouverte sur cette flèche. Dès que vous en créez
+une, la pastille est remplacée par le numéro de la Pull Request et son statut.</p>
+<div class="admonition note">
+<p class="admonition-title">Pas le bouton de promotion de la fenêtre de branche</p>
+<p>Une fenêtre de branche peut aussi afficher un bouton <strong>Create promotion from <branche> (Beta)</strong>
+et une case à cocher sur chaque ligne. Ce projet active cette fonctionnalité
+(<a href="../3-1-configure-the-pipeline-up-to-production/">Lab 3.1</a>), mais <code>allowedPromotionSteps</code> n'autorise qu'une seule étape, <code>uat</code> vers
+<code>preprod</code> : la fenêtre d'<code>integration</code> n'a donc ni l'un ni l'autre. Vous les rencontrerez tous
+les deux sur la fenêtre d'<code>uat</code> à l'étape 7.</p>
+<p>Cette fonctionnalité transporte un <strong>sous-ensemble</strong> de ce qui attend, et elle existe pour la
+semaine où le métier valide une story et pas celle d'à côté. Ce que vous faites ici, c'est tout
+promouvoir, ce que transporte une simple Pull Request d'une branche vers la suivante, et ce que
+vous devriez faire presque toutes les semaines. Le <a href="../3-10-promote-a-subset-with-promotion-branches/">Lab 3.10</a> est l'exception.</p>
+</div>
+<p>Intitulez-la pour les humains qui la liront, pas pour git, et appelez-la une <strong>promotion</strong> :</p>
+<blockquote>
+<p>Promotion 2026-09: crew capacity cap, quote PDF</p>
+</blockquote>
+<p><strong>Release</strong> est le mot réservé à la Pull Request vers <code>main</code>, la production, et à rien d'autre. Le
+métier lit "release" comme "c'est en ligne", et une Pull Request vers <code>uat</code> ne met rien en ligne.
+Gardez les deux mots distincts et une liste de Pull Requests se lit comme l'histoire de ce qui a
+atteint la production.</p>
+<p>Mergez-la avec <strong>Merge pull request</strong>, jamais avec un squash : une promotion transporte chaque commit
+des stories qu'elle promeut, et la promotion suivante, le retrofit et les notes de version ont tous
+besoin de les retrouver un par un (<a href="../../level-1-contributor-basics/1-6-pull-request-deployment-check-and-merge/">Lab 1.6</a>).</p>
+<h3 id="4-lire-les-deployment-actions-quelle-transporte">4. Lire les deployment actions qu'elle transporte<a class="headerlink" href="#4-lire-les-deployment-actions-quelle-transporte" title="Permanent link">&para;</a></h3>
+<p>Une fois le contrôle lancé, le commentaire sfdx-hardis gagne deux sections, <strong>Pre-deployment Actions
+Results</strong> et <strong>Post-deployment Actions Results</strong>. Ce qu'une promotion ajoute par-dessus est le
+paragraphe qui nomme la portée <span class="pill-ref pill-ref-1">(1)</span> : chaque Pull Request qu'elle transporte, chacune un lien.</p>
+<p><a class="glightbox" data-type="image" href="../../../_assets/annotated/web/github-pr-promotion-actions.png"><img alt="Les deployment actions rassemblées sur la Pull Request de promotion" src="../../../_assets/annotated/web/github-pr-promotion-actions.png" /></a></p>
+<p>Chaque action que n'importe quel contributeur a déclarée sur n'importe laquelle des stories mergées
+est rassemblée dans un seul tableau, avec son libellé, son type, son statut et un lien de retour vers
+la Pull Request d'où elle vient. Tout ce qui demande un humain reçoit une <strong>liste de cases au-dessus
+du tableau</strong>, intitulée <em>Manual Actions to perform before proceeding with deployment</em> ou <em>after
+deployment</em>. Les deux listes atterrissent sur des jobs différents : le job de contrôle porte celle
+d'avant <span class="pill-ref pill-ref-2">(2)</span>, pour que vous puissiez agir pendant que vous décidez, et le job de merge porte celle
+d'après. Les actions post-déploiement <span class="pill-ref pill-ref-3">(3)</span> affichent <strong>skipped</strong> sur le contrôle : un contrôle ne
+change rien dans l'org, elles attendent donc le merge.</p>
+<p><strong>Lisez-le avant de merger.</strong> Deux choses à chercher :</p>
+<table>
+<thead>
+<tr>
+<th>Ce que vous voyez</th>
+<th>Ce que cela veut dire pour vous</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Une <strong>étape manuelle</strong></td>
+<td>Quelqu'un doit cliquer quelque chose en UAT. Ce quelqu'un, c'est vous, et cela n'arrivera pas sans plan</td>
+</tr>
+<tr>
+<td>Un <strong>import de données</strong></td>
+<td>Des enregistrements vont être écrits en UAT. Les testeurs peuvent y avoir les leurs</td>
+</tr>
+</tbody>
+</table>
+<p>Vous ne pouvez pas modifier l'action d'un contributeur depuis ici : elle appartient à sa Pull Request
+et à toutes les orgs qui suivent celle-ci, une mauvaise action se corrige donc dans une nouvelle Pull
+Request et non dans cette promotion.</p>
+<p>La liste de cases est l'exception, et ce n'est pas de la décoration. <strong>Cochez une case une fois que
+vous avez fait la chose dans l'org</strong>, et le job sfdx-hardis suivant relit la case et note l'action
+comme faite. Laissez-la décochée et la promotion suivante vous la redemandera.</p>
+<p>Une étape <strong>avant</strong> retient aussi le merge : tant que l'étape de délivrabilité de US-026 n'est pas
+marquée comme faite dans <code>uat</code>, le contrôle de la promotion s'arrête en rouge, juste après ses
+actions de pré-déploiement. Faites le clic dans <code>helios-uat</code>, cochez sa case (ou <strong>Mark as done in
+uat</strong> dans l'onglet <strong>Deployment Actions</strong> de VS Code), puis <strong>Re-run all jobs</strong> sur le contrôle :
+il enregistre l'étape et passe au vert.</p>
+<h3 id="5-merger-et-regarder-le-deploiement">5. Merger et regarder le déploiement<a class="headerlink" href="#5-merger-et-regarder-le-deploiement" title="Permanent link">&para;</a></h3>
+<p>Mergez la promotion. L'exécution <strong>Process Deployment (sfdx-hardis)</strong> démarre, cette fois sur <code>uat</code>.</p>
+<p>C'est le premier déploiement vers cette org par la pipeline : il sera donc plus gros que ceux vers
+integration, l'UAT est en retard de tout ce que l'équipe a fait. Comptez plusieurs minutes.</p>
+<p>L'étape de délivrabilité est une étape <strong>pre-deploy</strong> : sa place est avant le merge, comme le dit
+l'étape 4, et le contrôle n'est pas passé au vert avant que vous ne l'ayez cochée. Ce job la saute :
+<em>Skipping Set Email Deliverability to All Email ...: already run in uat</em>.</p>
+<p>Puis lisez le log à la recherche du gestionnaire d'écrasement, au-dessus du déploiement, parmi les
+lignes qui commencent par <code>[NoOverwrite]</code> :</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>Type RemoteSiteSetting: 1 item(s) skipped because they already exist in the target org (protected), 0 item(s) to deploy
+</code></pre></div>
+<p><code>helios-uat</code> a déjà <code>Helios_Warehouse</code>, la promotion l'a donc laissé hors du package, et le
+<strong>Final package.xml to deploy</strong> affiché juste après a un élément de moins.</p>
+<h3 id="6-verifier-avec-des-yeux-de-testeur">6. Vérifier avec des yeux de testeur<a class="headerlink" href="#6-verifier-avec-des-yeux-de-testeur" title="Permanent link">&para;</a></h3>
+<p>Ouvrez <code>helios-uat</code> et vérifiez que les deux stories sont réellement utilisables, pas seulement
+déployées :</p>
+<ul>
+<li>Une équipe plus grande que le plafond est ramenée au plafond à l'enregistrement. La règle s'exécute
+  quand une installation planifiée reçoit son équipe, et UAT n'en a plus aucune au statut planifié
+  depuis le remplissage de la taille d'équipe du <a href="../../level-2-contributor-advanced/2-3-fix-broken-records-with-an-apex-deployment-action/">Lab 2.3</a> : créez-en une. Sur n'importe quelle
+  installation, mettez <code>Status</code> à <code>Planned</code>, <code>Crew Capacity Cap</code> à 3 et <code>Crew Size</code> à 6 dans la même
+  modification, et enregistrez. Il affiche 3, et elle est passée à <code>Scheduled</code></li>
+<li>La permission du PDF de devis est sur le permission set des managers</li>
+<li><strong>Setup &gt; Remote Site Settings</strong> dit toujours <code>https://warehouse-test.helios.invalid</code> pour
+  <code>Helios_Warehouse</code> : la promotion ne l'a pas touché</li>
+</ul>
+<p>Déployé et utilisable sont deux états différents, et l'écart entre eux est presque toujours une
+permission ou une donnée de référence.</p>
+<h3 id="7-generer-les-notes-de-version">7. Générer les notes de version<a class="headerlink" href="#7-generer-les-notes-de-version" title="Permanent link">&para;</a></h3>
+<p>Ouvrez le panneau <strong>DevOps Pipeline</strong> et cliquez sur le nœud <code>uat</code>, comme vous aviez cliqué sur
+<code>integration</code> à l'étape 1. Dans le pied de page de cette fenêtre, le bouton de gauche affiche
+maintenant <strong>Generate Promotion Notes for uat</strong>. Cliquez dessus.</p>
+<p>Cette fenêtre a la colonne de cases à cocher et le bouton <strong>Create promotion from uat (Beta)</strong> dont
+parlait la note ci-dessus, parce qu'<code>uat</code> est la source de la seule étape de promotion que ce projet
+autorise. Ignorez les deux jusqu'au <a href="../3-10-promote-a-subset-with-promotion-branches/">Lab 3.10</a>.</p>
+<p>Il pose une question, <strong>Select the merge commit for this release or promotion</strong>, en listant les
+merges qui ont atterri sur <code>uat</code>, du plus récent au plus ancien. Prenez celui du haut, <strong>Merge pull
+request #N from <em>votre-pseudo</em>/integration</strong> : la promotion que vous venez de merger. Les notes
+couvrent ce que ce merge a apporté dans <code>uat</code>, et rien d'avant.</p>
+<p>Le bouton est nommé d'après ce qu'est la branche. <code>uat</code> merge dans <code>preprod</code> : ce qui y est arrivé
+est donc une promotion. Sur une branche sans cible de merge, <code>main</code>, le même bouton affiche
+<strong>Generate Release Notes for Latest Release in main</strong>, et une fois que vous choisissez un go-live
+dans le sélecteur en haut de la fenêtre, il affiche <strong>Generate Release Notes for</strong> ce go-live.</p>
+<p>À côté, <strong>Preview Upcoming Promotion Notes from uat</strong> fait la même chose pour ce qui n'a pas encore
+été promu. C'est celui à utiliser un mercredi, quand quelqu'un demande ce que contiendra la livraison
+de jeudi.</p>
+<p>Vous obtenez un document markdown listant les Pull Requests, leurs auteurs, leurs stories et les
+étapes manuelles, généré depuis l'historique des merges plutôt que depuis la mémoire de quelqu'un. Il
+atterrit sous <code>hardis-report/release-notes/</code>, dans un dossier nommé d'après le tag de version et la
+date, ou d'après la branche cible et la date quand il n'y a pas de tag, donc ici <code>uat-&lt;date&gt;</code>.
+Markdown et PDF à chaque fois, plus un tableur quand il y a de quoi le remplir.</p>
+<p>Sur cette promotion, les notes générées s'ouvrent ainsi :</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a># Promotion Notes - uat
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>| Metric           | Value |
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>|------------------|-------|
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>| Pull Requests    | 20    |
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>| Tickets          | 15    |
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>| Contributors     | 1     |
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>| Added / Modified | 34    |
+</code></pre></div>
+<p>Le décompte inclut les Pull Requests qui ne portent aucune story : celles de configuration du <a href="../3-1-configure-the-pipeline-up-to-production/">Lab 3.1</a>
+et de l'étape 2, et la promotion elle-même. Le vôtre dépend de votre parcours : près de 20 après les
+Niveaux 1 et 2, beaucoup moins après <strong>Reset this level</strong>, qui démarre le Niveau 3 sans leurs Pull
+Requests.</p>
+<p>Viennent ensuite un tableau des tickets, un des Pull Requests avec leurs auteurs et dates de merge,
+les métadonnées modifiées par type, et les deployment actions avec leur statut dans <code>uat</code> : l'étape
+manuelle de délivrabilité <strong>success</strong>, cochée avant le merge, les imports et la planification
+<strong>success</strong>.</p>
+<p>Lisez-les puis améliorez-les. Des notes générées sont une liste complète, et une note de version que
+le métier lit a besoin de deux choses que le générateur ne peut pas connaître :</p>
+<ol>
+<li><strong>Une phrase en haut disant à quoi sert cette livraison.</strong> "Les équipes ne peuvent plus être
+   surdimensionnées, et les commerciaux peuvent générer des PDF de devis."</li>
+<li><strong>Les étapes manuelles, formulées comme des instructions à une personne nommée</strong>, pas comme une
+   liste technique</li>
+</ol>
+<p>Puis donnez-les aux gens qui les lisent. Ouvrez la Pull Request de promotion que vous avez mergée,
+<strong>...</strong> en haut à droite de sa description, <strong>Edit</strong>, et collez les notes améliorées à la place de la
+description d'une ligne. Une Pull Request mergée reste modifiable, et c'est là qu'est la livraison :
+son lien est ce que vous envoyez au métier, et ce vers quoi les notes de version de la promotion
+suivante renvoient.</p>
+<p><a class="glightbox" data-type="image" href="../../../_assets/annotated/web/github-pr-release-notes.png"><img alt="Les notes de version améliorées, dans la description de la Pull Request de promotion" src="../../../_assets/annotated/web/github-pr-release-notes.png" /></a></p>
+<p>La phrase <span class="pill-ref pill-ref-1">(1)</span> dit à quoi sert la promotion, dans les mots du métier. L'étape manuelle <span class="pill-ref pill-ref-2">(2)</span>
+nomme qui la fait, où, et ce qui casse si personne ne la fait. Le reste est un court tableau de ce
+qu'il faut tester, et un pointeur vers la liste générée complète pour qui la veut.</p>
+<details>
+<summary>Sous le capot : ce qui a généré les notes, et ce qu'est vraiment une promotion</summary>
+<p>La commande était :</p>
+<div class="highlight"><pre><span></span><code>sf hardis:doc:release-notes --mode post --target-branch uat
+</code></pre></div>
+<p>qui parcourt l'historique git entre deux références, rassemble les commits de merge, fait
+correspondre chacun à sa Pull Request via l'API du fournisseur git, et en tire le titre, l'auteur, le
+corps et les deployment actions déclarées.</p>
+<p><strong>Cet appel d'API est la partie qui peut échouer en silence.</strong> La commande a besoin d'un token de
+fournisseur git, pris dans l'environnement (<code>GITHUB_TOKEN</code> ou <code>CI_SFDX_HARDIS_GITHUB_TOKEN</code> sur
+GitHub). Sans token, elle ne s'arrête pas : elle avertit, rassemble zéro Pull Request, et vous écrit
+un document parfaitement mis en forme et vide. Une note de version vide est plus souvent un token
+manquant qu'une livraison vide.</p>
+<p><strong>C'est aussi pourquoi une promotion n'est jamais squashée.</strong> Les notes retrouvent chaque story
+depuis le commit que sa Pull Request a laissé sur <code>integration</code>, commit de merge ou commit unique
+d'un squash indifféremment : c'est pourquoi une Pull Request de feature peut être squashée. Une
+promotion squashée dans <code>uat</code> remplacerait tous ces commits par un seul qu'aucune story n'a produit,
+et les notes d'<code>uat</code> nommeraient la promotion et rien de ce qu'elle transportait. Le rapport DORA du
+<a href="../3-6-release-to-production-and-read-dora-metrics/">Lab 3.6</a> s'appuie sur le même lien.</p>
+<p><strong>Une promotion est une Pull Request ordinaire.</strong> Il n'y a pas de machinerie de promotion spéciale
+dans l'installation par défaut : <code>integration</code> dans <code>uat</code> est une branche mergée dans une autre
+branche, et le job de déploiement sur <code>uat</code> se comporte comme celui sur <code>integration</code>. Ce qui diffère
+est seulement ce que la configuration dit d'<code>uat</code> : son org, ses cibles de merge, et si le
+déploiement delta s'applique entre branches majeures
+(<code>enableDeltaDeploymentBetweenMajorBranches</code>, désactivé par défaut, parce qu'une promotion est le
+pire moment pour découvrir que l'org cible a dérivé).</p>
+<p>Il existe une fonctionnalité en Beta pour les équipes qui doivent promouvoir un <strong>sous-ensemble</strong> de
+ce qui attend, plutôt que tout : les <a href="https://sfdx-hardis.cloudity.com/salesforce-devops-promotion-branches/">branches de
+promotion</a>. Le
+<a href="../3-10-promote-a-subset-with-promotion-branches/">Lab 3.10</a> s'en sert, délibérément tard, parce que cela prend son sens une fois que vous avez
+fait quelques livraisons de la façon ordinaire.</p>
+<!-- command-links:start -->
+<p>Documentation de la commande : <a href="https://sfdx-hardis.cloudity.com/hardis/doc/release-notes/">hardis:doc:release-notes</a></p>
+<!-- command-links:end -->
+</details>
+<h2 id="ce-que-vous-devez-voir">Ce que vous devez voir<a class="headerlink" href="#ce-que-vous-devez-voir" title="Permanent link">&para;</a></h2>
+<ul>
+<li>La branche <code>uat</code> portant tout ce qu'<code>integration</code> avait</li>
+<li>Une exécution <strong>Process Deployment (sfdx-hardis)</strong> verte sur <code>uat</code></li>
+<li>Les deux stories fonctionnelles dans <code>helios-uat</code></li>
+<li><code>Helios_Warehouse</code> dans <code>helios-uat</code> pointant toujours vers l'entrepôt de test</li>
+<li>Les notes de version dans la description de la Pull Request de promotion</li>
+</ul>
+<details class="troubleshoot">
+<summary>En cas de problème</summary>
+<p><strong>Le contrôle échoue avec des erreurs d'authentification pour uat.</strong>
+<a href="../3-1-configure-the-pipeline-up-to-production/">Lab 3.1</a> pour la branche <code>uat</code> : les secrets, et la pré-autorisation de l'External Client App dans
+<code>helios-uat</code>.</p>
+<p><strong>Le déploiement échoue sur quelque chose qui marchait en integration.</strong>
+Les orgs diffèrent. En général il manque en UAT une fonctionnalité, une licence, ou un composant que
+quelqu'un y a supprimé à la main. Lisez l'erreur et vérifiez l'org.</p>
+<p><strong>La Pull Request de promotion montre des centaines de fichiers.</strong>
+C'est attendu sur une première promotion : l'UAT est en retard de tout l'historique. Cela se calme
+après celle-là.</p>
+<p><strong>Les notes de version sont vides.</strong>
+Trois causes, par ordre de probabilité : le mauvais commit de merge a été choisi, vérifiez donc que
+le haut de la liste était bien la promotion ; pas de token de fournisseur git dans l'environnement,
+la recherche de Pull Requests n'a donc rien renvoyé et s'est contentée d'avertir ; ou les merges ont
+été squashés, il n'y a donc aucun lien à retrouver.</p>
+</details>
+<h2 id="verifiez-votre-travail">Vérifiez votre travail<a class="headerlink" href="#verifiez-votre-travail" title="Permanent link">&para;</a></h2>
+<p>Welcome page &gt; <strong>Training: Level 3</strong> &gt; <strong>Check my work</strong>, puis choisissez le <strong>Lab 3.5</strong>.</p>
+<h2 id="pour-aller-plus-loin">Pour aller plus loin<a class="headerlink" href="#pour-aller-plus-loin" title="Permanent link">&para;</a></h2>
+<ul>
+<li><a href="https://sfdx-hardis.cloudity.com/salesforce-devops-deploy-major-branches/">Déployer vers les orgs majeures</a></li>
+<li><a href="https://sfdx-hardis.cloudity.com/hardis/doc/salesforce-devops-release-notes/">Notes de version</a></li>
+</ul>
+<p><a class="md-button md-button--primary" href="../3-6-release-to-production-and-read-dora-metrics/">Suite : Lab 3.6 - Livrer en production et lire vos métriques DORA</a></p>
+
+
+
+
+
+
+
+
+
+  
+  
+
+
+
+  
+
+
+
+
+  <h2 id="__comments">Questions and comments</h2>
+  <script src="https://giscus.app/client.js"
+          data-repo="hardisgroupcom/sfdx-hardis-training"
+          data-repo-id="R_kgDOUcjgQw"
+          data-category="Q&amp;A"
+          data-category-id="DIC_kwDOUcjgQ84DF-lC"
+          data-mapping="pathname"
+          data-strict="1"
+          data-reactions-enabled="1"
+          data-emit-metadata="0"
+          data-input-position="top"
+          data-theme="preferred_color_scheme"
+          data-lang="en"
+          data-loading="lazy"
+          crossorigin="anonymous"
+          async>
+  </script>
+
+  <script>
+    // Keep the Giscus iframe in sync with the palette toggle. It is a
+    // cross-origin frame, so its theme can only be changed by postMessage.
+    (function () {
+      if (window.__giscusThemeSync) {
+        return;
+      }
+      window.__giscusThemeSync = true;
+      var giscusTheme = function () {
+        var scheme = document.body.getAttribute("data-md-color-scheme");
+        return scheme === "slate" ? "dark" : "light";
+      };
+      var apply = function () {
+        var frame = document.querySelector("iframe.giscus-frame");
+        if (frame && frame.contentWindow) {
+          frame.contentWindow.postMessage(
+            { giscus: { setConfig: { theme: giscusTheme() } } },
+            "https://giscus.app"
+          );
+        }
+      };
+      new MutationObserver(apply).observe(document.body, {
+        attributes: true,
+        attributeFilter: ["data-md-color-scheme"]
+      });
+      window.addEventListener("message", function (event) {
+        if (event.origin === "https://giscus.app") {
+          apply();
+        }
+      });
+    })();
+  </script>
+
+                
+              </article>
+            </div>
+          
+          
+  <script>var tabs=__md_get("__tabs");if(Array.isArray(tabs))e:for(var set of document.querySelectorAll(".tabbed-set")){var labels=set.querySelector(".tabbed-labels");for(var tab of tabs)for(var label of labels.getElementsByTagName("label"))if(label.innerText.trim()===tab){var input=document.getElementById(label.htmlFor);input.checked=!0;continue e}}</script>
+
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-circle-arrow-up" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="m16 12-4-4-4 4M12 16V8"/></svg>
+  Retour en haut de la page
+</button>
+        
+      </main>
+      
+        
+
+
+
+
+<footer class="md-footer">
+  
+    
+      
+      <nav class="md-footer__inner md-grid" aria-label="Pied de page" >
+        
+          
+          <a href="../3-4-merge-colliding-pull-requests/" class="md-footer__link md-footer__link--prev" aria-label="Précédent: Lab 3.4 - Trois Pull Requests se percutent : choisir l&#x27;ordre de merge">
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-arrow-left" viewBox="0 0 24 24"><path d="m12 19-7-7 7-7M19 12H5"/></svg>
+            </div>
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Précédent
+              </span>
+              <div class="md-ellipsis">
+                Lab 3.4 - Trois Pull Requests se percutent : choisir l'ordre de merge
+              </div>
+            </div>
+          </a>
+        
+        
+          
+          <a href="../3-6-release-to-production-and-read-dora-metrics/" class="md-footer__link md-footer__link--next" aria-label="Suivant: Lab 3.6 - Livrer en production et lire vos métriques DORA">
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Suivant
+              </span>
+              <div class="md-ellipsis">
+                Lab 3.6 - Livrer en production et lire vos métriques DORA
+              </div>
+            </div>
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-arrow-right" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+            </div>
+          </a>
+        
+      </nav>
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      Cloudity and friends
+    </div>
+  
+  
+</div>
+      
+        
+<div class="md-social">
+  
+    
+    
+    
+    
+    <a href="https://github.com/hardisgroupcom/sfdx-hardis" target="_blank" rel="noopener" title="sfdx-hardis on GitHub" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.3.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2026 Fonticons, Inc.--><path fill="currentColor" d="M216.5 362.5c-66-8-112.5-55.5-112.5-117 0-25 9-52 24-70-6.5-16.5-5.5-51.5 2-66 20-2.5 47 8 63 22.5 19-6 39-9 63.5-9s44.5 3 62.5 8.5c15.5-14 43-24.5 63-22 7 13.5 8 48.5 1.5 65.5 16 19 24.5 44.5 24.5 70.5 0 61.5-46.5 108-113.5 116.5 17 11 28.5 35 28.5 62.5v52c0 15 12.5 23.5 27.5 17.5C441 459.5 512 369 512 257 512 115.5 397 0 255.5 0S0 115.5 0 257c0 111 70.5 203 165.5 237.5 13.5 5 26.5-4 26.5-17.5v-40c-7 3-16 5-24 5-33 0-52.5-18-66.5-51.5-5.5-13.5-11.5-21.5-23-23-6-.5-8-3-8-6 0-6 10-10.5 20-10.5 14.5 0 27 9 40 27.5 10 14.5 20.5 21 33 21s20.5-4.5 32-16c8.5-8.5 15-16 21-21"/></svg>
+    </a>
+  
+    
+    
+    
+    
+    <a href="https://sfdx-hardis.cloudity.com/" target="_blank" rel="noopener" title="sfdx-hardis documentation" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.3.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2026 Fonticons, Inc.--><path fill="currentColor" d="M384 512H96c-53 0-96-43-96-96V96C0 43 43 0 96 0h304c26.5 0 48 21.5 48 48v288c0 20.9-13.4 38.7-32 45.3V448c17.7 0 32 14.3 32 32s-14.3 32-32 32zM96 384c-17.7 0-32 14.3-32 32s14.3 32 32 32h256v-64zm32-232c0 13.3 10.7 24 24 24h176c13.3 0 24-10.7 24-24s-10.7-24-24-24H152c-13.3 0-24 10.7-24 24m24 72c-13.3 0-24 10.7-24 24s10.7 24 24 24h176c13.3 0 24-10.7 24-24s-10.7-24-24-24z"/></svg>
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog" role="status" aria-atomic="true">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      
+      
+        
+        
+      <script id="__config" type="application/json">{"annotate":null,"base":"../../..","features":["content.action.edit","content.code.copy","content.tabs.link","navigation.instant","navigation.tracking","navigation.top","navigation.footer","search.suggest","search.highlight","toc.follow"],"redirect":null,"search":"../../../assets/javascripts/workers/search.7d14d953.min.js","tags":null,"translations":{"clipboard.copied":"Copié dans le presse-papier","clipboard.copy":"Copier dans le presse-papier","clipboard.error":"Could not copy to clipboard","search.result.more.one":"1 de plus sur cette page","search.result.more.other":"# de plus sur cette page","search.result.none":"Aucun document trouvé","search.result.one":"1 document trouvé","search.result.other":"# documents trouvés","search.result.placeholder":"Taper pour démarrer la recherche","search.result.term.missing":"Non trouvé","select.version":"Sélectionner la version"},"version":null}</script>
+    
+    
+      <script src="../../../assets/javascripts/bundle.67a597eb.min.js"></script>
+      
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/tablesort/5.2.1/tablesort.min.js"></script>
+      
+        <script src="../../../theme/javascripts/tables.js"></script>
+      
+        <script src="../../../theme/javascripts/lightbox.js"></script>
+      
+        <script src="../../../theme/javascripts/after-footer.js"></script>
+      
+        <script src="../../../theme/javascripts/language-switch.js"></script>
+      
+    
+  </body>
+</html>

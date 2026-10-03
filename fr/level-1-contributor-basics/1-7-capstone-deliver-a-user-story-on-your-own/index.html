@@ -1,0 +1,2108 @@
+
+<!doctype html>
+<html lang="fr" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Livrez une User Story Salesforce de bout en bout sans pas-à-pas : branche, construction, récupération, commit, Pull Request et déploiement avec sfdx-hardis.">
+      
+      
+      
+        <link rel="canonical" href="https://sfdx-hardis-training.github.io/fr/level-1-contributor-basics/1-7-capstone-deliver-a-user-story-on-your-own/">
+      
+      
+        <link rel="prev" href="../1-6-pull-request-deployment-check-and-merge/">
+      
+      
+        <link rel="next" href="../../level-2-contributor-advanced/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../../theme/images/badge-mark.svg">
+      <meta name="generator" content="zensical-0.0.67">
+    
+    
+      
+        <title>Lab 1.7 - Épreuve finale : livrer une User Story tout seul - Salesforce DevOps with sfdx-hardis</title>
+      
+    
+    
+      
+        
+      
+      <link rel="stylesheet" href="../../../assets/stylesheets/modern/main.4ae390e2.min.css">
+      
+        
+          
+        
+        <link rel="stylesheet" href="../../../assets/stylesheets/modern/palette.96d1a7e4.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+    
+    
+      <link rel="stylesheet" href="../../../theme/stylesheets/extra.css">
+    
+    <script>__md_scope=new URL("../../..",location),__md_scope.pathname.endsWith("/")||(__md_scope=new URL(__md_scope.pathname+"/",location)),__md_hash=e=>[...e].reduce(((e,t)=>(e<<5)-e+t.charCodeAt(0)),0),__md_get=(e,t=localStorage,_=__md_scope)=>JSON.parse(t.getItem(_.pathname+"."+e)),__md_set=(e,t,_=localStorage,a=__md_scope)=>{try{_.setItem(a.pathname+"."+e,JSON.stringify(t))}catch(e){}},document.documentElement.setAttribute("data-platform",navigator.platform)</script>
+    
+      
+  
+
+
+  
+  
+
+<script id="__analytics">function __md_analytics(){function e(){dataLayer.push(arguments)}window.dataLayer=window.dataLayer||[],e("js",new Date),e("config","G-SE20CZ58E1"),document.addEventListener("DOMContentLoaded",(function(){document.forms.search&&document.forms.search.query.addEventListener("blur",(function(){this.value&&e("event","search",{search_term:this.value})}));document$.subscribe((function(){var t=document.forms.feedback;if(void 0!==t)for(var a of t.querySelectorAll("[type=submit]"))a.addEventListener("click",(function(a){a.preventDefault();var n=document.location.pathname,d=this.getAttribute("data-md-value");e("event","feedback",{page:n,data:d}),t.firstElementChild.disabled=!0;var r=t.querySelector(".md-feedback__note [data-md-value='"+d+"']");r&&(r.hidden=!1)})),t.hidden=!1})),location$.subscribe((function(t){e("config","G-SE20CZ58E1",{page_path:t.pathname})}))}));var t=document.createElement("script");t.async=!0,t.src="https://www.googletagmanager.com/gtag/js?id=G-SE20CZ58E1",document.getElementById("__analytics").insertAdjacentElement("afterEnd",t)}</script>
+  
+    <script>"undefined"!=typeof __md_analytics&&__md_analytics()</script>
+  
+
+    
+    
+  
+  
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Salesforce DevOps with sfdx-hardis">
+  <meta property="og:locale" content="fr">
+  <meta property="og:title" content="Lab 1.7 - Épreuve finale : livrer une User Story tout seul">
+  <meta property="og:description" content="Livrez une User Story Salesforce de bout en bout sans pas-à-pas : branche, construction, récupération, commit, Pull Request et déploiement avec sfdx-hardis.">
+  <meta property="og:url" content="https://sfdx-hardis-training.github.io/fr/level-1-contributor-basics/1-7-capstone-deliver-a-user-story-on-your-own/">
+  <meta property="og:image" content="https://sfdx-hardis-training.github.io/_assets/social/course.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="Lab 1.7 - Épreuve finale : livrer une User Story tout seul">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Lab 1.7 - Épreuve finale : livrer une User Story tout seul">
+  <meta name="twitter:description" content="Livrez une User Story Salesforce de bout en bout sans pas-à-pas : branche, construction, récupération, commit, Pull Request et déploiement avec sfdx-hardis.">
+  <meta name="twitter:image" content="https://sfdx-hardis-training.github.io/_assets/social/course.png">
+
+  <script>
+    (function () {
+      var here = "fr";
+      var alternates = {"en":"en/level-1-contributor-basics/1-7-capstone-deliver-a-user-story-on-your-own/","fr":"fr/level-1-contributor-basics/1-7-capstone-deliver-a-user-story-on-your-own/"};
+      var base = new URL("../../.." || ".", window.location.href).pathname;
+      try {
+        var asked = new URLSearchParams(window.location.search).get("lang");
+        if (asked) {
+          document.cookie =
+            "course-language=" + encodeURIComponent(asked) + "; path=" + base + "; max-age=31536000; samesite=lax";
+        }
+        var cookie = document.cookie.split("; ").filter(function (one) {
+          return one.indexOf("course-language=") === 0;
+        })[0];
+        if (!cookie) {
+          return;
+        }
+        var preferred = asked || decodeURIComponent(cookie.slice("course-language=".length));
+        if (!preferred || preferred === here) {
+          return;
+        }
+        var target = alternates[preferred];
+        if (typeof target !== "string") {
+          return;
+        }
+        var url = new URL(target, new URL(base, window.location.href)).pathname;
+        if (url !== window.location.pathname) {
+          window.location.replace(url + window.location.search + window.location.hash);
+        }
+      } catch (error) {
+        // A browser with no cookies stays where it is, which is the page asked for
+      }
+    })();
+  </script>
+
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="custom" data-md-color-accent="custom">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer" aria-label="Navigation"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#lab-17-epreuve-finale-livrer-une-user-story-tout-seul" class="md-skip">
+          Aller au contenu
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="En-tête">
+    <a href="/fr/" title="Salesforce DevOps with sfdx-hardis" class="md-header__button md-logo" aria-label="Salesforce DevOps with sfdx-hardis" data-md-component="logo">
+      
+  <img src="../../../theme/images/cloudity-text-logo-white.svg" alt="Salesforce DevOps with sfdx-hardis">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer" aria-label="Navigation">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-menu" viewBox="0 0 24 24"><path d="M4 5h16M4 12h16M4 19h16"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Salesforce DevOps with sfdx-hardis
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Lab 1.7 - Épreuve finale : livrer une User Story tout seul
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="none" data-md-color-scheme="default" data-md-color-primary="custom" data-md-color-accent="custom"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="none" data-md-color-scheme="slate" data-md-color-primary="custom" data-md-color-accent="custom"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+      
+
+
+
+  
+
+  
+    
+    
+  
+
+<div class="md-header__option">
+  <div class="md-select md-select--language">
+    <button class="md-header__button md-header__button--flag" aria-label="Sélectionner la langue">
+      
+        <img src="../../../theme/images/flags/fr.svg" alt="Français" class="md-select__flag md-select__flag--current">
+      
+    </button>
+    <div class="md-select__inner">
+      <ul class="md-select__list">
+        
+          
+          <li class="md-select__item"><a href="../../../en/level-1-contributor-basics/1-7-capstone-deliver-a-user-story-on-your-own/" hreflang="en" data-course-home="/" class="md-select__link">
+              
+                <img src="../../../theme/images/flags/gb.svg" alt="" class="md-select__flag">
+              
+              English
+            </a>
+          </li>
+        
+          
+          <li class="md-select__item"><a href="././" hreflang="fr" data-course-home="/fr/" class="md-select__link">
+              
+                <img src="../../../theme/images/flags/fr.svg" alt="" class="md-select__flag">
+              
+              Français
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</div>
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search" aria-label="Recherche">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-search" viewBox="0 0 24 24"><path d="m21 21-4.34-4.34"/><circle cx="11" cy="11" r="8"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog" aria-label="Recherche">
+  <button type="button" class="md-search__button">
+    Recherche
+  </button>
+</div>
+      
+    
+    <div class="md-header__source">
+      
+        <a href="https://github.com/hardisgroupcom/sfdx-hardis-training" title="Aller au dépôt" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.3.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2026 Fonticons, Inc.--><path fill="currentColor" d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    hardisgroupcom/sfdx-hardis-training
+  </div>
+</a>
+      
+    </div>
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0" data-course-lang="fr" data-course-base="../../.." data-course-alt-en="en/level-1-contributor-basics/1-7-capstone-deliver-a-user-story-on-your-own/" data-course-alt-fr="fr/level-1-contributor-basics/1-7-capstone-deliver-a-user-story-on-your-own/">
+  <label class="md-nav__title" for="__drawer">
+    <a href="/fr/" title="Salesforce DevOps with sfdx-hardis" class="md-nav__button md-logo" aria-label="Salesforce DevOps with sfdx-hardis" data-md-component="logo">
+      
+  <img src="../../../theme/images/cloudity-text-logo-white.svg" alt="Salesforce DevOps with sfdx-hardis">
+
+    </a>
+    Salesforce DevOps with sfdx-hardis
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/hardisgroupcom/sfdx-hardis-training" title="Aller au dépôt" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.3.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2026 Fonticons, Inc.--><path fill="currentColor" d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    hardisgroupcom/sfdx-hardis-training
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+      
+    
+      
+      
+      
+    
+      
+      
+      
+    
+      
+      
+      
+    
+      
+      
+      
+    
+      
+      
+      
+    
+      
+      
+      
+    
+      
+      
+      
+        
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Accueil
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+      
+    
+      
+      
+      
+        
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_9" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_9" id="__nav_9_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Niveau 1 - Contributeur Salesforce DevOps, les bases
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        
+          <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_9_label" aria-expanded="true">
+            <label class="md-nav__title" for="__nav_9">
+              <span class="md-nav__icon md-icon"></span>
+              
+  
+  Niveau 1 - Contributeur Salesforce DevOps, les bases
+
+            </label>
+            <ul class="md-nav__list" data-md-scrollfix>
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Commencer ici
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../1-1-install-vs-code-and-sfdx-hardis/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Lab 1.1 - Installer VS Code, Git et sfdx-hardis
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../1-2-create-your-dev-hub-scratch-orgs-and-pipeline/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Lab 1.2 - Créer votre Dev Hub, vos scratch orgs et votre pipeline CI/CD
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../1-3-start-a-user-story-on-a-git-branch/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Lab 1.3 - Démarrer une User Story sur sa propre branche Git
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../1-4-build-a-custom-field-in-your-org/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Lab 1.4 - Construire un champ personnalisé dans votre org Salesforce
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../1-5-retrieve-commit-and-publish-your-changes/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Lab 1.5 - Récupérer, commiter et publier vos modifications Salesforce
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../1-6-pull-request-deployment-check-and-merge/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Lab 1.6 - Ouvrir une Pull Request, passer le contrôle de déploiement, merger
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Lab 1.7 - Épreuve finale : livrer une User Story tout seul
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="././" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Lab 1.7 - Épreuve finale : livrer une User Story tout seul
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+
+<nav class="md-nav md-nav--secondary" aria-label="Table des matières">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table des matières
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#la-situation" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        La situation
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#avant-de-commencer" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Avant de commencer
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#ce-quil-faut-faire" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Ce qu'il faut faire
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#attention-aux-pieges" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Attention aux pièges :)
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#ce-que-vous-devez-voir" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Ce que vous devez voir
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#verifiez-votre-travail" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Vérifiez votre travail
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#demandez-votre-badge" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Demandez votre badge
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#la-suite" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        La suite
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+                
+              
+            </ul>
+          </nav>
+        
+      
+    </li>
+  
+
+      
+    
+      
+      
+      
+        
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_10" >
+        
+          
+          <label class="md-nav__link" for="__nav_10" id="__nav_10_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Niveau 2 - Contributeur Salesforce DevOps avancé
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        
+          <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_10_label" aria-expanded="false">
+            <label class="md-nav__title" for="__nav_10">
+              <span class="md-nav__icon md-icon"></span>
+              
+  
+  Niveau 2 - Contributeur Salesforce DevOps avancé
+
+            </label>
+            <ul class="md-nav__list" data-md-scrollfix>
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../level-2-contributor-advanced/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Commencer ici
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../level-2-contributor-advanced/2-1-backpromote-your-teammates-work/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Lab 2.1 - Backpromote : remettre votre org de dev au niveau de l'équipe
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../level-2-contributor-advanced/2-2-fix-a-missing-dependency-deployment-error/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Lab 2.2 - Corriger une erreur de déploiement due à une dépendance manquante
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../level-2-contributor-advanced/2-3-fix-broken-records-with-an-apex-deployment-action/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Lab 2.3 - Réparer des enregistrements cassés avec une deployment action Apex
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../level-2-contributor-advanced/2-4-ship-reference-data-and-a-batch-with-deployment-actions/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Lab 2.4 - Livrer des données de référence et un batch avec des deployment actions
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../level-2-contributor-advanced/2-5-pass-code-quality-and-apex-test-coverage/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Lab 2.5 - Passer la barrière de qualité de code et la couverture de tests Apex
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../level-2-contributor-advanced/2-6-permission-sets-and-profiles/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Lab 2.6 - Permission sets, profils, et pourquoi une autorisation disparaît
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../level-2-contributor-advanced/2-7-resolve-a-git-merge-conflict/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Lab 2.7 - Résoudre un conflit de merge Git avec un collègue
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../level-2-contributor-advanced/2-8-recover-from-committing-the-wrong-metadata/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Lab 2.8 - Se remettre d'avoir commité la mauvaise métadonnée
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../level-2-contributor-advanced/2-9-capstone-deliver-a-user-story-that-has-it-all/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Lab 2.9 - Épreuve finale : livrer une User Story qui a tout
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+            </ul>
+          </nav>
+        
+      
+    </li>
+  
+
+      
+    
+      
+      
+      
+        
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_11" >
+        
+          
+          <label class="md-nav__link" for="__nav_11" id="__nav_11_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Niveau 3 - Release manager Salesforce DevOps
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        
+          <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_11_label" aria-expanded="false">
+            <label class="md-nav__title" for="__nav_11">
+              <span class="md-nav__icon md-icon"></span>
+              
+  
+  Niveau 3 - Release manager Salesforce DevOps
+
+            </label>
+            <ul class="md-nav__list" data-md-scrollfix>
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../level-3-release-manager/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Commencer ici
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../level-3-release-manager/3-1-configure-the-pipeline-up-to-production/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Lab 3.1 - Configurer la pipeline CI/CD jusqu'à la production
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../level-3-release-manager/3-2-review-a-contributor-pull-request/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Lab 3.2 - Relire et merger la Pull Request d'un contributeur
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../level-3-release-manager/3-3-deploy-to-integration-and-read-the-log/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Lab 3.3 - Lire le log de déploiement, et ce que .forceignore lui cache
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../level-3-release-manager/3-4-merge-colliding-pull-requests/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Lab 3.4 - Trois Pull Requests se percutent : choisir l'ordre de merge
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../level-3-release-manager/3-5-promote-to-uat-and-write-release-notes/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Lab 3.5 - Promouvoir en UAT et écrire les notes de version
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../level-3-release-manager/3-6-release-to-production-and-read-dora-metrics/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Lab 3.6 - Livrer en production et lire vos métriques DORA
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../level-3-release-manager/3-7-hotfix-and-retrofit/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Lab 3.7 - La production est cassée : hotfix et retrofit
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../level-3-release-manager/3-8-monitor-your-production-org/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Lab 3.8 - Monitorer votre org de production
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../level-3-release-manager/3-9-generate-the-project-documentation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Lab 3.9 - Générer la documentation du projet Salesforce
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../level-3-release-manager/3-10-promote-a-subset-with-promotion-branches/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Lab 3.10 - Promouvoir un sous-ensemble avec les promotion branches (Beta)
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../level-3-release-manager/3-11-capstone-run-a-weekly-release-cycle/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Lab 3.11 - Épreuve finale : mener un cycle de release hebdomadaire
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+            </ul>
+          </nav>
+        
+      
+    </li>
+  
+
+      
+    
+      
+      
+      
+        
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../help/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Aide
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+      
+    
+      
+      
+      
+        
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../BACKLOG/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Backlog
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+      
+    
+      
+      
+      
+        
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../badges/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Badges
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+      
+    
+      
+      
+      
+        
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="https://sfdx-hardis.cloudity.com/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  sfdx-hardis documentation
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+      
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  
+                    
+                    
+                    
+                      
+                    
+                    
+                      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+                      <div class="md-sidebar-button__wrapper">
+                        <label class="md-sidebar-button" for="__toc"></label>
+                      </div>
+                    
+                  
+                  <div class="md-sidebar__inner">
+                    
+
+
+<nav class="md-nav md-nav--secondary" aria-label="Table des matières">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table des matières
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#la-situation" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        La situation
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#avant-de-commencer" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Avant de commencer
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#ce-quil-faut-faire" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Ce qu'il faut faire
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#attention-aux-pieges" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Attention aux pièges :)
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#ce-que-vous-devez-voir" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Ce que vous devez voir
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#verifiez-votre-travail" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Vérifiez votre travail
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#demandez-votre-badge" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Demandez votre badge
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#la-suite" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        La suite
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+  
+    <a href="https://github.com/hardisgroupcom/sfdx-hardis-training/edit/main/labs/fr/level-1-contributor-basics/1-7-capstone-deliver-a-user-story-on-your-own.md" title="Editer cette page" class="md-content__button md-icon" rel="edit">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-file-pen" viewBox="0 0 24 24"><path d="M12.659 22H18a2 2 0 0 0 2-2V8a2.4 2.4 0 0 0-.706-1.706l-3.588-3.588A2.4 2.4 0 0 0 14 2H6a2 2 0 0 0-2 2v9.34"/><path d="M14 2v5a1 1 0 0 0 1 1h5M10.378 12.622a1 1 0 0 1 3 3.003L8.36 20.637a2 2 0 0 1-.854.506l-2.867.837a.5.5 0 0 1-.62-.62l.836-2.869a2 2 0 0 1 .506-.853z"/></svg>
+    </a>
+  
+  
+
+
+<h1 id="lab-17-epreuve-finale-livrer-une-user-story-tout-seul">Lab 1.7 - Épreuve finale : livrer une User Story tout seul<a class="headerlink" href="#lab-17-epreuve-finale-livrer-une-user-story-tout-seul" title="Permanent link">&para;</a></h1>
+<p><strong>Niveau</strong> : 1 Contributeur, les bases</p>
+<p><strong>Durée</strong> : ~25 min</p>
+<p><strong>Vous allez</strong> : refaire toute la boucle sans pas-à-pas, la seule façon de savoir si vous l'avez
+apprise.</p>
+<h2 id="la-situation">La situation<a class="headerlink" href="#la-situation" title="Permanent link">&para;</a></h2>
+<p>Deuxième ticket, deuxième jour. Personne ne va vous tenir la main sur celui-ci.</p>
+<blockquote>
+<p><strong>US-016 - Let the crew leave notes on an installation</strong></p>
+<p>As a delivery crew member, I want a free text notes field and a list view of my open
+installations, so that I hand over cleanly to the next shift.</p>
+<p>Critères d'acceptation :</p>
+<ul>
+<li>Un champ <strong>Crew Notes</strong> existe sur Installation, texte long, modifiable par l'équipe de pose</li>
+<li>Il est sur la présentation de page Installation, là où l'équipe de pose peut le voir</li>
+<li>Une vue de liste <strong>Open Installations</strong> existe sur Installation, pour tous les utilisateurs</li>
+<li>Le permission set de l'équipe de pose accorde le champ</li>
+</ul>
+</blockquote>
+<h2 id="avant-de-commencer">Avant de commencer<a class="headerlink" href="#avant-de-commencer" title="Permanent link">&para;</a></h2>
+<ul class="task-list">
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <a href="../1-6-pull-request-deployment-check-and-merge/">Lab 1.6</a> terminé : US-014 est mergée dans <code>integration</code> et déployée</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> Le panneau Source Control ne montre plus rien à commiter</li>
+</ul>
+<h2 id="ce-quil-faut-faire">Ce qu'il faut faire<a class="headerlink" href="#ce-quil-faut-faire" title="Permanent link">&para;</a></h2>
+<p>Pas de clics numérotés cette fois. La boucle, dans l'ordre :</p>
+<ol>
+<li><strong>Démarrez la User Story.</strong> Branche <code>US-016-crew-notes</code>, cible <code>integration</code>, puis <strong>Scratch
+   org</strong> et <strong>Reuse scratch org helios-dev</strong>. Votre org a déjà US-014, puisque vous l'y avez
+   construite</li>
+<li><strong>Construisez-la dans <code>helios-dev</code></strong><ul>
+<li>Un champ <strong>Long Text Area</strong> <code>Crew_Notes__c</code> sur <code>Installation__c</code>, 4000 caractères, avec une
+   description et un help text</li>
+<li>Accordez-lui <strong>Read</strong> et <strong>Edit</strong> sur <code>Helios Delivery Crew</code>, parce que c'est un membre de
+   l'équipe de pose qui écrit les notes. Personne d'autre ne le voit pour le moment : le tour
+   des planificateurs vient au Niveau 2</li>
+<li>Sur la présentation de page Installation</li>
+<li>Une vue de liste sur Installation appelée <strong>Open Installations</strong>, visible par tous les
+   utilisateurs, avec <strong>Filter by Owner</strong> sur <strong>All installations</strong>, filtrée sur un statut autre
+   que Completed, et affichant le compte, le statut, la date d'installation et Panels Required</li>
+</ul>
+</li>
+<li><strong>Faites un retrieve.</strong> <strong>Commit changes</strong>, <strong>Recent Changes</strong>, <strong>Search Metadata</strong>, et prenez
+   le champ, la présentation de page, la vue de liste et le permission set. Rien d'autre.
+   Commitez-les</li>
+<li><strong>Publiez</strong>, et lisez le rapport <strong>Git Delta package.xml</strong> avant de pousser. Quatre choses,
+   toutes à vous</li>
+<li><strong>Ouvrez la Pull Request</strong> vers <code>integration</code> dans votre propre fork, faites-la passer au vert,
+   mergez</li>
+<li><strong>Vérifiez l'org d'intégration</strong> après le job de déploiement</li>
+</ol>
+<h2 id="attention-aux-pieges">Attention aux pièges :)<a class="headerlink" href="#attention-aux-pieges" title="Permanent link">&para;</a></h2>
+<p><strong>Le permission set et le champ voyagent ensemble.</strong> Si vous récupérez le champ et oubliez le
+permission set, le déploiement réussit et personne ne voit le champ. Si vous récupérez le permission
+set et oubliez le champ, le déploiement échoue franchement, parce qu'un permission set ne peut pas
+accorder quelque chose qui n'existe pas. Prenez les deux, à chaque fois. C'est la même paire que vous
+avez prise au <a href="../1-5-retrieve-commit-and-publish-your-changes/">Lab 1.5</a>, et la vue de liste a la même habitude : elle nomme Panels Required, il lui
+faut donc ce champ déjà présent dans l'org cible, ce qui est le cas depuis le <a href="../1-6-pull-request-deployment-check-and-merge/">Lab 1.6</a>.</p>
+<h2 id="ce-que-vous-devez-voir">Ce que vous devez voir<a class="headerlink" href="#ce-que-vous-devez-voir" title="Permanent link">&para;</a></h2>
+<p>Dans <code>helios-integration</code>, après le déploiement de merge :</p>
+<ul>
+<li><code>Crew Notes</code> accordé, <strong>Read</strong> et <strong>Edit</strong>, sur le permission set <strong>Helios Delivery Crew</strong> :
+  <strong>Setup &gt; Permission Sets &gt; Helios Delivery Crew &gt; Object Settings &gt; Installations</strong>. Vous ne
+  verrez pas le champ sur l'enregistrement vous-même : vous portez le permission set des
+  planificateurs, et cette story ne le leur accorde pas</li>
+<li><strong>Open Installations</strong> dans le sélecteur de vues de liste de l'onglet Installations</li>
+</ul>
+<details class="troubleshoot">
+<summary>En cas de problème</summary>
+<p>Tout ce qu'il vous faut est dans les Labs 1.3 à 1.6. Les échecs sont les mêmes, et les sections
+<strong>En cas de problème</strong> de ces labs les couvrent. Résistez à l'envie de relire tout le lab : allez
+chercher la seule étape sur laquelle vous bloquez.</p>
+<p>Si votre repository finit dans un état que vous n'arrivez pas à démêler, Welcome page &gt;
+<strong>Training: Level 1</strong> &gt; <strong>Reset this level</strong> le remet au début du Niveau 1 et vous pouvez refaire
+l'épreuve finale proprement. S'en servir n'est pas échouer. Ne pas s'en servir et abandonner, si.</p>
+</details>
+<h2 id="verifiez-votre-travail">Vérifiez votre travail<a class="headerlink" href="#verifiez-votre-travail" title="Permanent link">&para;</a></h2>
+<p>Welcome page &gt; <strong>Training: Level 1</strong> &gt; <strong>Check my work</strong>, puis choisissez <strong>Everything in level 1, capstone included</strong>.</p>
+<p>Six contrôles doivent passer. Les lignes de reçu qu'il affiche sont votre relevé de progression, et
+la demande de badge ci-dessous les reprend toute seule.</p>
+<h2 id="demandez-votre-badge">Demandez votre badge<a class="headerlink" href="#demandez-votre-badge" title="Permanent link">&para;</a></h2>
+<p>Vous avez terminé le Niveau 1.</p>
+<p>Welcome page &gt; <strong>Training: Level 1</strong> &gt; <strong>Claim my badge</strong>.</p>
+<p>Il recontrôle d'abord le niveau entier et refuse de demander quoi que ce soit qui ne passe pas : une
+demande qui serait rejetée est une demande qui ne vaut pas la peine d'être ouverte. Puis il ouvre le
+formulaire de demande du repository de formation dans votre navigateur, avec le niveau, votre nom
+d'utilisateur, votre fork (votre copie personnelle du repository du cours sur GitHub, par exemple
+<code>github.com/my-username/sfdx-hardis-training</code>) et vos reçus déjà remplis. Un champ reste vide :
+choisissez votre niveau dans la liste <strong>Level</strong>, car GitHub ne pré-remplit pas une liste déroulante
+depuis un lien et le formulaire refuse d'être soumis tant qu'elle affiche <em>None</em>. Cochez ensuite les
+trois cases et cliquez sur <strong>Create</strong>.</p>
+<p>Ces trois cases sont à vous de cocher, et rien ne les coche à votre place. Elles disent que votre
+fork (<code>github.com/my-username/sfdx-hardis-training</code>) est public et que votre pseudo GitHub devient
+public dans le repository de formation, ce qui est une décision à propos de votre nom plutôt qu'une
+formalité.</p>
+<div class="admonition tip">
+<p class="admonition-title">Si ce cours vous a servi</p>
+<p><a href="https://github.com/hardisgroupcom/sfdx-hardis">hardisgroupcom/sfdx-hardis</a> est le projet open
+source dont parle tout ce cours. Une étoile est ce qui permet à un projet comme celui-ci de
+rester visible : ouvrez sa page et cliquez sur <strong>Star</strong> <span class="pill-ref pill-ref-1">(1)</span>, en haut à droite. Donnez une étoile si
+vous avez aimé ce cours !</p>
+<p><a class="glightbox" data-type="image" href="../../../_assets/annotated/web/github-star-sfdx-hardis.png"><img alt="Le bouton Star du repository sfdx-hardis sur GitHub" src="../../../_assets/annotated/web/github-star-sfdx-hardis.png" /></a></p>
+</div>
+<p>Un job clone ensuite votre fork (<code>github.com/my-username/sfdx-hardis-training</code>), rejoue sur lui tous
+les contrôles ci-dessus, et répond sur l'issue. Personne ne le relit à la main, cela prend donc
+généralement deux minutes. Si quelque chose ne se vérifie pas, le commentaire nomme le lab exact et
+ce qu'il a cherché, vous corrigez, et vous modifiez l'issue pour le relancer.</p>
+<p>Votre fork (<code>github.com/my-username/sfdx-hardis-training</code>) doit être <strong>public</strong> pour que l'audit
+puisse le lire. S'il est privé, la commande propose de le rendre public.</p>
+<div class="admonition note">
+<p class="admonition-title">C'est un badge, pas une certification</p>
+<p>Il n'y a ici ni examen ni accréditation. Partagez-le dans <em>Featured</em> sur LinkedIn, pas dans
+<em>Licenses &amp; certifications</em>.</p>
+</div>
+<div class="admonition tip">
+<p class="admonition-title">La mettre en bannière LinkedIn</p>
+<p><a href="https://thb.nabondance.me/">Trailhead Banner</a> dessine une image de couverture LinkedIn à partir
+d'un nom d'utilisateur Trailblazer, et il y affiche le badge sfdx-hardis le plus élevé que vous
+avez réclamé ici. Tapez votre nom d'utilisateur, générez l'image, et mettez-la en bannière de
+votre profil LinkedIn.</p>
+</div>
+<h2 id="la-suite">La suite<a class="headerlink" href="#la-suite" title="Permanent link">&para;</a></h2>
+<p>Le Niveau 1 vous a appris la boucle quand tout se passe bien. Le Niveau 2 est l'autre moitié : le
+déploiement qui échoue sur une dépendance dont vous ignoriez l'existence, le champ qu'on ne peut pas
+rendre obligatoire, le collègue qui a modifié le même flow que vous.</p>
+<p>Il est recommandé pour tout contributeur, et <strong>obligatoire</strong> avant le Niveau 3.</p>
+<p><a class="md-button md-button--primary" href="../../level-2-contributor-advanced/">Continuer vers le Niveau 2 - Contributeur avancé</a></p>
+
+
+
+
+
+
+
+
+
+  
+  
+
+
+
+  
+
+
+
+
+  <h2 id="__comments">Questions and comments</h2>
+  <script src="https://giscus.app/client.js"
+          data-repo="hardisgroupcom/sfdx-hardis-training"
+          data-repo-id="R_kgDOUcjgQw"
+          data-category="Q&amp;A"
+          data-category-id="DIC_kwDOUcjgQ84DF-lC"
+          data-mapping="pathname"
+          data-strict="1"
+          data-reactions-enabled="1"
+          data-emit-metadata="0"
+          data-input-position="top"
+          data-theme="preferred_color_scheme"
+          data-lang="en"
+          data-loading="lazy"
+          crossorigin="anonymous"
+          async>
+  </script>
+
+  <script>
+    // Keep the Giscus iframe in sync with the palette toggle. It is a
+    // cross-origin frame, so its theme can only be changed by postMessage.
+    (function () {
+      if (window.__giscusThemeSync) {
+        return;
+      }
+      window.__giscusThemeSync = true;
+      var giscusTheme = function () {
+        var scheme = document.body.getAttribute("data-md-color-scheme");
+        return scheme === "slate" ? "dark" : "light";
+      };
+      var apply = function () {
+        var frame = document.querySelector("iframe.giscus-frame");
+        if (frame && frame.contentWindow) {
+          frame.contentWindow.postMessage(
+            { giscus: { setConfig: { theme: giscusTheme() } } },
+            "https://giscus.app"
+          );
+        }
+      };
+      new MutationObserver(apply).observe(document.body, {
+        attributes: true,
+        attributeFilter: ["data-md-color-scheme"]
+      });
+      window.addEventListener("message", function (event) {
+        if (event.origin === "https://giscus.app") {
+          apply();
+        }
+      });
+    })();
+  </script>
+
+                
+              </article>
+            </div>
+          
+          
+  <script>var tabs=__md_get("__tabs");if(Array.isArray(tabs))e:for(var set of document.querySelectorAll(".tabbed-set")){var labels=set.querySelector(".tabbed-labels");for(var tab of tabs)for(var label of labels.getElementsByTagName("label"))if(label.innerText.trim()===tab){var input=document.getElementById(label.htmlFor);input.checked=!0;continue e}}</script>
+
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-circle-arrow-up" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="m16 12-4-4-4 4M12 16V8"/></svg>
+  Retour en haut de la page
+</button>
+        
+      </main>
+      
+        
+
+
+
+
+<footer class="md-footer">
+  
+    
+      
+      <nav class="md-footer__inner md-grid" aria-label="Pied de page" >
+        
+          
+          <a href="../1-6-pull-request-deployment-check-and-merge/" class="md-footer__link md-footer__link--prev" aria-label="Précédent: Lab 1.6 - Ouvrir une Pull Request, passer le contrôle de déploiement, merger">
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-arrow-left" viewBox="0 0 24 24"><path d="m12 19-7-7 7-7M19 12H5"/></svg>
+            </div>
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Précédent
+              </span>
+              <div class="md-ellipsis">
+                Lab 1.6 - Ouvrir une Pull Request, passer le contrôle de déploiement, merger
+              </div>
+            </div>
+          </a>
+        
+        
+          
+          <a href="../../level-2-contributor-advanced/" class="md-footer__link md-footer__link--next" aria-label="Suivant: Commencer ici">
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Suivant
+              </span>
+              <div class="md-ellipsis">
+                Commencer ici
+              </div>
+            </div>
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-arrow-right" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+            </div>
+          </a>
+        
+      </nav>
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      Cloudity and friends
+    </div>
+  
+  
+</div>
+      
+        
+<div class="md-social">
+  
+    
+    
+    
+    
+    <a href="https://github.com/hardisgroupcom/sfdx-hardis" target="_blank" rel="noopener" title="sfdx-hardis on GitHub" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.3.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2026 Fonticons, Inc.--><path fill="currentColor" d="M216.5 362.5c-66-8-112.5-55.5-112.5-117 0-25 9-52 24-70-6.5-16.5-5.5-51.5 2-66 20-2.5 47 8 63 22.5 19-6 39-9 63.5-9s44.5 3 62.5 8.5c15.5-14 43-24.5 63-22 7 13.5 8 48.5 1.5 65.5 16 19 24.5 44.5 24.5 70.5 0 61.5-46.5 108-113.5 116.5 17 11 28.5 35 28.5 62.5v52c0 15 12.5 23.5 27.5 17.5C441 459.5 512 369 512 257 512 115.5 397 0 255.5 0S0 115.5 0 257c0 111 70.5 203 165.5 237.5 13.5 5 26.5-4 26.5-17.5v-40c-7 3-16 5-24 5-33 0-52.5-18-66.5-51.5-5.5-13.5-11.5-21.5-23-23-6-.5-8-3-8-6 0-6 10-10.5 20-10.5 14.5 0 27 9 40 27.5 10 14.5 20.5 21 33 21s20.5-4.5 32-16c8.5-8.5 15-16 21-21"/></svg>
+    </a>
+  
+    
+    
+    
+    
+    <a href="https://sfdx-hardis.cloudity.com/" target="_blank" rel="noopener" title="sfdx-hardis documentation" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.3.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2026 Fonticons, Inc.--><path fill="currentColor" d="M384 512H96c-53 0-96-43-96-96V96C0 43 43 0 96 0h304c26.5 0 48 21.5 48 48v288c0 20.9-13.4 38.7-32 45.3V448c17.7 0 32 14.3 32 32s-14.3 32-32 32zM96 384c-17.7 0-32 14.3-32 32s14.3 32 32 32h256v-64zm32-232c0 13.3 10.7 24 24 24h176c13.3 0 24-10.7 24-24s-10.7-24-24-24H152c-13.3 0-24 10.7-24 24m24 72c-13.3 0-24 10.7-24 24s10.7 24 24 24h176c13.3 0 24-10.7 24-24s-10.7-24-24-24z"/></svg>
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog" role="status" aria-atomic="true">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      
+      
+        
+        
+      <script id="__config" type="application/json">{"annotate":null,"base":"../../..","features":["content.action.edit","content.code.copy","content.tabs.link","navigation.instant","navigation.tracking","navigation.top","navigation.footer","search.suggest","search.highlight","toc.follow"],"redirect":null,"search":"../../../assets/javascripts/workers/search.7d14d953.min.js","tags":null,"translations":{"clipboard.copied":"Copié dans le presse-papier","clipboard.copy":"Copier dans le presse-papier","clipboard.error":"Could not copy to clipboard","search.result.more.one":"1 de plus sur cette page","search.result.more.other":"# de plus sur cette page","search.result.none":"Aucun document trouvé","search.result.one":"1 document trouvé","search.result.other":"# documents trouvés","search.result.placeholder":"Taper pour démarrer la recherche","search.result.term.missing":"Non trouvé","select.version":"Sélectionner la version"},"version":null}</script>
+    
+    
+      <script src="../../../assets/javascripts/bundle.67a597eb.min.js"></script>
+      
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/tablesort/5.2.1/tablesort.min.js"></script>
+      
+        <script src="../../../theme/javascripts/tables.js"></script>
+      
+        <script src="../../../theme/javascripts/lightbox.js"></script>
+      
+        <script src="../../../theme/javascripts/after-footer.js"></script>
+      
+        <script src="../../../theme/javascripts/language-switch.js"></script>
+      
+    
+  </body>
+</html>

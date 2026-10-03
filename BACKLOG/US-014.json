@@ -1,0 +1,8 @@
+{
+  "id": "US-014",
+  "subject": "Show the crew how many panels a job needs",
+  "url": "https://sfdx-hardis-training.github.io/BACKLOG/US-014/",
+  "owner": "You",
+  "branch": "features/US-014-panels-required",
+  "lab": "1.3"
+}

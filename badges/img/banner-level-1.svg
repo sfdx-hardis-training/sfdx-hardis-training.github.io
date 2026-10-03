@@ -1,0 +1,53 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="320" height="320" viewBox="0 0 320 320" role="img" aria-label="sfdx-hardis Contributor Basics">
+  <title>sfdx-hardis Contributor Basics</title>
+  <!--
+    The badge as a banner shows it: one of twenty, at about fifty pixels, where a
+    name, a handle and a date are neither readable nor wanted. Three things are
+    left, the Cloudity mark, sfdx-hardis, and which level it is, and the level is
+    two letters because a word is a smudge at that size: C1, C2, RM.
+
+    Nothing here is personal, so one file serves every holder of a level. Each
+    record points at it next to the full badge image, under "bannerImage", which
+    is what the Trailhead Banner project reads.
+
+    Filled in by scripts/badges/badge-svg.mjs from the same LEVELS colours as
+    badges/_template.svg. The top band is a shadow so the wordmark sits on
+    something flatter than a gradient; the bottom band is the level's own colour,
+    which is the second place a reader picks the level up from.
+
+    Everything inside is cut to the hexagon: the shape closes in towards its
+    foot, and a band drawn edge to edge would otherwise hang outside it.
+
+    Nothing in this file may hold two hyphens in a row. It is XML, and a comment
+    that does turns the badge into a picture no browser will draw.
+  -->
+  <defs>
+    <linearGradient id="banner-field" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#2E7BFF"/>
+      <stop offset="100%" stop-color="#0032A8"/>
+    </linearGradient>
+    <clipPath id="banner-body">
+      <path d="M 295.1 216.16 Q 295.1 238 276.19 248.92 L 178.91 305.08 Q 160 316 141.09 305.08 L 43.81 248.92 Q 24.9 238 24.9 216.16 L 24.9 103.84 Q 24.9 82 43.81 71.08 L 141.09 14.92 Q 160 4 178.91 14.92 L 276.19 71.08 Q 295.1 82 295.1 103.84 Z"/>
+    </clipPath>
+  </defs>
+
+  <path d="M 295.1 216.16 Q 295.1 238 276.19 248.92 L 178.91 305.08 Q 160 316 141.09 305.08 L 43.81 248.92 Q 24.9 238 24.9 216.16 L 24.9 103.84 Q 24.9 82 43.81 71.08 L 141.09 14.92 Q 160 4 178.91 14.92 L 276.19 71.08 Q 295.1 82 295.1 103.84 Z" fill="url(#banner-field)"/>
+
+  <g clip-path="url(#banner-body)">
+    <svg x="57" y="113" width="206" height="100.6" viewBox="0 0 112.4 54.9">
+      <path fill="#FFFFFF" d="M37.34,39.85l-.32.23c-2.67,2.01-5.86,3.1-9.21,3.15-.08,0-.15,0-.23,0-8.14,0-15-6.28-15.67-14.39-.37-4.45,1.09-8.7,4.1-11.97.67-.73,1.41-1.39,2.21-1.98.79-.59,1.64-1.1,2.53-1.52s1.81-.77,2.76-1.02c.29-.08,1.27-.3,2.22-.49-.04-.08-6.64-7.4-6.79-7.59-.05-.06-.26.08-.26.07C8.68,8.18,2.04,18.16,2.78,29.2c.84,12.63,11.42,22.8,24.08,23.15,5.67.16,11.09-1.55,15.6-4.94l.21-.15c2.61-1.88,7.72-5.14,10.96-6.54-.21-.23-6.52-6.57-6.63-6.73-4.21,1.92-7.38,4.21-9.67,5.86Z"/>
+      <path fill="#9DC0FF" d="M109.63,26.08c-.74-13.15-11.63-23.42-24.81-23.42h-.1c-5.39.02-10.51,1.73-14.78,4.95l-.21.15c-4.08,2.93-8.7,6.26-13.29,6.26-3.06,0-6.92-1.7-11.52-5.09l-2.71-1.77-1.54-.93c-1.58-.86-3.18-1.71-4.86-2.36-1.74-.67-3.46-1.06-5.37-1.21-1.91-.15-3.57-.18-5.5.06.06.18.29.35.42.49.25.27.5.54.76.81.69.74,1.38,1.47,2.07,2.21,1.15,1.23,11.2,11.02,13.12,13.1,1.53,1.65,3.07,3.31,4.59,5,5,5.53,9.9,11.1,15.29,16.25,4.97,4.75,10.43,9.54,17.33,11.13,8.75,2.01,18.17-.57,24.37-7.13,4.75-5.02,7.14-11.59,6.75-18.49ZM100.48,28.9c-.69,8.09-7.55,14.34-15.67,14.34-.09,0-.17,0-.26,0-11.46,0-27.1-20.38-26.9-20.39,7.25-.22,12.6-4.2,17.41-7.67l.32-.23c2.74-2.06,6-3.15,9.44-3.15,4.38,0,8.6,1.86,11.58,5.1,3.01,3.28,4.46,7.55,4.08,12Z"/>
+    </svg>
+
+    <rect x="0" y="52" width="320" height="54" fill="#060214" opacity="0.45"/>
+    <rect x="0" y="226" width="320" height="64" fill="#0053FF"/>
+
+    <text x="160" y="89" text-anchor="middle" font-family="Segoe UI, Helvetica, Arial, sans-serif"
+          font-size="29" font-weight="700" fill="#FFFFFF">sfdx-hardis</text>
+    <text x="160" y="274" text-anchor="middle" font-family="Segoe UI, Helvetica, Arial, sans-serif"
+          font-size="56" font-weight="700" letter-spacing="2" fill="#FFFFFF">C1</text>
+  </g>
+
+  <path d="M 293.8 215.62 Q 293.8 237.25 275.07 248.07 L 178.73 303.69 Q 160 314.5 141.27 303.69 L 44.93 248.07 Q 26.2 237.25 26.2 215.62 L 26.2 104.38 Q 26.2 82.75 44.93 71.93 L 141.27 16.32 Q 160 5.5 178.73 16.31 L 275.07 71.93 Q 293.8 82.75 293.8 104.38 Z"
+        fill="none" stroke="#0053FF" stroke-width="10"/>
+</svg>

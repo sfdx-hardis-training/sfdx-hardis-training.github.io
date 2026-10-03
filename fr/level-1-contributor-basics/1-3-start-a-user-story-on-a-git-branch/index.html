@@ -1,0 +1,2290 @@
+
+<!doctype html>
+<html lang="fr" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Prenez votre premier ticket du backlog et créez sa branche Git et son org de développement avec le bouton New User Story de l'extension VS Code sfdx-hardis.">
+      
+      
+      
+        <link rel="canonical" href="https://sfdx-hardis-training.github.io/fr/level-1-contributor-basics/1-3-start-a-user-story-on-a-git-branch/">
+      
+      
+        <link rel="prev" href="../1-2-create-your-dev-hub-scratch-orgs-and-pipeline/">
+      
+      
+        <link rel="next" href="../1-4-build-a-custom-field-in-your-org/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../../theme/images/badge-mark.svg">
+      <meta name="generator" content="zensical-0.0.67">
+    
+    
+      
+        <title>Lab 1.3 - Démarrer une User Story sur sa propre branche Git - Salesforce DevOps with sfdx-hardis</title>
+      
+    
+    
+      
+        
+      
+      <link rel="stylesheet" href="../../../assets/stylesheets/modern/main.4ae390e2.min.css">
+      
+        
+          
+        
+        <link rel="stylesheet" href="../../../assets/stylesheets/modern/palette.96d1a7e4.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+    
+    
+      <link rel="stylesheet" href="../../../theme/stylesheets/extra.css">
+    
+    <script>__md_scope=new URL("../../..",location),__md_scope.pathname.endsWith("/")||(__md_scope=new URL(__md_scope.pathname+"/",location)),__md_hash=e=>[...e].reduce(((e,t)=>(e<<5)-e+t.charCodeAt(0)),0),__md_get=(e,t=localStorage,_=__md_scope)=>JSON.parse(t.getItem(_.pathname+"."+e)),__md_set=(e,t,_=localStorage,a=__md_scope)=>{try{_.setItem(a.pathname+"."+e,JSON.stringify(t))}catch(e){}},document.documentElement.setAttribute("data-platform",navigator.platform)</script>
+    
+      
+  
+
+
+  
+  
+
+<script id="__analytics">function __md_analytics(){function e(){dataLayer.push(arguments)}window.dataLayer=window.dataLayer||[],e("js",new Date),e("config","G-SE20CZ58E1"),document.addEventListener("DOMContentLoaded",(function(){document.forms.search&&document.forms.search.query.addEventListener("blur",(function(){this.value&&e("event","search",{search_term:this.value})}));document$.subscribe((function(){var t=document.forms.feedback;if(void 0!==t)for(var a of t.querySelectorAll("[type=submit]"))a.addEventListener("click",(function(a){a.preventDefault();var n=document.location.pathname,d=this.getAttribute("data-md-value");e("event","feedback",{page:n,data:d}),t.firstElementChild.disabled=!0;var r=t.querySelector(".md-feedback__note [data-md-value='"+d+"']");r&&(r.hidden=!1)})),t.hidden=!1})),location$.subscribe((function(t){e("config","G-SE20CZ58E1",{page_path:t.pathname})}))}));var t=document.createElement("script");t.async=!0,t.src="https://www.googletagmanager.com/gtag/js?id=G-SE20CZ58E1",document.getElementById("__analytics").insertAdjacentElement("afterEnd",t)}</script>
+  
+    <script>"undefined"!=typeof __md_analytics&&__md_analytics()</script>
+  
+
+    
+    
+  
+  
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Salesforce DevOps with sfdx-hardis">
+  <meta property="og:locale" content="fr">
+  <meta property="og:title" content="Lab 1.3 - Démarrer une User Story sur sa propre branche Git">
+  <meta property="og:description" content="Prenez votre premier ticket du backlog et créez sa branche Git et son org de développement avec le bouton New User Story de l'extension VS Code sfdx-hardis.">
+  <meta property="og:url" content="https://sfdx-hardis-training.github.io/fr/level-1-contributor-basics/1-3-start-a-user-story-on-a-git-branch/">
+  <meta property="og:image" content="https://sfdx-hardis-training.github.io/_assets/social/course.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="Lab 1.3 - Démarrer une User Story sur sa propre branche Git">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Lab 1.3 - Démarrer une User Story sur sa propre branche Git">
+  <meta name="twitter:description" content="Prenez votre premier ticket du backlog et créez sa branche Git et son org de développement avec le bouton New User Story de l'extension VS Code sfdx-hardis.">
+  <meta name="twitter:image" content="https://sfdx-hardis-training.github.io/_assets/social/course.png">
+
+  <script>
+    (function () {
+      var here = "fr";
+      var alternates = {"en":"en/level-1-contributor-basics/1-3-start-a-user-story-on-a-git-branch/","fr":"fr/level-1-contributor-basics/1-3-start-a-user-story-on-a-git-branch/"};
+      var base = new URL("../../.." || ".", window.location.href).pathname;
+      try {
+        var asked = new URLSearchParams(window.location.search).get("lang");
+        if (asked) {
+          document.cookie =
+            "course-language=" + encodeURIComponent(asked) + "; path=" + base + "; max-age=31536000; samesite=lax";
+        }
+        var cookie = document.cookie.split("; ").filter(function (one) {
+          return one.indexOf("course-language=") === 0;
+        })[0];
+        if (!cookie) {
+          return;
+        }
+        var preferred = asked || decodeURIComponent(cookie.slice("course-language=".length));
+        if (!preferred || preferred === here) {
+          return;
+        }
+        var target = alternates[preferred];
+        if (typeof target !== "string") {
+          return;
+        }
+        var url = new URL(target, new URL(base, window.location.href)).pathname;
+        if (url !== window.location.pathname) {
+          window.location.replace(url + window.location.search + window.location.hash);
+        }
+      } catch (error) {
+        // A browser with no cookies stays where it is, which is the page asked for
+      }
+    })();
+  </script>
+
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="custom" data-md-color-accent="custom">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer" aria-label="Navigation"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#lab-13-demarrer-une-user-story-sur-sa-propre-branche-git" class="md-skip">
+          Aller au contenu
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="En-tête">
+    <a href="/fr/" title="Salesforce DevOps with sfdx-hardis" class="md-header__button md-logo" aria-label="Salesforce DevOps with sfdx-hardis" data-md-component="logo">
+      
+  <img src="../../../theme/images/cloudity-text-logo-white.svg" alt="Salesforce DevOps with sfdx-hardis">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer" aria-label="Navigation">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-menu" viewBox="0 0 24 24"><path d="M4 5h16M4 12h16M4 19h16"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Salesforce DevOps with sfdx-hardis
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Lab 1.3 - Démarrer une User Story sur sa propre branche Git
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="none" data-md-color-scheme="default" data-md-color-primary="custom" data-md-color-accent="custom"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="none" data-md-color-scheme="slate" data-md-color-primary="custom" data-md-color-accent="custom"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+      
+
+
+
+  
+
+  
+    
+    
+  
+
+<div class="md-header__option">
+  <div class="md-select md-select--language">
+    <button class="md-header__button md-header__button--flag" aria-label="Sélectionner la langue">
+      
+        <img src="../../../theme/images/flags/fr.svg" alt="Français" class="md-select__flag md-select__flag--current">
+      
+    </button>
+    <div class="md-select__inner">
+      <ul class="md-select__list">
+        
+          
+          <li class="md-select__item"><a href="../../../en/level-1-contributor-basics/1-3-start-a-user-story-on-a-git-branch/" hreflang="en" data-course-home="/" class="md-select__link">
+              
+                <img src="../../../theme/images/flags/gb.svg" alt="" class="md-select__flag">
+              
+              English
+            </a>
+          </li>
+        
+          
+          <li class="md-select__item"><a href="././" hreflang="fr" data-course-home="/fr/" class="md-select__link">
+              
+                <img src="../../../theme/images/flags/fr.svg" alt="" class="md-select__flag">
+              
+              Français
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</div>
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search" aria-label="Recherche">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-search" viewBox="0 0 24 24"><path d="m21 21-4.34-4.34"/><circle cx="11" cy="11" r="8"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog" aria-label="Recherche">
+  <button type="button" class="md-search__button">
+    Recherche
+  </button>
+</div>
+      
+    
+    <div class="md-header__source">
+      
+        <a href="https://github.com/hardisgroupcom/sfdx-hardis-training" title="Aller au dépôt" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.3.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2026 Fonticons, Inc.--><path fill="currentColor" d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    hardisgroupcom/sfdx-hardis-training
+  </div>
+</a>
+      
+    </div>
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0" data-course-lang="fr" data-course-base="../../.." data-course-alt-en="en/level-1-contributor-basics/1-3-start-a-user-story-on-a-git-branch/" data-course-alt-fr="fr/level-1-contributor-basics/1-3-start-a-user-story-on-a-git-branch/">
+  <label class="md-nav__title" for="__drawer">
+    <a href="/fr/" title="Salesforce DevOps with sfdx-hardis" class="md-nav__button md-logo" aria-label="Salesforce DevOps with sfdx-hardis" data-md-component="logo">
+      
+  <img src="../../../theme/images/cloudity-text-logo-white.svg" alt="Salesforce DevOps with sfdx-hardis">
+
+    </a>
+    Salesforce DevOps with sfdx-hardis
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/hardisgroupcom/sfdx-hardis-training" title="Aller au dépôt" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.3.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2026 Fonticons, Inc.--><path fill="currentColor" d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    hardisgroupcom/sfdx-hardis-training
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+      
+    
+      
+      
+      
+    
+      
+      
+      
+    
+      
+      
+      
+    
+      
+      
+      
+    
+      
+      
+      
+    
+      
+      
+      
+    
+      
+      
+      
+        
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Accueil
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+      
+    
+      
+      
+      
+        
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_9" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_9" id="__nav_9_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Niveau 1 - Contributeur Salesforce DevOps, les bases
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        
+          <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_9_label" aria-expanded="true">
+            <label class="md-nav__title" for="__nav_9">
+              <span class="md-nav__icon md-icon"></span>
+              
+  
+  Niveau 1 - Contributeur Salesforce DevOps, les bases
+
+            </label>
+            <ul class="md-nav__list" data-md-scrollfix>
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Commencer ici
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../1-1-install-vs-code-and-sfdx-hardis/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Lab 1.1 - Installer VS Code, Git et sfdx-hardis
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../1-2-create-your-dev-hub-scratch-orgs-and-pipeline/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Lab 1.2 - Créer votre Dev Hub, vos scratch orgs et votre pipeline CI/CD
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Lab 1.3 - Démarrer une User Story sur sa propre branche Git
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="././" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Lab 1.3 - Démarrer une User Story sur sa propre branche Git
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+
+<nav class="md-nav md-nav--secondary" aria-label="Table des matières">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table des matières
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#la-situation" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        La situation
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#avant-de-commencer" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Avant de commencer
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#les-etapes" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Les étapes
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Les étapes">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-demarrer-la-user-story" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        1. Démarrer la User Story
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-ou-va-le-travail" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        2. Où va le travail
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-de-quel-genre-de-travail-il-sagit" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        3. De quel genre de travail il s'agit
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#4-comment-lappeler" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        4. Comment l'appeler
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#5-lorg-dans-laquelle-vous-allez-construire" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        5. L'org dans laquelle vous allez construire
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#6-lire-ce-quelle-vous-dit-a-la-fin" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        6. Lire ce qu'elle vous dit à la fin
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#ce-que-vous-devez-voir" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Ce que vous devez voir
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#verifiez-votre-travail" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Vérifiez votre travail
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#pour-aller-plus-loin" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Pour aller plus loin
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../1-4-build-a-custom-field-in-your-org/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Lab 1.4 - Construire un champ personnalisé dans votre org Salesforce
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../1-5-retrieve-commit-and-publish-your-changes/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Lab 1.5 - Récupérer, commiter et publier vos modifications Salesforce
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../1-6-pull-request-deployment-check-and-merge/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Lab 1.6 - Ouvrir une Pull Request, passer le contrôle de déploiement, merger
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../1-7-capstone-deliver-a-user-story-on-your-own/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Lab 1.7 - Épreuve finale : livrer une User Story tout seul
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+            </ul>
+          </nav>
+        
+      
+    </li>
+  
+
+      
+    
+      
+      
+      
+        
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_10" >
+        
+          
+          <label class="md-nav__link" for="__nav_10" id="__nav_10_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Niveau 2 - Contributeur Salesforce DevOps avancé
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        
+          <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_10_label" aria-expanded="false">
+            <label class="md-nav__title" for="__nav_10">
+              <span class="md-nav__icon md-icon"></span>
+              
+  
+  Niveau 2 - Contributeur Salesforce DevOps avancé
+
+            </label>
+            <ul class="md-nav__list" data-md-scrollfix>
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../level-2-contributor-advanced/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Commencer ici
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../level-2-contributor-advanced/2-1-backpromote-your-teammates-work/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Lab 2.1 - Backpromote : remettre votre org de dev au niveau de l'équipe
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../level-2-contributor-advanced/2-2-fix-a-missing-dependency-deployment-error/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Lab 2.2 - Corriger une erreur de déploiement due à une dépendance manquante
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../level-2-contributor-advanced/2-3-fix-broken-records-with-an-apex-deployment-action/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Lab 2.3 - Réparer des enregistrements cassés avec une deployment action Apex
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../level-2-contributor-advanced/2-4-ship-reference-data-and-a-batch-with-deployment-actions/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Lab 2.4 - Livrer des données de référence et un batch avec des deployment actions
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../level-2-contributor-advanced/2-5-pass-code-quality-and-apex-test-coverage/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Lab 2.5 - Passer la barrière de qualité de code et la couverture de tests Apex
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../level-2-contributor-advanced/2-6-permission-sets-and-profiles/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Lab 2.6 - Permission sets, profils, et pourquoi une autorisation disparaît
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../level-2-contributor-advanced/2-7-resolve-a-git-merge-conflict/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Lab 2.7 - Résoudre un conflit de merge Git avec un collègue
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../level-2-contributor-advanced/2-8-recover-from-committing-the-wrong-metadata/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Lab 2.8 - Se remettre d'avoir commité la mauvaise métadonnée
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../level-2-contributor-advanced/2-9-capstone-deliver-a-user-story-that-has-it-all/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Lab 2.9 - Épreuve finale : livrer une User Story qui a tout
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+            </ul>
+          </nav>
+        
+      
+    </li>
+  
+
+      
+    
+      
+      
+      
+        
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_11" >
+        
+          
+          <label class="md-nav__link" for="__nav_11" id="__nav_11_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Niveau 3 - Release manager Salesforce DevOps
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        
+          <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_11_label" aria-expanded="false">
+            <label class="md-nav__title" for="__nav_11">
+              <span class="md-nav__icon md-icon"></span>
+              
+  
+  Niveau 3 - Release manager Salesforce DevOps
+
+            </label>
+            <ul class="md-nav__list" data-md-scrollfix>
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../level-3-release-manager/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Commencer ici
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../level-3-release-manager/3-1-configure-the-pipeline-up-to-production/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Lab 3.1 - Configurer la pipeline CI/CD jusqu'à la production
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../level-3-release-manager/3-2-review-a-contributor-pull-request/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Lab 3.2 - Relire et merger la Pull Request d'un contributeur
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../level-3-release-manager/3-3-deploy-to-integration-and-read-the-log/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Lab 3.3 - Lire le log de déploiement, et ce que .forceignore lui cache
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../level-3-release-manager/3-4-merge-colliding-pull-requests/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Lab 3.4 - Trois Pull Requests se percutent : choisir l'ordre de merge
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../level-3-release-manager/3-5-promote-to-uat-and-write-release-notes/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Lab 3.5 - Promouvoir en UAT et écrire les notes de version
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../level-3-release-manager/3-6-release-to-production-and-read-dora-metrics/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Lab 3.6 - Livrer en production et lire vos métriques DORA
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../level-3-release-manager/3-7-hotfix-and-retrofit/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Lab 3.7 - La production est cassée : hotfix et retrofit
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../level-3-release-manager/3-8-monitor-your-production-org/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Lab 3.8 - Monitorer votre org de production
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../level-3-release-manager/3-9-generate-the-project-documentation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Lab 3.9 - Générer la documentation du projet Salesforce
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../level-3-release-manager/3-10-promote-a-subset-with-promotion-branches/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Lab 3.10 - Promouvoir un sous-ensemble avec les promotion branches (Beta)
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../level-3-release-manager/3-11-capstone-run-a-weekly-release-cycle/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Lab 3.11 - Épreuve finale : mener un cycle de release hebdomadaire
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+            </ul>
+          </nav>
+        
+      
+    </li>
+  
+
+      
+    
+      
+      
+      
+        
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../help/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Aide
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+      
+    
+      
+      
+      
+        
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../BACKLOG/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Backlog
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+      
+    
+      
+      
+      
+        
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../badges/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Badges
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+      
+    
+      
+      
+      
+        
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="https://sfdx-hardis.cloudity.com/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  sfdx-hardis documentation
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+      
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  
+                    
+                    
+                    
+                      
+                    
+                    
+                      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+                      <div class="md-sidebar-button__wrapper">
+                        <label class="md-sidebar-button" for="__toc"></label>
+                      </div>
+                    
+                  
+                  <div class="md-sidebar__inner">
+                    
+
+
+<nav class="md-nav md-nav--secondary" aria-label="Table des matières">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table des matières
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#la-situation" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        La situation
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#avant-de-commencer" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Avant de commencer
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#les-etapes" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Les étapes
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Les étapes">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-demarrer-la-user-story" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        1. Démarrer la User Story
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-ou-va-le-travail" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        2. Où va le travail
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-de-quel-genre-de-travail-il-sagit" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        3. De quel genre de travail il s'agit
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#4-comment-lappeler" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        4. Comment l'appeler
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#5-lorg-dans-laquelle-vous-allez-construire" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        5. L'org dans laquelle vous allez construire
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#6-lire-ce-quelle-vous-dit-a-la-fin" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        6. Lire ce qu'elle vous dit à la fin
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#ce-que-vous-devez-voir" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Ce que vous devez voir
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#verifiez-votre-travail" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Vérifiez votre travail
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#pour-aller-plus-loin" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Pour aller plus loin
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+  
+    <a href="https://github.com/hardisgroupcom/sfdx-hardis-training/edit/main/labs/fr/level-1-contributor-basics/1-3-start-a-user-story-on-a-git-branch.md" title="Editer cette page" class="md-content__button md-icon" rel="edit">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-file-pen" viewBox="0 0 24 24"><path d="M12.659 22H18a2 2 0 0 0 2-2V8a2.4 2.4 0 0 0-.706-1.706l-3.588-3.588A2.4 2.4 0 0 0 14 2H6a2 2 0 0 0-2 2v9.34"/><path d="M14 2v5a1 1 0 0 0 1 1h5M10.378 12.622a1 1 0 0 1 3 3.003L8.36 20.637a2 2 0 0 1-.854.506l-2.867.837a.5.5 0 0 1-.62-.62l.836-2.869a2 2 0 0 1 .506-.853z"/></svg>
+    </a>
+  
+  
+
+
+<h1 id="lab-13-demarrer-une-user-story-sur-sa-propre-branche-git">Lab 1.3 - Démarrer une User Story sur sa propre branche Git<a class="headerlink" href="#lab-13-demarrer-une-user-story-sur-sa-propre-branche-git" title="Permanent link">&para;</a></h1>
+<p><strong>Niveau</strong> : 1 Contributeur, les bases</p>
+<p><strong>Durée</strong> : ~10 min</p>
+<p><strong>Vous allez</strong> : prendre votre premier ticket et atterrir sur une branche propre, pointée vers votre
+org de dev.</p>
+<h2 id="la-situation">La situation<a class="headerlink" href="#la-situation" title="Permanent link">&para;</a></h2>
+<p>Le backlog est dans <a href="../../../BACKLOG/">BACKLOG.md</a>. Votre première story est tout en haut :</p>
+<blockquote>
+<p><strong>US-014 - Show the crew how many panels a job needs</strong></p>
+<p>As a delivery crew member, I want to see the number of panels required on the installation
+record, so that I load the right quantity on the van.</p>
+<p>Critères d'acceptation :</p>
+<ul>
+<li>Un champ Panels Required existe sur Installation</li>
+<li>Il est visible pour le permission set de l'équipe de pose</li>
+<li>Les planificateurs peuvent le renseigner</li>
+<li>Il apparaît sur la page d'enregistrement Installation</li>
+</ul>
+</blockquote>
+<p>Petite exprès. Ce qui compte dans ce lab n'est pas le champ, c'est la boucle que vous êtes sur le
+point d'apprendre et de répéter pendant tout le reste de votre carrière sur ce projet.</p>
+<div class="admonition info">
+<p class="admonition-title">La branche, en une phrase</p>
+<p>Une branche est une ligne de travail nommée à l'intérieur du repository. La vôtre démarre comme une
+copie exacte de ce que l'équipe a en ce moment. Vous y changez ce que votre story demande, et la
+version de l'équipe reste telle quelle jusqu'à ce que votre Pull Request y remerge la vôtre :
+c'est ainsi que deux personnes travaillent sur deux stories en même temps sans se marcher
+dessus. L'extension crée la branche, vous bascule dessus et la pousse plus tard, vous ne tapez
+donc jamais une commande Git.</p>
+</div>
+<h2 id="avant-de-commencer">Avant de commencer<a class="headerlink" href="#avant-de-commencer" title="Permanent link">&para;</a></h2>
+<ul class="task-list">
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <a href="../1-2-create-your-dev-hub-scratch-orgs-and-pipeline/">Lab 1.2</a> terminé : votre fork (votre copie personnelle du repository du cours sur GitHub, par
+      exemple <code>github.com/my-username/sfdx-hardis-training</code>) est cloné, et <code>integration</code> et <code>uat</code>
+      nomment leurs orgs</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>helios-dev</code> listée comme <strong>Connected</strong> dans <strong>Orgs Manager</strong></li>
+</ul>
+<h2 id="les-etapes">Les étapes<a class="headerlink" href="#les-etapes" title="Permanent link">&para;</a></h2>
+<h3 id="1-demarrer-la-user-story">1. Démarrer la User Story<a class="headerlink" href="#1-demarrer-la-user-story" title="Permanent link">&para;</a></h3>
+<p>Sur la Welcome page, ouvrez le panneau <strong>DevOps Pipeline</strong> et faites défiler au-delà du diagramme
+jusqu'au <strong>Project Contribution Workflow</strong> <span class="pill-ref pill-ref-1">(1)</span>. Cliquez sur la carte <strong>New User Story</strong> <span class="pill-ref pill-ref-2">(2)</span>.</p>
+<p><a class="glightbox" data-type="image" href="../../../_assets/annotated/vscode/pipeline-cards-level1--new-user-story.png"><img alt="Les cartes de contribution du panneau DevOps Pipeline" src="../../../_assets/annotated/vscode/pipeline-cards-level1--new-user-story.png" /></a></p>
+<div class="admonition tip">
+<p class="admonition-title">Vous ne voyez pas les cartes ?</p>
+<p>Elles sont sous le diagramme des branches. Faites défiler vers le bas dans le panneau.</p>
+</div>
+<p>L'extension pose quatre questions, un écran à la fois. Chacune apparaît dans son propre panneau, et
+chaque réponse que vous donnez reste visible au-dessus de la question suivante : vous voyez donc
+toujours ce que vous lui avez dit. Avant la première, elle vous dit quelque chose au lieu de
+demander.</p>
+<h3 id="2-ou-va-le-travail">2. Où va le travail<a class="headerlink" href="#2-ou-va-le-travail" title="Permanent link">&para;</a></h3>
+<p>La première ligne sous l'en-tête indique <strong>Automatically selected target branch is integration</strong>
+<span class="pill-ref pill-ref-1">(1)</span>. Ce n'est pas une question, parce qu'il n'y a rien à choisir : ce projet déclare
+<code>integration</code> comme seule branche qu'un contributeur a le droit de cibler, dans
+<code>availableTargetBranches</code>. Le <a href="../../level-3-release-manager/3-1-configure-the-pipeline-up-to-production/">Lab 3.1</a> ajoute <code>preprod</code>, là où démarrent les correctifs urgents, et à
+partir de là la commande demande, en proposant les deux. Sous cette ligne, la première vraie question
+attend déjà. Deux de ses réponses, <span class="pill-ref pill-ref-2">(2)</span> et <span class="pill-ref pill-ref-3">(3)</span>, sont celles entre lesquelles vous choisissez :
+l'étape suivante parle d'elles.</p>
+<p><a class="glightbox" data-type="image" href="../../../_assets/annotated/vscode/work-new-story-type.png"><img alt="La première question de New User Story, sous la ligne qui nomme la branche cible" src="../../../_assets/annotated/vscode/work-new-story-type.png" /></a></p>
+<p>Vous ne devinez jamais où va votre travail : la commande le dit d'abord, l'écrit, et chaque étape
+suivante le relit.</p>
+<h3 id="3-de-quel-genre-de-travail-il-sagit">3. De quel genre de travail il s'agit<a class="headerlink" href="#3-de-quel-genre-de-travail-il-sagit" title="Permanent link">&para;</a></h3>
+<p><strong>What type of User Story do you want to create?</strong> Prenez <strong>Feature: a new capability or an
+improvement</strong> <span class="pill-ref pill-ref-2">(2)</span> : US-014 ajoute quelque chose qui n'était pas là. <strong>Fix: correct something that
+is broken</strong> <span class="pill-ref pill-ref-3">(3)</span> sert à corriger quelque chose de déjà livré. Les deux réponses sont formulées par
+ce projet, dans <code>branchPrefixChoices</code>.</p>
+<p>La troisième réponse, <strong>Retrofit</strong>, est celle du release manager. Elle fait redescendre un hotfix de
+production dans la pipeline, et le <a href="../../level-3-release-manager/3-7-hotfix-and-retrofit/">Lab 3.7</a>
+est l'endroit où elle sert. Ici, n'y touchez pas.</p>
+<p>La réponse devient la première partie du nom de votre branche, <code>features/</code> ou <code>fix/</code>, pour que
+quiconque regarde la liste des branches voie d'un coup d'œil quel genre de travail est en cours.</p>
+<h3 id="4-comment-lappeler">4. Comment l'appeler<a class="headerlink" href="#4-comment-lappeler" title="Permanent link">&para;</a></h3>
+<p><strong>What is the name of your new User Story?</strong> Tapez-le dans la zone <span class="pill-ref pill-ref-1">(1)</span> et cliquez sur
+<strong>Validate</strong> <span class="pill-ref pill-ref-2">(2)</span> :</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>US-014-panels-required
+</code></pre></div>
+<p><a class="glightbox" data-type="image" href="../../../_assets/annotated/vscode/work-new-story-name.png"><img alt="La question demandant le nom de la User Story" src="../../../_assets/annotated/vscode/work-new-story-name.png" /></a></p>
+<p>L'exemple grisé à l'intérieur de la zone n'est pas de la décoration : ce projet déclare un motif
+auquel les noms doivent correspondre, et l'exemple est un nom qui y correspond. Tapez autre chose,
+<code>Panels Required</code> par exemple, et la commande vous dit ce qu'elle attendait et redemande.</p>
+<h3 id="5-lorg-dans-laquelle-vous-allez-construire">5. L'org dans laquelle vous allez construire<a class="headerlink" href="#5-lorg-dans-laquelle-vous-allez-construire" title="Permanent link">&para;</a></h3>
+<p><strong>Which Salesforce org do you want to work in?</strong> Prenez <strong>Scratch org</strong> <span class="pill-ref pill-ref-1">(1)</span> : <code>helios-dev</code> en est
+une, créée au <a href="../1-2-create-your-dev-hub-scratch-orgs-and-pipeline/">Lab 1.2</a>.</p>
+<p><a class="glightbox" data-type="image" href="../../../_assets/annotated/vscode/work-new-org-type.png"><img alt="La question demandant dans quel genre d'org cette User Story se construit" src="../../../_assets/annotated/vscode/work-new-org-type.png" /></a></p>
+<p>Les autres réponses sont pour d'autres projets. <strong>Sandbox org with source tracking</strong> <span class="pill-ref pill-ref-2">(2)</span> est ce
+qu'utilisent la plupart des équipes, une sandbox de développeur distribuée par le release manager.
+Le source tracking veut dire que l'org tient à jour une note de ce qui y a changé depuis votre
+dernière synchronisation, ce qui vous évite de chercher. <strong>Current org</strong> <span class="pill-ref pill-ref-3">(3)</span> désigne l'org vers
+laquelle votre projet pointe, par son adresse : c'est <code>helios-dev</code> aujourd'hui, mais une adresse ne
+vous dit rien, ne comptez donc pas dessus. La dernière réponse sert à éditer directement les fichiers
+du projet, sans org du tout.</p>
+<p>Puis la liste des orgs qu'elle pourrait attacher. Prenez <strong>Reuse scratch org helios-dev</strong> <span class="pill-ref pill-ref-1">(1)</span>.</p>
+<p><a class="glightbox" data-type="image" href="../../../_assets/annotated/vscode/work-new-org.png"><img alt="La commande New User Story demandant dans quelle scratch org construire" src="../../../_assets/annotated/vscode/work-new-org.png" /></a></p>
+<p>C'est l'org que le <a href="../1-2-create-your-dev-hub-scratch-orgs-and-pipeline/">Lab 1.2</a> a remplie avec l'application Helios, et celle que vous allez modifier à la
+main dans Setup. La liste ne propose ni <code>helios-integration</code> ni <code>helios-uat</code> : la commande sait que
+ces deux-là appartiennent à des branches majeures, et construire directement dans une org partagée
+est exactement ce que toute cette façon de travailler existe pour empêcher.</p>
+<p>La réponse du milieu, <strong>Reuse current org</strong>, atterrirait sur la même org ici, par son adresse plutôt
+que par son nom. Prenez celle qui est nommée : une adresse ne vous dit rien sur l'org dont il s'agit.</p>
+<div class="admonition danger">
+<p class="admonition-title">Ne prenez jamais Create new scratch org ici</p>
+<p>C'est la première réponse, et sur un vrai projet c'est souvent la bonne. Ici, elle demanderait
+une quatrième scratch org à votre Dev Hub, et un Dev Hub Developer Edition n'en garde que trois
+vivantes : la commande échoue après une longue attente, sans rien à montrer.</p>
+</div>
+<h3 id="6-lire-ce-quelle-vous-dit-a-la-fin">6. Lire ce qu'elle vous dit à la fin<a class="headerlink" href="#6-lire-ce-quelle-vous-dit-a-la-fin" title="Permanent link">&para;</a></h3>
+<p>La commande ouvre <code>helios-dev</code> dans votre navigateur : vous pouvez laisser cet onglet pour le
+<a href="../1-4-build-a-custom-field-in-your-org/">Lab 1.4</a>. Puis elle se termine et affiche ce qu'elle a fait. Lisez-le plutôt que de le fermer.</p>
+<p><a class="glightbox" data-type="image" href="../../../_assets/annotated/vscode/work-new-completed.png"><img alt="La commande New User Story, terminée, avec son résumé" src="../../../_assets/annotated/vscode/work-new-completed.png" /></a></p>
+<ul>
+<li>la branche qu'elle a créée et sur laquelle elle vous a basculé <span class="pill-ref pill-ref-1">(1)</span></li>
+<li>la confirmation que vous êtes prêt à travailler dessus <span class="pill-ref pill-ref-2">(2)</span></li>
+<li>l'org qu'elle a attachée à cette User Story, par nom d'utilisateur et par URL <span class="pill-ref pill-ref-3">(3)</span></li>
+</ul>
+<p>Ces trois lignes méritent un coup d'œil à chaque fois. Un nom de branche qui n'est pas celui que vous
+attendiez, ou une org qui n'est pas celle que vous vouliez, c'est un problème qui coûte trente
+secondes maintenant et un après-midi plus tard.</p>
+<details>
+<summary>Sous le capot : ce que "New User Story" vient de faire</summary>
+<p>Le panneau a lancé :</p>
+<div class="highlight"><pre><span></span><code>sf hardis:work:new
+</code></pre></div>
+<p>qui a fait six choses, dans cet ordre :</p>
+<ol>
+<li><strong>Choisi la branche cible.</strong> Avec une seule entrée dans <code>availableTargetBranches</code> elle prend
+   celle-là sans demander ; avec plusieurs elle demande, et elle retient la réponse pour cette
+   branche</li>
+<li><strong>Récupéré et mis à jour la branche cible.</strong> <code>git fetch</code>, puis <code>git checkout integration</code> et
+   <code>git pull</code>, pour que votre branche parte de ce que l'équipe a maintenant plutôt que de ce que vous
+   aviez la semaine dernière. C'est l'étape que les gens sautent à la main et regrettent une semaine
+   plus tard</li>
+<li><strong>Créé la branche</strong>, nommée d'après vos réponses :
+   <code>git checkout -b features/US-014-panels-required</code></li>
+<li><strong>Écrit votre configuration utilisateur</strong> dans <code>config/user/.sfdx-hardis.&lt;votre-utilisateur&gt;.yml</code>,
+   en y notant l'org de cette User Story. Ce fichier est ignoré par git : il est à vous, personne
+   d'autre n'en a besoin</li>
+<li><strong>Sélectionné l'org</strong> comme cible par défaut des commandes suivantes</li>
+<li><strong>Ouvert l'org</strong> dans votre navigateur, puisque vous êtes sur le point d'y travailler</li>
+</ol>
+<p>La liste des scratch orgs est celle des orgs créées par votre Dev Hub par défaut, que le <a href="../1-2-create-your-dev-hub-scratch-orgs-and-pipeline/">Lab 1.2</a> a
+réglé sur <code>helios-prod</code>, moins celles nommées dans <code>config/branches/</code>. Rien ici n'amène ce qui est
+sur <code>integration</code> dans votre org : cela s'appelle un backpromote, et le Niveau 2 commence par là.</p>
+<p>Le préfixe de branche <code>features/</code> et le motif de nom viennent de <code>config/.sfdx-hardis.yml</code> :</p>
+<div class="highlight"><pre><span></span><code>branchPrefixChoices:
+  - value: features
+    title: "Feature: a new capability or an improvement"
+  - value: fix
+    title: "Fix: correct something that is broken"
+newTaskNameRegex: '^US-\d{3}-[a-z0-9-]+$'
+</code></pre></div>
+<p>Changez ces deux réglages et chaque contributeur reçoit des questions différentes. C'est ainsi qu'un
+projet impose une convention sans que personne ait à s'en souvenir.</p>
+<!-- command-links:start -->
+<p>Documentation de la commande : <a href="https://sfdx-hardis.cloudity.com/hardis/work/new/">hardis:work:new</a></p>
+<!-- command-links:end -->
+</details>
+<h2 id="ce-que-vous-devez-voir">Ce que vous devez voir<a class="headerlink" href="#ce-que-vous-devez-voir" title="Permanent link">&para;</a></h2>
+<p>Trois choses, toutes visibles sans quitter VS Code :</p>
+<ol>
+<li><strong>En bas à gauche de la barre d'état</strong> : la branche est maintenant
+   <code>features/US-014-panels-required</code></li>
+<li><strong>Le panneau sfdx-hardis, section Status</strong> : <em>Current Org</em> nomme la scratch org que vous avez
+   choisie. Il affiche le nom propre de l'org, celui que Salesforce a inventé, et non l'alias
+   <code>helios-dev</code> : vérifiez donc le nom d'utilisateur plutôt que de chercher l'alias que vous
+   connaissez</li>
+<li><strong>Le panneau DevOps Pipeline</strong> : <code>integration</code> et <code>uat</code>, inchangés. <strong>Votre nouvelle branche
+   n'y est pas, et c'est normal.</strong> Le diagramme dessine les branches majeures et les Pull Requests
+   ouvertes vers elles, et votre branche n'a encore ni Pull Request ni org à elle. Elle apparaîtra
+   au <a href="../1-6-pull-request-deployment-check-and-merge/">Lab 1.6</a>, au moment où vous ouvrirez la
+   Pull Request</li>
+</ol>
+<p>Si les deux premières se contredisent, arrêtez-vous et corrigez-le maintenant plutôt qu'après avoir
+construit quelque chose.</p>
+<details class="troubleshoot">
+<summary>En cas de problème</summary>
+<p><strong>La commande refuse le nom.</strong>
+Le motif qu'utilise ce projet est <code>US-014-panels-required</code> : trois chiffres, puis des mots en
+minuscules séparés par des tirets. <code>US14-PanelsRequired</code> est rejeté exprès.</p>
+<p><strong>Un fichier que vous éditiez a disparu.</strong>
+Vous avez modifié quelque chose avant de démarrer, et <code>hardis:work:new</code> n'emporte jamais du travail
+qui traîne sur une branche neuve : il le met de côté dans un <em>stash</em>, et le dit dans son panneau, en
+nommant les fichiers. Pour les récupérer sur la nouvelle branche : panneau <strong>Source Control</strong>, le
+menu <strong>...</strong> en haut, <strong>Stash</strong>, puis <strong>Pop Latest Stash</strong>.</p>
+<p><strong>La liste des orgs n'affiche pas <code>helios-dev</code>.</strong>
+La scratch org a expiré : elles vivent 30 jours. Recliquez sur <strong>Training: Level 1 &gt; Set up my
+training environment</strong>. Il crée une nouvelle <code>helios-dev</code> avec l'application Helios, et laisse tout
+le reste en l'état.</p>
+<p><strong>Elle échoue avec un message sur la limite de scratch orgs.</strong>
+Vous avez pris <strong>Create new scratch org</strong>. Rien n'a été créé et rien n'est cassé : redémarrez la User
+Story et prenez <strong>Reuse scratch org helios-dev</strong>.</p>
+</details>
+<h2 id="verifiez-votre-travail">Vérifiez votre travail<a class="headerlink" href="#verifiez-votre-travail" title="Permanent link">&para;</a></h2>
+<p>Welcome page &gt; <strong>Training: Level 1</strong> &gt; <strong>Check my work</strong>, puis choisissez le <strong>Lab 1.3</strong>.</p>
+<p>Il cherche votre branche de story, <code>features/US-014-...</code>, la seule chose que ce lab laisse derrière
+lui. Votre travail n'a pas encore atteint <code>integration</code>, et rien ici ne s'y attend : c'est le
+<a href="../1-6-pull-request-deployment-check-and-merge/">Lab 1.6</a>.</p>
+<div class="admonition tip">
+<p class="admonition-title">Dans Agentforce Vibes, si le panneau dit que le contenu est bloqué</p>
+<p>Un IDE dans le navigateur perd parfois le cadre dans lequel tourne un panneau, et affiche <em>the
+content is blocked</em> à la place de la commande. Rien ne cloche dans votre travail : rechargez
+l'onglet du navigateur et recliquez sur <strong>Check my work</strong>. Cela arrive à n'importe quel
+panneau, pas seulement à celui-ci.</p>
+</div>
+<h2 id="pour-aller-plus-loin">Pour aller plus loin<a class="headerlink" href="#pour-aller-plus-loin" title="Permanent link">&para;</a></h2>
+<ul>
+<li><a href="https://sfdx-hardis.cloudity.com/salesforce-devops-create-new-user-story/">Démarrer une User Story</a></li>
+<li><a href="https://sfdx-hardis.cloudity.com/salesforce-devops-use-home/">La boucle du contributeur en une page</a></li>
+</ul>
+<p><a class="md-button md-button--primary" href="../1-4-build-a-custom-field-in-your-org/">Suite : Lab 1.4 - Construire un champ personnalisé dans votre org Salesforce</a></p>
+
+
+
+
+
+
+
+
+
+  
+  
+
+
+
+  
+
+
+
+
+  <h2 id="__comments">Questions and comments</h2>
+  <script src="https://giscus.app/client.js"
+          data-repo="hardisgroupcom/sfdx-hardis-training"
+          data-repo-id="R_kgDOUcjgQw"
+          data-category="Q&amp;A"
+          data-category-id="DIC_kwDOUcjgQ84DF-lC"
+          data-mapping="pathname"
+          data-strict="1"
+          data-reactions-enabled="1"
+          data-emit-metadata="0"
+          data-input-position="top"
+          data-theme="preferred_color_scheme"
+          data-lang="en"
+          data-loading="lazy"
+          crossorigin="anonymous"
+          async>
+  </script>
+
+  <script>
+    // Keep the Giscus iframe in sync with the palette toggle. It is a
+    // cross-origin frame, so its theme can only be changed by postMessage.
+    (function () {
+      if (window.__giscusThemeSync) {
+        return;
+      }
+      window.__giscusThemeSync = true;
+      var giscusTheme = function () {
+        var scheme = document.body.getAttribute("data-md-color-scheme");
+        return scheme === "slate" ? "dark" : "light";
+      };
+      var apply = function () {
+        var frame = document.querySelector("iframe.giscus-frame");
+        if (frame && frame.contentWindow) {
+          frame.contentWindow.postMessage(
+            { giscus: { setConfig: { theme: giscusTheme() } } },
+            "https://giscus.app"
+          );
+        }
+      };
+      new MutationObserver(apply).observe(document.body, {
+        attributes: true,
+        attributeFilter: ["data-md-color-scheme"]
+      });
+      window.addEventListener("message", function (event) {
+        if (event.origin === "https://giscus.app") {
+          apply();
+        }
+      });
+    })();
+  </script>
+
+                
+              </article>
+            </div>
+          
+          
+  <script>var tabs=__md_get("__tabs");if(Array.isArray(tabs))e:for(var set of document.querySelectorAll(".tabbed-set")){var labels=set.querySelector(".tabbed-labels");for(var tab of tabs)for(var label of labels.getElementsByTagName("label"))if(label.innerText.trim()===tab){var input=document.getElementById(label.htmlFor);input.checked=!0;continue e}}</script>
+
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-circle-arrow-up" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="m16 12-4-4-4 4M12 16V8"/></svg>
+  Retour en haut de la page
+</button>
+        
+      </main>
+      
+        
+
+
+
+
+<footer class="md-footer">
+  
+    
+      
+      <nav class="md-footer__inner md-grid" aria-label="Pied de page" >
+        
+          
+          <a href="../1-2-create-your-dev-hub-scratch-orgs-and-pipeline/" class="md-footer__link md-footer__link--prev" aria-label="Précédent: Lab 1.2 - Créer votre Dev Hub, vos scratch orgs et votre pipeline CI&#x2f;CD">
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-arrow-left" viewBox="0 0 24 24"><path d="m12 19-7-7 7-7M19 12H5"/></svg>
+            </div>
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Précédent
+              </span>
+              <div class="md-ellipsis">
+                Lab 1.2 - Créer votre Dev Hub, vos scratch orgs et votre pipeline CI/CD
+              </div>
+            </div>
+          </a>
+        
+        
+          
+          <a href="../1-4-build-a-custom-field-in-your-org/" class="md-footer__link md-footer__link--next" aria-label="Suivant: Lab 1.4 - Construire un champ personnalisé dans votre org Salesforce">
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Suivant
+              </span>
+              <div class="md-ellipsis">
+                Lab 1.4 - Construire un champ personnalisé dans votre org Salesforce
+              </div>
+            </div>
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-arrow-right" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+            </div>
+          </a>
+        
+      </nav>
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      Cloudity and friends
+    </div>
+  
+  
+</div>
+      
+        
+<div class="md-social">
+  
+    
+    
+    
+    
+    <a href="https://github.com/hardisgroupcom/sfdx-hardis" target="_blank" rel="noopener" title="sfdx-hardis on GitHub" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.3.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2026 Fonticons, Inc.--><path fill="currentColor" d="M216.5 362.5c-66-8-112.5-55.5-112.5-117 0-25 9-52 24-70-6.5-16.5-5.5-51.5 2-66 20-2.5 47 8 63 22.5 19-6 39-9 63.5-9s44.5 3 62.5 8.5c15.5-14 43-24.5 63-22 7 13.5 8 48.5 1.5 65.5 16 19 24.5 44.5 24.5 70.5 0 61.5-46.5 108-113.5 116.5 17 11 28.5 35 28.5 62.5v52c0 15 12.5 23.5 27.5 17.5C441 459.5 512 369 512 257 512 115.5 397 0 255.5 0S0 115.5 0 257c0 111 70.5 203 165.5 237.5 13.5 5 26.5-4 26.5-17.5v-40c-7 3-16 5-24 5-33 0-52.5-18-66.5-51.5-5.5-13.5-11.5-21.5-23-23-6-.5-8-3-8-6 0-6 10-10.5 20-10.5 14.5 0 27 9 40 27.5 10 14.5 20.5 21 33 21s20.5-4.5 32-16c8.5-8.5 15-16 21-21"/></svg>
+    </a>
+  
+    
+    
+    
+    
+    <a href="https://sfdx-hardis.cloudity.com/" target="_blank" rel="noopener" title="sfdx-hardis documentation" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.3.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2026 Fonticons, Inc.--><path fill="currentColor" d="M384 512H96c-53 0-96-43-96-96V96C0 43 43 0 96 0h304c26.5 0 48 21.5 48 48v288c0 20.9-13.4 38.7-32 45.3V448c17.7 0 32 14.3 32 32s-14.3 32-32 32zM96 384c-17.7 0-32 14.3-32 32s14.3 32 32 32h256v-64zm32-232c0 13.3 10.7 24 24 24h176c13.3 0 24-10.7 24-24s-10.7-24-24-24H152c-13.3 0-24 10.7-24 24m24 72c-13.3 0-24 10.7-24 24s10.7 24 24 24h176c13.3 0 24-10.7 24-24s-10.7-24-24-24z"/></svg>
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog" role="status" aria-atomic="true">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      
+      
+        
+        
+      <script id="__config" type="application/json">{"annotate":null,"base":"../../..","features":["content.action.edit","content.code.copy","content.tabs.link","navigation.instant","navigation.tracking","navigation.top","navigation.footer","search.suggest","search.highlight","toc.follow"],"redirect":null,"search":"../../../assets/javascripts/workers/search.7d14d953.min.js","tags":null,"translations":{"clipboard.copied":"Copié dans le presse-papier","clipboard.copy":"Copier dans le presse-papier","clipboard.error":"Could not copy to clipboard","search.result.more.one":"1 de plus sur cette page","search.result.more.other":"# de plus sur cette page","search.result.none":"Aucun document trouvé","search.result.one":"1 document trouvé","search.result.other":"# documents trouvés","search.result.placeholder":"Taper pour démarrer la recherche","search.result.term.missing":"Non trouvé","select.version":"Sélectionner la version"},"version":null}</script>
+    
+    
+      <script src="../../../assets/javascripts/bundle.67a597eb.min.js"></script>
+      
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/tablesort/5.2.1/tablesort.min.js"></script>
+      
+        <script src="../../../theme/javascripts/tables.js"></script>
+      
+        <script src="../../../theme/javascripts/lightbox.js"></script>
+      
+        <script src="../../../theme/javascripts/after-footer.js"></script>
+      
+        <script src="../../../theme/javascripts/language-switch.js"></script>
+      
+    
+  </body>
+</html>

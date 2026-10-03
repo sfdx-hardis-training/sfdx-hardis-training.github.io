@@ -1,0 +1,2478 @@
+
+<!doctype html>
+<html lang="fr" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Mettez en place le monitoring nocturne sfdx-hardis sur votre org Salesforce de production, lisez son premier rapport, et décidez quelles alertes méritent d'être reçues.">
+      
+      
+      
+        <link rel="canonical" href="https://sfdx-hardis-training.github.io/fr/level-3-release-manager/3-8-monitor-your-production-org/">
+      
+      
+        <link rel="prev" href="../3-7-hotfix-and-retrofit/">
+      
+      
+        <link rel="next" href="../3-9-generate-the-project-documentation/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../../theme/images/badge-mark.svg">
+      <meta name="generator" content="zensical-0.0.67">
+    
+    
+      
+        <title>Lab 3.8 - Monitorer votre org de production - Salesforce DevOps with sfdx-hardis</title>
+      
+    
+    
+      
+        
+      
+      <link rel="stylesheet" href="../../../assets/stylesheets/modern/main.4ae390e2.min.css">
+      
+        
+          
+        
+        <link rel="stylesheet" href="../../../assets/stylesheets/modern/palette.96d1a7e4.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+    
+    
+      <link rel="stylesheet" href="../../../theme/stylesheets/extra.css">
+    
+    <script>__md_scope=new URL("../../..",location),__md_scope.pathname.endsWith("/")||(__md_scope=new URL(__md_scope.pathname+"/",location)),__md_hash=e=>[...e].reduce(((e,t)=>(e<<5)-e+t.charCodeAt(0)),0),__md_get=(e,t=localStorage,_=__md_scope)=>JSON.parse(t.getItem(_.pathname+"."+e)),__md_set=(e,t,_=localStorage,a=__md_scope)=>{try{_.setItem(a.pathname+"."+e,JSON.stringify(t))}catch(e){}},document.documentElement.setAttribute("data-platform",navigator.platform)</script>
+    
+      
+  
+
+
+  
+  
+
+<script id="__analytics">function __md_analytics(){function e(){dataLayer.push(arguments)}window.dataLayer=window.dataLayer||[],e("js",new Date),e("config","G-SE20CZ58E1"),document.addEventListener("DOMContentLoaded",(function(){document.forms.search&&document.forms.search.query.addEventListener("blur",(function(){this.value&&e("event","search",{search_term:this.value})}));document$.subscribe((function(){var t=document.forms.feedback;if(void 0!==t)for(var a of t.querySelectorAll("[type=submit]"))a.addEventListener("click",(function(a){a.preventDefault();var n=document.location.pathname,d=this.getAttribute("data-md-value");e("event","feedback",{page:n,data:d}),t.firstElementChild.disabled=!0;var r=t.querySelector(".md-feedback__note [data-md-value='"+d+"']");r&&(r.hidden=!1)})),t.hidden=!1})),location$.subscribe((function(t){e("config","G-SE20CZ58E1",{page_path:t.pathname})}))}));var t=document.createElement("script");t.async=!0,t.src="https://www.googletagmanager.com/gtag/js?id=G-SE20CZ58E1",document.getElementById("__analytics").insertAdjacentElement("afterEnd",t)}</script>
+  
+    <script>"undefined"!=typeof __md_analytics&&__md_analytics()</script>
+  
+
+    
+    
+  
+  
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Salesforce DevOps with sfdx-hardis">
+  <meta property="og:locale" content="fr">
+  <meta property="og:title" content="Lab 3.8 - Monitorer votre org de production">
+  <meta property="og:description" content="Mettez en place le monitoring nocturne sfdx-hardis sur votre org Salesforce de production, lisez son premier rapport, et décidez quelles alertes méritent d'être reçues.">
+  <meta property="og:url" content="https://sfdx-hardis-training.github.io/fr/level-3-release-manager/3-8-monitor-your-production-org/">
+  <meta property="og:image" content="https://sfdx-hardis-training.github.io/_assets/social/course.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="Lab 3.8 - Monitorer votre org de production">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Lab 3.8 - Monitorer votre org de production">
+  <meta name="twitter:description" content="Mettez en place le monitoring nocturne sfdx-hardis sur votre org Salesforce de production, lisez son premier rapport, et décidez quelles alertes méritent d'être reçues.">
+  <meta name="twitter:image" content="https://sfdx-hardis-training.github.io/_assets/social/course.png">
+
+  <script>
+    (function () {
+      var here = "fr";
+      var alternates = {"en":"en/level-3-release-manager/3-8-monitor-your-production-org/","fr":"fr/level-3-release-manager/3-8-monitor-your-production-org/"};
+      var base = new URL("../../.." || ".", window.location.href).pathname;
+      try {
+        var asked = new URLSearchParams(window.location.search).get("lang");
+        if (asked) {
+          document.cookie =
+            "course-language=" + encodeURIComponent(asked) + "; path=" + base + "; max-age=31536000; samesite=lax";
+        }
+        var cookie = document.cookie.split("; ").filter(function (one) {
+          return one.indexOf("course-language=") === 0;
+        })[0];
+        if (!cookie) {
+          return;
+        }
+        var preferred = asked || decodeURIComponent(cookie.slice("course-language=".length));
+        if (!preferred || preferred === here) {
+          return;
+        }
+        var target = alternates[preferred];
+        if (typeof target !== "string") {
+          return;
+        }
+        var url = new URL(target, new URL(base, window.location.href)).pathname;
+        if (url !== window.location.pathname) {
+          window.location.replace(url + window.location.search + window.location.hash);
+        }
+      } catch (error) {
+        // A browser with no cookies stays where it is, which is the page asked for
+      }
+    })();
+  </script>
+
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="custom" data-md-color-accent="custom">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer" aria-label="Navigation"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#lab-38-monitorer-votre-org-de-production" class="md-skip">
+          Aller au contenu
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+        <aside class="md-banner">
+          <div class="md-banner__inner md-grid md-typeset">
+            
+            
+      <strong>Ce niveau est en phase de relecture.</strong> Il est complet et a été déroulé de bout
+      en bout, et maintenant il a besoin de vous. Si une étape ne fonctionne pas, ou si l'écran ne
+      correspond pas à ce que dit la page, merci de
+      <a href="#__comments">laisser un commentaire en bas de cette page</a>. C'est le moyen le plus
+      rapide de faire corriger le problème, et cela aide la personne suivante.
+    
+          </div>
+          
+        </aside>
+      
+    </div>
+    
+    
+      
+
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="En-tête">
+    <a href="/fr/" title="Salesforce DevOps with sfdx-hardis" class="md-header__button md-logo" aria-label="Salesforce DevOps with sfdx-hardis" data-md-component="logo">
+      
+  <img src="../../../theme/images/cloudity-text-logo-white.svg" alt="Salesforce DevOps with sfdx-hardis">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer" aria-label="Navigation">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-menu" viewBox="0 0 24 24"><path d="M4 5h16M4 12h16M4 19h16"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Salesforce DevOps with sfdx-hardis
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Lab 3.8 - Monitorer votre org de production
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="none" data-md-color-scheme="default" data-md-color-primary="custom" data-md-color-accent="custom"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="none" data-md-color-scheme="slate" data-md-color-primary="custom" data-md-color-accent="custom"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+      
+
+
+
+  
+
+  
+    
+    
+  
+
+<div class="md-header__option">
+  <div class="md-select md-select--language">
+    <button class="md-header__button md-header__button--flag" aria-label="Sélectionner la langue">
+      
+        <img src="../../../theme/images/flags/fr.svg" alt="Français" class="md-select__flag md-select__flag--current">
+      
+    </button>
+    <div class="md-select__inner">
+      <ul class="md-select__list">
+        
+          
+          <li class="md-select__item"><a href="../../../en/level-3-release-manager/3-8-monitor-your-production-org/" hreflang="en" data-course-home="/" class="md-select__link">
+              
+                <img src="../../../theme/images/flags/gb.svg" alt="" class="md-select__flag">
+              
+              English
+            </a>
+          </li>
+        
+          
+          <li class="md-select__item"><a href="././" hreflang="fr" data-course-home="/fr/" class="md-select__link">
+              
+                <img src="../../../theme/images/flags/fr.svg" alt="" class="md-select__flag">
+              
+              Français
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</div>
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search" aria-label="Recherche">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-search" viewBox="0 0 24 24"><path d="m21 21-4.34-4.34"/><circle cx="11" cy="11" r="8"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog" aria-label="Recherche">
+  <button type="button" class="md-search__button">
+    Recherche
+  </button>
+</div>
+      
+    
+    <div class="md-header__source">
+      
+        <a href="https://github.com/hardisgroupcom/sfdx-hardis-training" title="Aller au dépôt" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.3.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2026 Fonticons, Inc.--><path fill="currentColor" d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    hardisgroupcom/sfdx-hardis-training
+  </div>
+</a>
+      
+    </div>
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0" data-course-lang="fr" data-course-base="../../.." data-course-alt-en="en/level-3-release-manager/3-8-monitor-your-production-org/" data-course-alt-fr="fr/level-3-release-manager/3-8-monitor-your-production-org/">
+  <label class="md-nav__title" for="__drawer">
+    <a href="/fr/" title="Salesforce DevOps with sfdx-hardis" class="md-nav__button md-logo" aria-label="Salesforce DevOps with sfdx-hardis" data-md-component="logo">
+      
+  <img src="../../../theme/images/cloudity-text-logo-white.svg" alt="Salesforce DevOps with sfdx-hardis">
+
+    </a>
+    Salesforce DevOps with sfdx-hardis
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/hardisgroupcom/sfdx-hardis-training" title="Aller au dépôt" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.3.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2026 Fonticons, Inc.--><path fill="currentColor" d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    hardisgroupcom/sfdx-hardis-training
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+      
+    
+      
+      
+      
+    
+      
+      
+      
+    
+      
+      
+      
+    
+      
+      
+      
+    
+      
+      
+      
+    
+      
+      
+      
+    
+      
+      
+      
+        
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Accueil
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+      
+    
+      
+      
+      
+        
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_9" >
+        
+          
+          <label class="md-nav__link" for="__nav_9" id="__nav_9_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Niveau 1 - Contributeur Salesforce DevOps, les bases
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        
+          <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_9_label" aria-expanded="false">
+            <label class="md-nav__title" for="__nav_9">
+              <span class="md-nav__icon md-icon"></span>
+              
+  
+  Niveau 1 - Contributeur Salesforce DevOps, les bases
+
+            </label>
+            <ul class="md-nav__list" data-md-scrollfix>
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../level-1-contributor-basics/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Commencer ici
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../level-1-contributor-basics/1-1-install-vs-code-and-sfdx-hardis/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Lab 1.1 - Installer VS Code, Git et sfdx-hardis
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../level-1-contributor-basics/1-2-create-your-dev-hub-scratch-orgs-and-pipeline/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Lab 1.2 - Créer votre Dev Hub, vos scratch orgs et votre pipeline CI/CD
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../level-1-contributor-basics/1-3-start-a-user-story-on-a-git-branch/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Lab 1.3 - Démarrer une User Story sur sa propre branche Git
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../level-1-contributor-basics/1-4-build-a-custom-field-in-your-org/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Lab 1.4 - Construire un champ personnalisé dans votre org Salesforce
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../level-1-contributor-basics/1-5-retrieve-commit-and-publish-your-changes/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Lab 1.5 - Récupérer, commiter et publier vos modifications Salesforce
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../level-1-contributor-basics/1-6-pull-request-deployment-check-and-merge/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Lab 1.6 - Ouvrir une Pull Request, passer le contrôle de déploiement, merger
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../level-1-contributor-basics/1-7-capstone-deliver-a-user-story-on-your-own/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Lab 1.7 - Épreuve finale : livrer une User Story tout seul
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+            </ul>
+          </nav>
+        
+      
+    </li>
+  
+
+      
+    
+      
+      
+      
+        
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_10" >
+        
+          
+          <label class="md-nav__link" for="__nav_10" id="__nav_10_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Niveau 2 - Contributeur Salesforce DevOps avancé
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        
+          <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_10_label" aria-expanded="false">
+            <label class="md-nav__title" for="__nav_10">
+              <span class="md-nav__icon md-icon"></span>
+              
+  
+  Niveau 2 - Contributeur Salesforce DevOps avancé
+
+            </label>
+            <ul class="md-nav__list" data-md-scrollfix>
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../level-2-contributor-advanced/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Commencer ici
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../level-2-contributor-advanced/2-1-backpromote-your-teammates-work/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Lab 2.1 - Backpromote : remettre votre org de dev au niveau de l'équipe
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../level-2-contributor-advanced/2-2-fix-a-missing-dependency-deployment-error/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Lab 2.2 - Corriger une erreur de déploiement due à une dépendance manquante
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../level-2-contributor-advanced/2-3-fix-broken-records-with-an-apex-deployment-action/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Lab 2.3 - Réparer des enregistrements cassés avec une deployment action Apex
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../level-2-contributor-advanced/2-4-ship-reference-data-and-a-batch-with-deployment-actions/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Lab 2.4 - Livrer des données de référence et un batch avec des deployment actions
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../level-2-contributor-advanced/2-5-pass-code-quality-and-apex-test-coverage/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Lab 2.5 - Passer la barrière de qualité de code et la couverture de tests Apex
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../level-2-contributor-advanced/2-6-permission-sets-and-profiles/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Lab 2.6 - Permission sets, profils, et pourquoi une autorisation disparaît
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../level-2-contributor-advanced/2-7-resolve-a-git-merge-conflict/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Lab 2.7 - Résoudre un conflit de merge Git avec un collègue
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../level-2-contributor-advanced/2-8-recover-from-committing-the-wrong-metadata/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Lab 2.8 - Se remettre d'avoir commité la mauvaise métadonnée
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../level-2-contributor-advanced/2-9-capstone-deliver-a-user-story-that-has-it-all/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Lab 2.9 - Épreuve finale : livrer une User Story qui a tout
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+            </ul>
+          </nav>
+        
+      
+    </li>
+  
+
+      
+    
+      
+      
+      
+        
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_11" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_11" id="__nav_11_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Niveau 3 - Release manager Salesforce DevOps
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        
+          <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_11_label" aria-expanded="true">
+            <label class="md-nav__title" for="__nav_11">
+              <span class="md-nav__icon md-icon"></span>
+              
+  
+  Niveau 3 - Release manager Salesforce DevOps
+
+            </label>
+            <ul class="md-nav__list" data-md-scrollfix>
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Commencer ici
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../3-1-configure-the-pipeline-up-to-production/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Lab 3.1 - Configurer la pipeline CI/CD jusqu'à la production
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../3-2-review-a-contributor-pull-request/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Lab 3.2 - Relire et merger la Pull Request d'un contributeur
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../3-3-deploy-to-integration-and-read-the-log/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Lab 3.3 - Lire le log de déploiement, et ce que .forceignore lui cache
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../3-4-merge-colliding-pull-requests/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Lab 3.4 - Trois Pull Requests se percutent : choisir l'ordre de merge
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../3-5-promote-to-uat-and-write-release-notes/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Lab 3.5 - Promouvoir en UAT et écrire les notes de version
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../3-6-release-to-production-and-read-dora-metrics/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Lab 3.6 - Livrer en production et lire vos métriques DORA
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../3-7-hotfix-and-retrofit/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Lab 3.7 - La production est cassée : hotfix et retrofit
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Lab 3.8 - Monitorer votre org de production
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="././" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Lab 3.8 - Monitorer votre org de production
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+
+<nav class="md-nav md-nav--secondary" aria-label="Table des matières">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table des matières
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#la-situation" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        La situation
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#avant-de-commencer" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Avant de commencer
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#les-etapes" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Les étapes
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Les étapes">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-creer-dabord-le-second-repository-vous-meme" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        1. Créer d'abord le second repository, vous-même
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-lancer-la-configuration" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        2. Lancer la configuration
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-choisir-ce-quil-surveille" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        3. Choisir ce qu'il surveille
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#4-le-lancer-une-fois-a-la-main" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        4. Le lancer une fois à la main
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#5-lire-le-premier-rapport" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        5. Lire le premier rapport
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#6-decider-ce-qui-est-du-bruit-ce-qui-est-la-vraie-competence" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        6. Décider ce qui est du bruit, ce qui est la vraie compétence
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#7-router-une-notification" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        7. Router une notification
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#8-le-rendre-trouvable" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        8. Le rendre trouvable
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#ce-que-vous-devez-voir" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Ce que vous devez voir
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#verifiez-votre-travail" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Vérifiez votre travail
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#pour-aller-plus-loin" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Pour aller plus loin
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../3-9-generate-the-project-documentation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Lab 3.9 - Générer la documentation du projet Salesforce
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../3-10-promote-a-subset-with-promotion-branches/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Lab 3.10 - Promouvoir un sous-ensemble avec les promotion branches (Beta)
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../3-11-capstone-run-a-weekly-release-cycle/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Lab 3.11 - Épreuve finale : mener un cycle de release hebdomadaire
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+            </ul>
+          </nav>
+        
+      
+    </li>
+  
+
+      
+    
+      
+      
+      
+        
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../help/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Aide
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+      
+    
+      
+      
+      
+        
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../BACKLOG/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Backlog
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+      
+    
+      
+      
+      
+        
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../badges/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Badges
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+      
+    
+      
+      
+      
+        
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="https://sfdx-hardis.cloudity.com/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  sfdx-hardis documentation
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+      
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  
+                    
+                    
+                    
+                      
+                    
+                    
+                      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+                      <div class="md-sidebar-button__wrapper">
+                        <label class="md-sidebar-button" for="__toc"></label>
+                      </div>
+                    
+                  
+                  <div class="md-sidebar__inner">
+                    
+
+
+<nav class="md-nav md-nav--secondary" aria-label="Table des matières">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table des matières
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#la-situation" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        La situation
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#avant-de-commencer" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Avant de commencer
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#les-etapes" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Les étapes
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Les étapes">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-creer-dabord-le-second-repository-vous-meme" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        1. Créer d'abord le second repository, vous-même
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-lancer-la-configuration" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        2. Lancer la configuration
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-choisir-ce-quil-surveille" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        3. Choisir ce qu'il surveille
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#4-le-lancer-une-fois-a-la-main" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        4. Le lancer une fois à la main
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#5-lire-le-premier-rapport" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        5. Lire le premier rapport
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#6-decider-ce-qui-est-du-bruit-ce-qui-est-la-vraie-competence" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        6. Décider ce qui est du bruit, ce qui est la vraie compétence
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#7-router-une-notification" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        7. Router une notification
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#8-le-rendre-trouvable" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        8. Le rendre trouvable
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#ce-que-vous-devez-voir" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Ce que vous devez voir
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#verifiez-votre-travail" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Vérifiez votre travail
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#pour-aller-plus-loin" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Pour aller plus loin
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+  
+    <a href="https://github.com/hardisgroupcom/sfdx-hardis-training/edit/main/labs/fr/level-3-release-manager/3-8-monitor-your-production-org.md" title="Editer cette page" class="md-content__button md-icon" rel="edit">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-file-pen" viewBox="0 0 24 24"><path d="M12.659 22H18a2 2 0 0 0 2-2V8a2.4 2.4 0 0 0-.706-1.706l-3.588-3.588A2.4 2.4 0 0 0 14 2H6a2 2 0 0 0-2 2v9.34"/><path d="M14 2v5a1 1 0 0 0 1 1h5M10.378 12.622a1 1 0 0 1 3 3.003L8.36 20.637a2 2 0 0 1-.854.506l-2.867.837a.5.5 0 0 1-.62-.62l.836-2.869a2 2 0 0 1 .506-.853z"/></svg>
+    </a>
+  
+  
+
+
+<h1 id="lab-38-monitorer-votre-org-de-production">Lab 3.8 - Monitorer votre org de production<a class="headerlink" href="#lab-38-monitorer-votre-org-de-production" title="Permanent link">&para;</a></h1>
+<p><strong>Niveau</strong> : 3 Release Manager</p>
+<p><strong>Durée</strong> : ~35 min</p>
+<p><strong>Vous allez</strong> : mettre en place un monitoring nocturne sur la production, lire son premier rapport,
+et décider de ce qui mérite qu'on vous en parle.</p>
+<h2 id="la-situation">La situation<a class="headerlink" href="#la-situation" title="Permanent link">&para;</a></h2>
+<p>Vous savez maintenant ce qui a été livré et quand. Vous ne savez pas dans quel état est la production
+entre deux livraisons.</p>
+<p>Sur une org que Victor a tenue deux ans, cela voudrait dire : des utilisateurs inactifs qui occupent
+encore des licences, une Connected App dont personne ne se souvient d'avoir autorisé, de l'Apex sur
+une version d'API vieille de quatre ans, un job planifié en échec toutes les nuits depuis mars.
+Personne ne regarde, parce que regarder suppose de penser à regarder.</p>
+<p>Le monitoring est la part du métier de release manager qui se joue quand rien n'est livré.</p>
+<h2 id="avant-de-commencer">Avant de commencer<a class="headerlink" href="#avant-de-commencer" title="Permanent link">&para;</a></h2>
+<ul class="task-list">
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <a href="../3-7-hotfix-and-retrofit/">Lab 3.7</a> terminé</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>helios-prod</code> connectée dans <strong>Orgs Manager</strong></li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> Un repository GitHub vide à vous, avec <code>monitoring</code> dans son nom</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> Environ 20 de ces 35 minutes seront la première exécution du monitoring</li>
+</ul>
+<h2 id="les-etapes">Les étapes<a class="headerlink" href="#les-etapes" title="Permanent link">&para;</a></h2>
+<h3 id="1-creer-dabord-le-second-repository-vous-meme">1. Créer d'abord le second repository, vous-même<a class="headerlink" href="#1-creer-dabord-le-second-repository-vous-meme" title="Permanent link">&para;</a></h3>
+<p>Le monitoring vit <strong>toujours</strong> dans son propre repository, séparé de celui depuis lequel votre
+pipeline déploie. Pas en général, pas par préférence : toujours. C'est la partie que les gens
+ratent, et c'est celle qui coûte cher à défaire une fois qu'une année de commits nocturnes s'est
+empilée au mauvais endroit.</p>
+<p><code>sf hardis:org:configure:monitoring</code> ne crée pas ce repository pour vous. Il vérifie le nom de celui
+dans lequel il se trouve, et si ce nom ne contient pas <code>monitoring</code> il demande <strong>Do you use a
+separate repository for your monitoring deployment sources?</strong>, avec deux réponses :</p>
+<ul>
+<li><em>Yes, I'm sure because I know what I'm doing, like Roman 😊</em>, qui continue quoi qu'il arrive</li>
+<li><em>Mmmmm no, let me create another repo with the word "monitoring" in its name !</em>, qui arrête la
+  commande</li>
+</ul>
+<p><strong>Prenez la seconde.</strong> La question existe parce que la commande ne peut pas être certaine à partir
+d'un nom seul, pas parce que les deux sont des alternatives. Dans un repository dont le nom contient
+bien <code>monitoring</code>, la question n'est jamais posée, et c'est l'état dans lequel vous voulez être
+avant de commencer.</p>
+<p>Donc, avant toute chose : créez un repository privé vide appelé <code>sfdx-hardis-training-monitoring</code>
+sur GitHub. Clonez-le ensuite comme le <a href="../../level-1-contributor-basics/1-2-create-your-dev-hub-scratch-orgs-and-pipeline/">Lab
+1.2</a> a cloné
+celui-ci : <strong>File &gt; Open Folder</strong> sur un dossier vide, panneau <strong>Source Control</strong>, <strong>Clone
+Repository</strong>, et collez l'adresse du bouton vert <strong>Code</strong> de votre nouveau repository. Rien dans ce
+lab ne se passe dans le repository où vous travaillez depuis le début du cours.</p>
+<p>Pourquoi deux repositories, et c'est la même raison que sur les vrais projets :</p>
+<table>
+<thead>
+<tr>
+<th>Raison</th>
+<th>Détail</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Des permissions différentes</td>
+<td>Le monitoring détient les identifiants de la production. Chaque contributeur a accès au repository de sources, et n'a pas besoin de celui-ci</td>
+</tr>
+<tr>
+<td>Un rythme différent</td>
+<td>Le monitoring commite toutes les nuits. Mélanger cet historique avec celui de vos sources rend les deux illisibles</td>
+</tr>
+<tr>
+<td>Un contenu différent</td>
+<td>Le monitoring stocke des sauvegardes nocturnes de l'org. Il grossit, et il ne doit pas grossir dans le repository que les gens clonent tous les jours</td>
+</tr>
+</tbody>
+</table>
+<p>Votre repository de sources et votre repository de monitoring sont deux choses différentes avec deux
+publics différents. Si vous vous surprenez sur le point de répondre oui à cette question, le bon
+mouvement est de vous arrêter et de créer le second repository, si tard que cela paraisse.</p>
+<h3 id="2-lancer-la-configuration">2. Lancer la configuration<a class="headerlink" href="#2-lancer-la-configuration" title="Permanent link">&para;</a></h3>
+<p>Depuis le repository de monitoring, ouvrez l'<strong>Org Monitoring Workbench</strong> depuis la Welcome page et
+cliquez sur <strong>Install Org Monitoring</strong>.</p>
+<div class="admonition note">
+<p class="admonition-title">Pas de bouton de ce nom ?</p>
+<p>C'est que vous êtes dans le mauvais dossier. Ouvrez le même panneau depuis le repository où vous
+travaillez depuis le début du cours et vous obtenez ceci à la place :</p>
+<p><a class="glightbox" data-type="image" href="../../../_assets/annotated/vscode/org-monitoring--not-a-monitoring-repo.png"><img alt="L'Org Monitoring Workbench ouvert depuis un repository CI/CD" src="../../../_assets/annotated/vscode/org-monitoring--not-a-monitoring-repo.png" /></a></p>
+<p><strong>Org Monitoring Not Present (CI/CD Repo)</strong> <span class="pill-ref pill-ref-1">(1)</span> est le panneau qui vous dit qu'il
+n'installera pas le monitoring ici, et <strong>Learn More</strong> <span class="pill-ref pill-ref-2">(2)</span> est tout ce qu'il propose. Un
+projet qui a noté où vit son repository de monitoring reçoit un bouton <strong>Open Monitoring Repository</strong>
+à côté. Le bouton d'installation n'existe que là où ce qu'il installe a sa place.</p>
+</div>
+<p>La commande tourne dans un panneau et pose ses questions une à une, comme au <a href="../3-1-configure-the-pipeline-up-to-production/">Lab 3.1</a> :</p>
+<ol>
+<li><strong>Did you configure the sfdx-hardis monitoring pre-requisites on your Git server ?</strong> La deuxième
+   réponse, <em>ℹ️ No, bring me to the documentation!</em>, ouvre cette page et met fin à la commande :
+   lisez-la donc d'abord si ce n'est pas fait</li>
+<li><strong>Please select or connect to the org that you want to monitor</strong> - <code>helios-prod</code>. Comme au
+   <a href="../3-1-configure-the-pipeline-up-to-production/">Lab 3.1</a>, en faire l'org par défaut relance la commande : rechoisissez-la donc dans le nouveau
+   panneau</li>
+<li><strong>What is the address of the CI/CD repository that deploys to this org? (optional)</strong> - l'adresse
+   de votre fork, <code>https://github.com/&lt;your-handle&gt;/sfdx-hardis-training</code>. C'est le miroir de
+   l'étape 8 : le repository de monitoring retient où vit la pipeline, pour qu'un agent de code ouvert
+   dedans puisse aussi chercher dans votre fork et dans ses exécutions de workflow</li>
+<li><strong>Branch monitoring_... does not exist on the remote server. Do you want to push it?</strong> - oui.
+   Celle-ci vient avant le certificat, pas après, et elle n'apparaît que la première fois</li>
+<li>Puis les questions de certificat du <a href="../3-1-configure-the-pipeline-up-to-production/">Lab 3.1</a>, inchangées et dans le même ordre : auto-signé,
+   laisser sfdx-hardis configurer l'External Client App, certificat chiffré sous forme de fichier,
+   puis le même arrêt pendant que vous stockez les deux secrets, cette fois dans le repository de
+   <strong>monitoring</strong>, puis le nom, l'e-mail de contact et le profil de l'application. La liste des
+   profils est dans la langue de l'utilisateur de l'org, comme au <a href="../3-1-configure-the-pipeline-up-to-production/">Lab 3.1</a></li>
+<li><strong>Do you want to save the configuration on the remote server (auto-commit)?</strong> - oui</li>
+</ol>
+<p>Pour finir, elle écrit le workflow sur <code>main</code> et le dit : <em>The monitoring workflow on main now runs
+monitoring_...</em>. GitHub ne planifie que les workflows de la branche par défaut, et ne propose
+<strong>Run workflow</strong> que pour ceux-là : le workflow qui lance chaque org monitorée vit donc sur <code>main</code> et
+liste chaque branche de monitoring.</p>
+<p>Elle ne demande jamais de nom de repository à créer ni de fournisseur git, parce qu'elle n'en crée aucun : la seule adresse qu'elle demande, celle de votre fork, elle se contente de l'enregistrer.
+L'authentification est le même code qu'au <a href="../3-1-configure-the-pipeline-up-to-production/">Lab 3.1</a>
+: External Client App, JWT, deux secrets à stocker, cette fois dans le repository de <strong>monitoring</strong>.
+La clé atterrit dans <code>./.ssh/</code> plutôt que dans <code>config/branches/.jwt/</code>, et la configuration dans un
+<code>.sfdx-hardis.yml</code> à la racine du repository, sur une branche appelée <code>monitoring_</code> plus le domaine
+de l'org, tirée de <code>main</code>. Le repository était vide : elle donne donc d'abord à <code>main</code> un commit
+vide d'où partir. Une branche par org monitorée est la façon dont un seul repository en surveille
+plusieurs.</p>
+<h3 id="3-choisir-ce-quil-surveille">3. Choisir ce qu'il surveille<a class="headerlink" href="#3-choisir-ce-quil-surveille" title="Permanent link">&para;</a></h3>
+<p>Ouvrez le panneau <strong>Monitoring Config Workbench</strong>. Une ligne par contrôle, et six colonnes :
+<strong>Command</strong> <span class="pill-ref pill-ref-1">(1)</span>, <strong>Frequency</strong> <span class="pill-ref pill-ref-2">(2)</span>, puis <strong>Messaging</strong>, <strong>Email</strong> et <strong>API</strong> <span class="pill-ref pill-ref-3">(3)</span>, qui
+sont la sévérité à partir de laquelle chaque canal est alimenté, et une dernière colonne d'actions
+par ligne.</p>
+<p><a class="glightbox" data-type="image" href="../../../_assets/annotated/vscode/monitoring-config--what-it-watches.png"><img alt="Le Monitoring Config Workbench, avec la liste des contrôles, leur fréquence et leur routage par canal" src="../../../_assets/annotated/vscode/monitoring-config--what-it-watches.png" /></a></p>
+<p>Il y a une trentaine de contrôles, ils viennent du produit et non de votre fichier de configuration,
+et ils sont tous activés par défaut à des fréquences choisies par le produit : certains quotidiens,
+d'autres hebdomadaires, d'autres mensuels. C'est le bon défaut et le mauvais réglage de long terme.</p>
+<p>Pour une première exécution, laissez tout activé. Vous êtes sur le point de découvrir lesquels disent
+quelque chose d'utile sur <strong>cette</strong> org-là, et cela ne se sait pas d'avance.</p>
+<h3 id="4-le-lancer-une-fois-a-la-main">4. Le lancer une fois à la main<a class="headerlink" href="#4-le-lancer-une-fois-a-la-main" title="Permanent link">&para;</a></h3>
+<p>N'attendez pas cette nuit. Le workflow, <strong>Org Monitoring sfdx-hardis</strong>, est planifié à <code>0 0 * * *</code>
+(minuit UTC) et accepte aussi un lancement manuel. Dans le repository de monitoring, ouvrez
+<strong>Actions</strong>, cliquez sur <strong>Org Monitoring sfdx-hardis</strong> <span class="pill-ref pill-ref-1">(1)</span> dans la liste de gauche, puis sur
+<strong>Run workflow</strong>
+<span class="pill-ref pill-ref-2">(2)</span>. Laissez la branche sur <code>main</code> <span class="pill-ref pill-ref-3">(3)</span> et cliquez sur le <strong>Run workflow</strong> vert <span class="pill-ref pill-ref-4">(4)</span>.</p>
+<p><a class="glightbox" data-type="image" href="../../../_assets/annotated/web/github-run-workflow.png"><img alt="Le menu Run workflow du workflow Org Monitoring sur GitHub" src="../../../_assets/annotated/web/github-run-workflow.png" /></a></p>
+<p>L'exécution apparaît dans la liste quelques secondes plus tard : cliquez dessus pour la suivre.</p>
+<p>Elle prend un moment, l'essentiel étant la sauvegarde de l'org. Quand elle se termine, le repository
+contient une sauvegarde complète des sources de la production et un jeu de rapports.</p>
+<h3 id="5-lire-le-premier-rapport">5. Lire le premier rapport<a class="headerlink" href="#5-lire-le-premier-rapport" title="Permanent link">&para;</a></h3>
+<p>Ouvrez le panneau <strong>Org Monitoring Workbench</strong> dans VS Code, pointé sur le repository de monitoring.</p>
+<p><a class="glightbox" data-type="image" href="../../../_assets/annotated/vscode/org-monitoring--first-report.png"><img alt="L'Org Monitoring Workbench, ouvert sur le repository CI/CD au lieu du repository de monitoring" src="../../../_assets/annotated/vscode/org-monitoring--first-report.png" /></a></p>
+<p>Vérifiez d'abord la bannière <span class="pill-ref pill-ref-1">(1)</span>. <strong>Org Monitoring Not Present (CI/CD Repo)</strong> veut dire que vous
+avez ouvert le mauvais dossier : ce panneau lit le repository de monitoring, pas celui où vous
+travaillez depuis le début du cours. Ouvrez le repository de monitoring et la bannière disparaît.</p>
+<p>Sous l'org monitorée, le panneau affiche le <strong>Deployment repository</strong> donné à la commande à
+l'étape 2 : cliquez dessus pour ouvrir votre fork dans une nouvelle fenêtre VS Code. Si vous aviez
+laissé cette question vide, le panneau proposerait <strong>Set deployment repository</strong> à la place. C'est
+optionnel dans les deux cas.</p>
+<p>Chaque contrôle est une carte, et les deux à ouvrir en premier sont <strong>Detect calls to deprecated API
+versions</strong> <span class="pill-ref pill-ref-2">(2)</span> et <strong>Detect unsecured Connected Apps in an org</strong> <span class="pill-ref pill-ref-3">(3)</span>.</p>
+<p>Soyez honnête sur ce que vous regardez. <code>helios-prod</code> est une org Developer Edition vieille de
+quelques jours, avec un utilisateur dedans et une application que vous avez déployée vous-même. Rien
+ne l'alimente avec les trouvailles qu'a une org de deux ans, et un rapport qui revient presque propre
+n'est pas un rapport cassé.</p>
+<p>Presque propre, pas propre : la première exécution est rouge. Le job <strong>Monitoring</strong> échoue sur
+<strong>Detect if org limits are close to be reached</strong>, avec une limite à 100 % : <code>ActiveScratchOrgs</code>,
+3 sur 3. <code>helios-prod</code> est aussi votre Dev Hub, et vos trois scratch orgs de formation occupent tous
+ses emplacements. C'est une vraie trouvaille, le genre pour lequel un contrôle de limites existe :
+sur un vrai Dev Hub, cela veut dire que personne dans l'équipe ne peut créer de scratch org tant
+qu'une autre n'a pas expiré.</p>
+<p>Et <strong>Detect unsecured Connected Apps</strong> en a une aussi : <strong>Salesforce CLI</strong>, marquée <em>Unsecured</em>.
+C'est l'application par laquelle passe chaque <code>sf org login</code>, y compris les vôtres, et sur une org
+Developer Edition elle est ouverte à tout utilisateur capable de se connecter. Sur une org de
+production, c'est la première trouvaille à porter à l'équipe sécurité : un admin peut la restreindre
+aux utilisateurs approuvés, et la CLI continue de fonctionner pour eux.</p>
+<p>Ce que vous lisez, c'est la <strong>forme</strong> de chaque trouvaille, pour la reconnaître sur une vraie org :</p>
+<table>
+<thead>
+<tr>
+<th>Trouvaille sur une vraie org</th>
+<th>Ce que cela veut dire vraiment</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Des utilisateurs inactifs toujours actifs</strong></td>
+<td>Des licences payées, et des comptes qui peuvent encore se connecter</td>
+</tr>
+<tr>
+<td><strong>Une Connected App non sécurisée</strong></td>
+<td>Quelque chose peut atteindre vos données de production et personne ne se souvient de l'avoir approuvé</td>
+</tr>
+<tr>
+<td><strong>De l'Apex sur une vieille version d'API</strong></td>
+<td>Cela cassera à une release Salesforce, à une date que vous ne maîtrisez pas</td>
+</tr>
+</tbody>
+</table>
+<p>La seule trouvaille que vous devriez vraiment attendre ici est dans la <strong>sauvegarde</strong> plutôt que
+dans un contrôle : la règle de validation que le <a href="../3-7-hotfix-and-retrofit/">Lab 3.7</a> a corrigée
+est dans l'org avec sa nouvelle formule, et elle est maintenant dans l'historique git du repository
+de monitoring, datée. C'est la réponse à "quand est-ce que cela a changé", et c'est la part du
+monitoring qui se rentabilise en premier.</p>
+<h3 id="6-decider-ce-qui-est-du-bruit-ce-qui-est-la-vraie-competence">6. Décider ce qui est du bruit, ce qui est la vraie compétence<a class="headerlink" href="#6-decider-ce-qui-est-du-bruit-ce-qui-est-la-vraie-competence" title="Permanent link">&para;</a></h3>
+<p>C'est l'étape qui décide si le monitoring survit six mois.</p>
+<p>Passez chaque trouvaille en revue et mettez-la dans l'un de trois paniers :</p>
+<table>
+<thead>
+<tr>
+<th>Panier</th>
+<th>Ce que vous faites</th>
+<th>Exemple</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Agir maintenant</strong></td>
+<td>Corrigez-la cette semaine</td>
+<td>La Connected App non sécurisée</td>
+</tr>
+<tr>
+<td><strong>Suivre</strong></td>
+<td>Mettez-la au backlog comme une story</td>
+<td>La vieille version d'API</td>
+</tr>
+<tr>
+<td><strong>Faire taire, avec une raison</strong></td>
+<td>Désactivez-la dans la configuration, avec un commentaire disant pourquoi</td>
+<td>Un contrôle qui ne s'applique pas à cette org</td>
+</tr>
+</tbody>
+</table>
+<p>Sur <code>helios-prod</code>, <code>ActiveScratchOrgs</code> va dans <strong>Suivre</strong> : c'est réel, c'est attendu tant que le
+cours tourne, et cela expirera avec les scratch orgs. Faire taire tout le contrôle de limites pour
+elle cacherait toutes les autres limites avec, ce qui est exactement la mauvaise façon de faire
+taire.</p>
+<p><strong>Faire taire est légitime.</strong> Un rapport de monitoring avec quarante trouvailles sur lesquelles
+personne n'agit est pire que pas de monitoring, parce qu'il apprend à l'équipe que le rapport est du
+bruit. Un rapport avec quatre trouvailles qui comptent toutes est lu tous les matins.</p>
+<p>Ce qui n'est pas légitime, c'est de faire taire quelque chose parce que c'est gênant. Écrivez la
+raison dans le fichier de configuration, et la personne suivante pourra ne pas être d'accord avec
+vous en connaissance de cause.</p>
+<h3 id="7-router-une-notification">7. Router une notification<a class="headerlink" href="#7-router-une-notification" title="Permanent link">&para;</a></h3>
+<p>Un rapport que personne n'ouvre n'est pas du monitoring.</p>
+<p>Configurez <strong>un</strong> canal : Slack, Teams, Google Chat ou e-mail. Un seul suffit, et plus d'un le
+premier jour veut dire le même message qui arrive deux fois et qui est ignoré des deux côtés.</p>
+<p>De retour dans le <strong>Monitoring Config Workbench</strong>, les colonnes <strong>Messaging</strong>, <strong>Email</strong> et <strong>API</strong>
+contiennent la sévérité à partir de laquelle chaque canal est alimenté, par contrôle. Réglez-les pour
+que seuls les échecs et les trouvailles critiques soient envoyés. Un message nocturne "tout va bien"
+est lu une semaine et filtré pour toujours ensuite.</p>
+<p>Ces réglages sont écrits sous <code>notificationConfig</code> dans le <code>.sfdx-hardis.yml</code> du repository de
+monitoring, une entrée par type de notification, fusionnée par-dessus les valeurs par défaut du
+produit.</p>
+<h3 id="8-le-rendre-trouvable">8. Le rendre trouvable<a class="headerlink" href="#8-le-rendre-trouvable" title="Permanent link">&para;</a></h3>
+<p>Le prochain release manager aura besoin du repository de monitoring dès son premier jour, et le seul
+endroit où il regardera est le projet. De retour dans le repository de sources : <strong>DevOps Pipeline</strong></p>
+<blockquote>
+<p>menu engrenage &gt; <strong>Pipeline Settings</strong>, portée <strong>Global Settings</strong>, onglet <strong>Salesforce Project</strong>.
+<strong>Monitoring repository</strong> : <strong>Edit</strong>, collez l'adresse de votre repository de monitoring,
+<code>https://github.com/&lt;votre-pseudo&gt;/sfdx-hardis-training-monitoring</code>, et <strong>Save</strong>. Puis
+<strong>Training: Level 3</strong> &gt; <strong>Publish my pipeline configuration</strong> : c'est de la configuration de
+pipeline, comme le reste.</p>
+</blockquote>
+<p>À partir de là, l'<strong>Org Monitoring Workbench</strong> ouvert depuis le repository de sources propose
+<strong>Open Monitoring Repository</strong> au lieu d'une impasse.</p>
+<details>
+<summary>Sous le capot : ce qui tourne chaque nuit</summary>
+<p>La commande était :</p>
+<div class="highlight"><pre><span></span><code>sf hardis:org:configure:monitoring
+</code></pre></div>
+<p>et elle a copié les fichiers de CI de <strong>tous</strong> les fournisseurs git à la fois, pas seulement GitHub.
+Le workflow qu'elle a généré pour GitHub a quatre jobs :</p>
+<ol>
+<li><strong>Backup</strong> tourne en premier, seul : <code>sf hardis:org:monitor:backup</code> récupère toute l'org en format
+   source et la commite. L'historique git de ce repository devient une réponse à "qu'est-ce qui a changé
+   en production, et quand", que rien d'autre ne vous donne. Quand la récupération est faite, la même
+   commande régénère la documentation de projet du <a href="../3-9-generate-the-project-documentation/">Lab 3.9</a> avant de se terminer</li>
+<li>Puis trois jobs en parallèle, chacun n'attendant que la sauvegarde : <code>sf hardis:org:test:apex</code>,
+   MegaLinter, et <code>sf hardis:org:monitor:all</code></li>
+</ol>
+<p><code>monitor:all</code> est là où vivent les contrôles. Il lance lui-même les commandes
+<code>sf hardis:org:diagnose:*</code>, une par contrôle, puis applique les seuils et envoie les notifications.
+Vous ne les trouverez pas listées dans le workflow.</p>
+<p><code>monitoringCommands</code> dans le <code>.sfdx-hardis.yml</code> du repository de monitoring n'est <strong>pas</strong> la liste
+des contrôles : la liste est intégrée au produit, une trentaine, et cette clé ne fait que remplacer
+des entrées par leur clé ou en ajouter de nouvelles. La laisser vide lance quand même tout.
+<code>monitoringDisable</code> est l'interrupteur par contrôle, par clé du contrôle plutôt que par libellé, et
+mettre la <code>frequency</code> d'un contrôle à <code>off</code> le sort aussi de l'exécution. <code>notificationConfig</code>
+décide de ce qui part où, et à partir de quelle sévérité.</p>
+<p>La sauvegarde nocturne est la partie sous-estimée. Quand quelqu'un demande "quand cette règle de
+validation a-t-elle changé", la réponse est un <code>git log</code> sur le repository de monitoring, et cela
+fonctionne même pour les modifications que personne n'a faites par la pipeline.</p>
+<p>La sauvegarde écrit aussi un <code>AGENTS.md</code> à la racine de la branche de monitoring, et un <code>CLAUDE.md</code>
+qui pointe dessus. Il explique le repository à un agent de code : ce que contient chaque dossier, ce
+que la sauvegarde ignore, comment lire l'historique, quels contrôles tournent. Avec
+<code>deploymentRepository</code> renseigné, il explique aussi à l'agent comment cloner votre fork à côté, en
+lecture seule, trouver la branche qui déploie dans <code>helios-prod</code>, et lire les exécutions de workflow
+des deux repositories. C'est ce qui permet à un agent de répondre à "ce changement a-t-il été déployé
+par la pipeline, ou fait directement en production ?".</p>
+<p>Si votre organisation utilise Grafana, les résultats peuvent alimenter des <a href="https://sfdx-hardis.cloudity.com/salesforce-monitoring-grafana-v2/">tableaux de bord prêts à
+l'emploi</a>. C'est hors sujet ici,
+et il est bon de savoir que cela existe.</p>
+<!-- command-links:start -->
+<p>Documentation des commandes : <a href="https://sfdx-hardis.cloudity.com/hardis/org/configure/monitoring/">hardis:org:configure:monitoring</a>, <a href="https://sfdx-hardis.cloudity.com/hardis/org/monitor/backup/">hardis:org:monitor:backup</a>, <a href="https://sfdx-hardis.cloudity.com/hardis/org/test/apex/">hardis:org:test:apex</a>, <a href="https://sfdx-hardis.cloudity.com/hardis/org/monitor/all/">hardis:org:monitor:all</a></p>
+<!-- command-links:end -->
+</details>
+<h2 id="ce-que-vous-devez-voir">Ce que vous devez voir<a class="headerlink" href="#ce-que-vous-devez-voir" title="Permanent link">&para;</a></h2>
+<ul>
+<li>Un second repository, créé par vous, avec une exécution du workflow <strong>Org Monitoring sfdx-hardis</strong> : la
+  sauvegarde, les tests Apex et MegaLinter au vert, et le job Monitoring au rouge sur
+  <code>ActiveScratchOrgs</code></li>
+<li>Une sauvegarde complète des sources de <code>helios-prod</code> commitée dedans</li>
+<li>Un premier rapport que vous avez lu et trié, aussi court soit-il</li>
+<li>Un canal de notification configuré</li>
+<li><code>monitoringRepository</code> dans <code>config/.sfdx-hardis.yml</code> sur <code>integration</code>, pointant dessus</li>
+<li><code>deploymentRepository</code> dans le <code>.sfdx-hardis.yml</code> de la branche de monitoring, pointant vers votre
+  fork, et un <code>AGENTS.md</code> à la racine de cette branche</li>
+</ul>
+<details class="troubleshoot">
+<summary>En cas de problème</summary>
+<p><strong>Le workflow de monitoring échoue à l'authentification.</strong>
+Comme au <a href="../3-1-configure-the-pipeline-up-to-production/">Lab 3.1</a> : l'External Client App a besoin
+que l'utilisateur soit pré-autorisé, et les secrets doivent être dans le repository de
+<strong>monitoring</strong>, pas dans celui des sources.</p>
+<p><strong>Actions ne propose pas de Run workflow pour Org Monitoring sfdx-hardis.</strong>
+Le workflow n'est pas sur <code>main</code>. La commande l'y écrit à la fin, sur GitHub, et le dit. Si elle a
+dit qu'elle n'y arrivait pas, copiez <code>.github/workflows/org-monitoring.yml</code> de la branche de
+monitoring vers <code>main</code> et suivez les commentaires <code>MANUAL</code> qu'il contient.</p>
+<p><strong>La sauvegarde dépasse le temps imparti.</strong>
+Une grosse org met longtemps. Sur une org Developer Edition cela ne devrait pas arriver : si c'est le
+cas, regardez sur quel type de métadonnée elle bloque et excluez-le.</p>
+<p><strong>Les notifications n'arrivent jamais.</strong>
+Le webhook est faux, ou le seuil est au-dessus de ce que le rapport a produit. Baissez le seuil
+temporairement pour prouver que le canal fonctionne, puis remontez-le.</p>
+<p><strong>Le rapport a quarante trouvailles.</strong>
+Attendu pour une première exécution sur n'importe quelle vraie org, et peu probable sur une org
+Developer Edition vieille de quelques jours. L'étape 6 est le lab dans les deux cas.</p>
+<p><strong>La commande refuse de tourner.</strong>
+Vous lui avez dit que vous n'êtes pas dans un repository de monitoring séparé, ce qui est la bonne
+réponse quand vous ne l'êtes pas. Revenez à l'étape 1 et créez celui de monitoring.</p>
+</details>
+<h2 id="verifiez-votre-travail">Vérifiez votre travail<a class="headerlink" href="#verifiez-votre-travail" title="Permanent link">&para;</a></h2>
+<p>Welcome page &gt; <strong>Training: Level 3</strong> &gt; <strong>Check my work</strong>, puis choisissez le <strong>Lab 3.8</strong>.</p>
+<h2 id="pour-aller-plus-loin">Pour aller plus loin<a class="headerlink" href="#pour-aller-plus-loin" title="Permanent link">&para;</a></h2>
+<ul>
+<li><a href="https://sfdx-hardis.cloudity.com/salesforce-monitoring-home/">Monitoring d'org</a></li>
+<li><a href="https://sfdx-hardis.cloudity.com/salesforce-monitoring-config-github/">Monitoring sur GitHub</a></li>
+<li><a href="https://sfdx-hardis.cloudity.com/salesforce-monitoring-grafana-v2/">Tableaux de bord Grafana</a></li>
+</ul>
+<p><a class="md-button md-button--primary" href="../3-9-generate-the-project-documentation/">Suite : Lab 3.9 - Générer la documentation du projet Salesforce</a></p>
+
+
+
+
+
+
+
+
+
+  
+  
+
+
+
+  
+
+
+
+
+  <h2 id="__comments">Questions and comments</h2>
+  <script src="https://giscus.app/client.js"
+          data-repo="hardisgroupcom/sfdx-hardis-training"
+          data-repo-id="R_kgDOUcjgQw"
+          data-category="Q&amp;A"
+          data-category-id="DIC_kwDOUcjgQ84DF-lC"
+          data-mapping="pathname"
+          data-strict="1"
+          data-reactions-enabled="1"
+          data-emit-metadata="0"
+          data-input-position="top"
+          data-theme="preferred_color_scheme"
+          data-lang="en"
+          data-loading="lazy"
+          crossorigin="anonymous"
+          async>
+  </script>
+
+  <script>
+    // Keep the Giscus iframe in sync with the palette toggle. It is a
+    // cross-origin frame, so its theme can only be changed by postMessage.
+    (function () {
+      if (window.__giscusThemeSync) {
+        return;
+      }
+      window.__giscusThemeSync = true;
+      var giscusTheme = function () {
+        var scheme = document.body.getAttribute("data-md-color-scheme");
+        return scheme === "slate" ? "dark" : "light";
+      };
+      var apply = function () {
+        var frame = document.querySelector("iframe.giscus-frame");
+        if (frame && frame.contentWindow) {
+          frame.contentWindow.postMessage(
+            { giscus: { setConfig: { theme: giscusTheme() } } },
+            "https://giscus.app"
+          );
+        }
+      };
+      new MutationObserver(apply).observe(document.body, {
+        attributes: true,
+        attributeFilter: ["data-md-color-scheme"]
+      });
+      window.addEventListener("message", function (event) {
+        if (event.origin === "https://giscus.app") {
+          apply();
+        }
+      });
+    })();
+  </script>
+
+                
+              </article>
+            </div>
+          
+          
+  <script>var tabs=__md_get("__tabs");if(Array.isArray(tabs))e:for(var set of document.querySelectorAll(".tabbed-set")){var labels=set.querySelector(".tabbed-labels");for(var tab of tabs)for(var label of labels.getElementsByTagName("label"))if(label.innerText.trim()===tab){var input=document.getElementById(label.htmlFor);input.checked=!0;continue e}}</script>
+
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-circle-arrow-up" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="m16 12-4-4-4 4M12 16V8"/></svg>
+  Retour en haut de la page
+</button>
+        
+      </main>
+      
+        
+
+
+
+
+<footer class="md-footer">
+  
+    
+      
+      <nav class="md-footer__inner md-grid" aria-label="Pied de page" >
+        
+          
+          <a href="../3-7-hotfix-and-retrofit/" class="md-footer__link md-footer__link--prev" aria-label="Précédent: Lab 3.7 - La production est cassée : hotfix et retrofit">
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-arrow-left" viewBox="0 0 24 24"><path d="m12 19-7-7 7-7M19 12H5"/></svg>
+            </div>
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Précédent
+              </span>
+              <div class="md-ellipsis">
+                Lab 3.7 - La production est cassée : hotfix et retrofit
+              </div>
+            </div>
+          </a>
+        
+        
+          
+          <a href="../3-9-generate-the-project-documentation/" class="md-footer__link md-footer__link--next" aria-label="Suivant: Lab 3.9 - Générer la documentation du projet Salesforce">
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Suivant
+              </span>
+              <div class="md-ellipsis">
+                Lab 3.9 - Générer la documentation du projet Salesforce
+              </div>
+            </div>
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-arrow-right" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+            </div>
+          </a>
+        
+      </nav>
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      Cloudity and friends
+    </div>
+  
+  
+</div>
+      
+        
+<div class="md-social">
+  
+    
+    
+    
+    
+    <a href="https://github.com/hardisgroupcom/sfdx-hardis" target="_blank" rel="noopener" title="sfdx-hardis on GitHub" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.3.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2026 Fonticons, Inc.--><path fill="currentColor" d="M216.5 362.5c-66-8-112.5-55.5-112.5-117 0-25 9-52 24-70-6.5-16.5-5.5-51.5 2-66 20-2.5 47 8 63 22.5 19-6 39-9 63.5-9s44.5 3 62.5 8.5c15.5-14 43-24.5 63-22 7 13.5 8 48.5 1.5 65.5 16 19 24.5 44.5 24.5 70.5 0 61.5-46.5 108-113.5 116.5 17 11 28.5 35 28.5 62.5v52c0 15 12.5 23.5 27.5 17.5C441 459.5 512 369 512 257 512 115.5 397 0 255.5 0S0 115.5 0 257c0 111 70.5 203 165.5 237.5 13.5 5 26.5-4 26.5-17.5v-40c-7 3-16 5-24 5-33 0-52.5-18-66.5-51.5-5.5-13.5-11.5-21.5-23-23-6-.5-8-3-8-6 0-6 10-10.5 20-10.5 14.5 0 27 9 40 27.5 10 14.5 20.5 21 33 21s20.5-4.5 32-16c8.5-8.5 15-16 21-21"/></svg>
+    </a>
+  
+    
+    
+    
+    
+    <a href="https://sfdx-hardis.cloudity.com/" target="_blank" rel="noopener" title="sfdx-hardis documentation" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.3.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2026 Fonticons, Inc.--><path fill="currentColor" d="M384 512H96c-53 0-96-43-96-96V96C0 43 43 0 96 0h304c26.5 0 48 21.5 48 48v288c0 20.9-13.4 38.7-32 45.3V448c17.7 0 32 14.3 32 32s-14.3 32-32 32zM96 384c-17.7 0-32 14.3-32 32s14.3 32 32 32h256v-64zm32-232c0 13.3 10.7 24 24 24h176c13.3 0 24-10.7 24-24s-10.7-24-24-24H152c-13.3 0-24 10.7-24 24m24 72c-13.3 0-24 10.7-24 24s10.7 24 24 24h176c13.3 0 24-10.7 24-24s-10.7-24-24-24z"/></svg>
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog" role="status" aria-atomic="true">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      
+      
+        
+        
+      <script id="__config" type="application/json">{"annotate":null,"base":"../../..","features":["content.action.edit","content.code.copy","content.tabs.link","navigation.instant","navigation.tracking","navigation.top","navigation.footer","search.suggest","search.highlight","toc.follow"],"redirect":null,"search":"../../../assets/javascripts/workers/search.7d14d953.min.js","tags":null,"translations":{"clipboard.copied":"Copié dans le presse-papier","clipboard.copy":"Copier dans le presse-papier","clipboard.error":"Could not copy to clipboard","search.result.more.one":"1 de plus sur cette page","search.result.more.other":"# de plus sur cette page","search.result.none":"Aucun document trouvé","search.result.one":"1 document trouvé","search.result.other":"# documents trouvés","search.result.placeholder":"Taper pour démarrer la recherche","search.result.term.missing":"Non trouvé","select.version":"Sélectionner la version"},"version":null}</script>
+    
+    
+      <script src="../../../assets/javascripts/bundle.67a597eb.min.js"></script>
+      
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/tablesort/5.2.1/tablesort.min.js"></script>
+      
+        <script src="../../../theme/javascripts/tables.js"></script>
+      
+        <script src="../../../theme/javascripts/lightbox.js"></script>
+      
+        <script src="../../../theme/javascripts/after-footer.js"></script>
+      
+        <script src="../../../theme/javascripts/language-switch.js"></script>
+      
+    
+  </body>
+</html>

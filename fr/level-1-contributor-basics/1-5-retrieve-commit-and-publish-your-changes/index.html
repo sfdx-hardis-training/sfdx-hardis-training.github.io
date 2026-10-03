@@ -1,0 +1,2432 @@
+
+<!doctype html>
+<html lang="fr" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Rapatriez vos modifications d'org dans Git avec le Metadata Retriever de sfdx-hardis, ne stagez que les fichiers de votre story, commitez, et publiez votre branche.">
+      
+      
+      
+        <link rel="canonical" href="https://sfdx-hardis-training.github.io/fr/level-1-contributor-basics/1-5-retrieve-commit-and-publish-your-changes/">
+      
+      
+        <link rel="prev" href="../1-4-build-a-custom-field-in-your-org/">
+      
+      
+        <link rel="next" href="../1-6-pull-request-deployment-check-and-merge/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../../theme/images/badge-mark.svg">
+      <meta name="generator" content="zensical-0.0.67">
+    
+    
+      
+        <title>Lab 1.5 - Récupérer, commiter et publier vos modifications Salesforce - Salesforce DevOps with sfdx-hardis</title>
+      
+    
+    
+      
+        
+      
+      <link rel="stylesheet" href="../../../assets/stylesheets/modern/main.4ae390e2.min.css">
+      
+        
+          
+        
+        <link rel="stylesheet" href="../../../assets/stylesheets/modern/palette.96d1a7e4.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+    
+    
+      <link rel="stylesheet" href="../../../theme/stylesheets/extra.css">
+    
+    <script>__md_scope=new URL("../../..",location),__md_scope.pathname.endsWith("/")||(__md_scope=new URL(__md_scope.pathname+"/",location)),__md_hash=e=>[...e].reduce(((e,t)=>(e<<5)-e+t.charCodeAt(0)),0),__md_get=(e,t=localStorage,_=__md_scope)=>JSON.parse(t.getItem(_.pathname+"."+e)),__md_set=(e,t,_=localStorage,a=__md_scope)=>{try{_.setItem(a.pathname+"."+e,JSON.stringify(t))}catch(e){}},document.documentElement.setAttribute("data-platform",navigator.platform)</script>
+    
+      
+  
+
+
+  
+  
+
+<script id="__analytics">function __md_analytics(){function e(){dataLayer.push(arguments)}window.dataLayer=window.dataLayer||[],e("js",new Date),e("config","G-SE20CZ58E1"),document.addEventListener("DOMContentLoaded",(function(){document.forms.search&&document.forms.search.query.addEventListener("blur",(function(){this.value&&e("event","search",{search_term:this.value})}));document$.subscribe((function(){var t=document.forms.feedback;if(void 0!==t)for(var a of t.querySelectorAll("[type=submit]"))a.addEventListener("click",(function(a){a.preventDefault();var n=document.location.pathname,d=this.getAttribute("data-md-value");e("event","feedback",{page:n,data:d}),t.firstElementChild.disabled=!0;var r=t.querySelector(".md-feedback__note [data-md-value='"+d+"']");r&&(r.hidden=!1)})),t.hidden=!1})),location$.subscribe((function(t){e("config","G-SE20CZ58E1",{page_path:t.pathname})}))}));var t=document.createElement("script");t.async=!0,t.src="https://www.googletagmanager.com/gtag/js?id=G-SE20CZ58E1",document.getElementById("__analytics").insertAdjacentElement("afterEnd",t)}</script>
+  
+    <script>"undefined"!=typeof __md_analytics&&__md_analytics()</script>
+  
+
+    
+    
+  
+  
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Salesforce DevOps with sfdx-hardis">
+  <meta property="og:locale" content="fr">
+  <meta property="og:title" content="Lab 1.5 - Récupérer, commiter et publier vos modifications Salesforce">
+  <meta property="og:description" content="Rapatriez vos modifications d'org dans Git avec le Metadata Retriever de sfdx-hardis, ne stagez que les fichiers de votre story, commitez, et publiez votre branche.">
+  <meta property="og:url" content="https://sfdx-hardis-training.github.io/fr/level-1-contributor-basics/1-5-retrieve-commit-and-publish-your-changes/">
+  <meta property="og:image" content="https://sfdx-hardis-training.github.io/_assets/social/course.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="Lab 1.5 - Récupérer, commiter et publier vos modifications Salesforce">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Lab 1.5 - Récupérer, commiter et publier vos modifications Salesforce">
+  <meta name="twitter:description" content="Rapatriez vos modifications d'org dans Git avec le Metadata Retriever de sfdx-hardis, ne stagez que les fichiers de votre story, commitez, et publiez votre branche.">
+  <meta name="twitter:image" content="https://sfdx-hardis-training.github.io/_assets/social/course.png">
+
+  <script>
+    (function () {
+      var here = "fr";
+      var alternates = {"en":"en/level-1-contributor-basics/1-5-retrieve-commit-and-publish-your-changes/","fr":"fr/level-1-contributor-basics/1-5-retrieve-commit-and-publish-your-changes/"};
+      var base = new URL("../../.." || ".", window.location.href).pathname;
+      try {
+        var asked = new URLSearchParams(window.location.search).get("lang");
+        if (asked) {
+          document.cookie =
+            "course-language=" + encodeURIComponent(asked) + "; path=" + base + "; max-age=31536000; samesite=lax";
+        }
+        var cookie = document.cookie.split("; ").filter(function (one) {
+          return one.indexOf("course-language=") === 0;
+        })[0];
+        if (!cookie) {
+          return;
+        }
+        var preferred = asked || decodeURIComponent(cookie.slice("course-language=".length));
+        if (!preferred || preferred === here) {
+          return;
+        }
+        var target = alternates[preferred];
+        if (typeof target !== "string") {
+          return;
+        }
+        var url = new URL(target, new URL(base, window.location.href)).pathname;
+        if (url !== window.location.pathname) {
+          window.location.replace(url + window.location.search + window.location.hash);
+        }
+      } catch (error) {
+        // A browser with no cookies stays where it is, which is the page asked for
+      }
+    })();
+  </script>
+
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="custom" data-md-color-accent="custom">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer" aria-label="Navigation"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#lab-15-recuperer-commiter-et-publier-vos-modifications-salesforce" class="md-skip">
+          Aller au contenu
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="En-tête">
+    <a href="/fr/" title="Salesforce DevOps with sfdx-hardis" class="md-header__button md-logo" aria-label="Salesforce DevOps with sfdx-hardis" data-md-component="logo">
+      
+  <img src="../../../theme/images/cloudity-text-logo-white.svg" alt="Salesforce DevOps with sfdx-hardis">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer" aria-label="Navigation">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-menu" viewBox="0 0 24 24"><path d="M4 5h16M4 12h16M4 19h16"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Salesforce DevOps with sfdx-hardis
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Lab 1.5 - Récupérer, commiter et publier vos modifications Salesforce
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="none" data-md-color-scheme="default" data-md-color-primary="custom" data-md-color-accent="custom"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="none" data-md-color-scheme="slate" data-md-color-primary="custom" data-md-color-accent="custom"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+      
+
+
+
+  
+
+  
+    
+    
+  
+
+<div class="md-header__option">
+  <div class="md-select md-select--language">
+    <button class="md-header__button md-header__button--flag" aria-label="Sélectionner la langue">
+      
+        <img src="../../../theme/images/flags/fr.svg" alt="Français" class="md-select__flag md-select__flag--current">
+      
+    </button>
+    <div class="md-select__inner">
+      <ul class="md-select__list">
+        
+          
+          <li class="md-select__item"><a href="../../../en/level-1-contributor-basics/1-5-retrieve-commit-and-publish-your-changes/" hreflang="en" data-course-home="/" class="md-select__link">
+              
+                <img src="../../../theme/images/flags/gb.svg" alt="" class="md-select__flag">
+              
+              English
+            </a>
+          </li>
+        
+          
+          <li class="md-select__item"><a href="././" hreflang="fr" data-course-home="/fr/" class="md-select__link">
+              
+                <img src="../../../theme/images/flags/fr.svg" alt="" class="md-select__flag">
+              
+              Français
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</div>
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search" aria-label="Recherche">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-search" viewBox="0 0 24 24"><path d="m21 21-4.34-4.34"/><circle cx="11" cy="11" r="8"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog" aria-label="Recherche">
+  <button type="button" class="md-search__button">
+    Recherche
+  </button>
+</div>
+      
+    
+    <div class="md-header__source">
+      
+        <a href="https://github.com/hardisgroupcom/sfdx-hardis-training" title="Aller au dépôt" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.3.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2026 Fonticons, Inc.--><path fill="currentColor" d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    hardisgroupcom/sfdx-hardis-training
+  </div>
+</a>
+      
+    </div>
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0" data-course-lang="fr" data-course-base="../../.." data-course-alt-en="en/level-1-contributor-basics/1-5-retrieve-commit-and-publish-your-changes/" data-course-alt-fr="fr/level-1-contributor-basics/1-5-retrieve-commit-and-publish-your-changes/">
+  <label class="md-nav__title" for="__drawer">
+    <a href="/fr/" title="Salesforce DevOps with sfdx-hardis" class="md-nav__button md-logo" aria-label="Salesforce DevOps with sfdx-hardis" data-md-component="logo">
+      
+  <img src="../../../theme/images/cloudity-text-logo-white.svg" alt="Salesforce DevOps with sfdx-hardis">
+
+    </a>
+    Salesforce DevOps with sfdx-hardis
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/hardisgroupcom/sfdx-hardis-training" title="Aller au dépôt" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.3.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2026 Fonticons, Inc.--><path fill="currentColor" d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    hardisgroupcom/sfdx-hardis-training
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+      
+    
+      
+      
+      
+    
+      
+      
+      
+    
+      
+      
+      
+    
+      
+      
+      
+    
+      
+      
+      
+    
+      
+      
+      
+    
+      
+      
+      
+        
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Accueil
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+      
+    
+      
+      
+      
+        
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_9" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_9" id="__nav_9_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Niveau 1 - Contributeur Salesforce DevOps, les bases
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        
+          <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_9_label" aria-expanded="true">
+            <label class="md-nav__title" for="__nav_9">
+              <span class="md-nav__icon md-icon"></span>
+              
+  
+  Niveau 1 - Contributeur Salesforce DevOps, les bases
+
+            </label>
+            <ul class="md-nav__list" data-md-scrollfix>
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Commencer ici
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../1-1-install-vs-code-and-sfdx-hardis/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Lab 1.1 - Installer VS Code, Git et sfdx-hardis
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../1-2-create-your-dev-hub-scratch-orgs-and-pipeline/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Lab 1.2 - Créer votre Dev Hub, vos scratch orgs et votre pipeline CI/CD
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../1-3-start-a-user-story-on-a-git-branch/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Lab 1.3 - Démarrer une User Story sur sa propre branche Git
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../1-4-build-a-custom-field-in-your-org/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Lab 1.4 - Construire un champ personnalisé dans votre org Salesforce
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Lab 1.5 - Récupérer, commiter et publier vos modifications Salesforce
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="././" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Lab 1.5 - Récupérer, commiter et publier vos modifications Salesforce
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+
+<nav class="md-nav md-nav--secondary" aria-label="Table des matières">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table des matières
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#la-situation" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        La situation
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#avant-de-commencer" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Avant de commencer
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#les-etapes" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Les étapes
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Les étapes">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-sortir-vos-modifications-de-lorg" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        1. Sortir vos modifications de l'org
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-demander-a-lorg-ce-qui-a-change" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        2. Demander à l'org ce qui a changé
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-prendre-les-votres-laisser-le-reste" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        3. Prendre les vôtres, laisser le reste
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#4-commiter-ce-que-vous-avez-rapatrie" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        4. Commiter ce que vous avez rapatrié
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#5-le-publier" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        5. Le publier
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#6-lire-le-package-avant-de-pousser" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        6. Lire le package avant de pousser
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#7-lire-ce-que-la-commande-a-fait-a-vos-fichiers" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        7. Lire ce que la commande a fait à vos fichiers
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#8-pousser" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        8. Pousser
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#ce-que-vous-devez-voir" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Ce que vous devez voir
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#verifiez-votre-travail" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Vérifiez votre travail
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#pour-aller-plus-loin" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Pour aller plus loin
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../1-6-pull-request-deployment-check-and-merge/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Lab 1.6 - Ouvrir une Pull Request, passer le contrôle de déploiement, merger
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../1-7-capstone-deliver-a-user-story-on-your-own/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Lab 1.7 - Épreuve finale : livrer une User Story tout seul
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+            </ul>
+          </nav>
+        
+      
+    </li>
+  
+
+      
+    
+      
+      
+      
+        
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_10" >
+        
+          
+          <label class="md-nav__link" for="__nav_10" id="__nav_10_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Niveau 2 - Contributeur Salesforce DevOps avancé
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        
+          <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_10_label" aria-expanded="false">
+            <label class="md-nav__title" for="__nav_10">
+              <span class="md-nav__icon md-icon"></span>
+              
+  
+  Niveau 2 - Contributeur Salesforce DevOps avancé
+
+            </label>
+            <ul class="md-nav__list" data-md-scrollfix>
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../level-2-contributor-advanced/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Commencer ici
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../level-2-contributor-advanced/2-1-backpromote-your-teammates-work/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Lab 2.1 - Backpromote : remettre votre org de dev au niveau de l'équipe
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../level-2-contributor-advanced/2-2-fix-a-missing-dependency-deployment-error/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Lab 2.2 - Corriger une erreur de déploiement due à une dépendance manquante
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../level-2-contributor-advanced/2-3-fix-broken-records-with-an-apex-deployment-action/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Lab 2.3 - Réparer des enregistrements cassés avec une deployment action Apex
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../level-2-contributor-advanced/2-4-ship-reference-data-and-a-batch-with-deployment-actions/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Lab 2.4 - Livrer des données de référence et un batch avec des deployment actions
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../level-2-contributor-advanced/2-5-pass-code-quality-and-apex-test-coverage/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Lab 2.5 - Passer la barrière de qualité de code et la couverture de tests Apex
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../level-2-contributor-advanced/2-6-permission-sets-and-profiles/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Lab 2.6 - Permission sets, profils, et pourquoi une autorisation disparaît
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../level-2-contributor-advanced/2-7-resolve-a-git-merge-conflict/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Lab 2.7 - Résoudre un conflit de merge Git avec un collègue
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../level-2-contributor-advanced/2-8-recover-from-committing-the-wrong-metadata/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Lab 2.8 - Se remettre d'avoir commité la mauvaise métadonnée
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../level-2-contributor-advanced/2-9-capstone-deliver-a-user-story-that-has-it-all/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Lab 2.9 - Épreuve finale : livrer une User Story qui a tout
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+            </ul>
+          </nav>
+        
+      
+    </li>
+  
+
+      
+    
+      
+      
+      
+        
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_11" >
+        
+          
+          <label class="md-nav__link" for="__nav_11" id="__nav_11_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Niveau 3 - Release manager Salesforce DevOps
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        
+          <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_11_label" aria-expanded="false">
+            <label class="md-nav__title" for="__nav_11">
+              <span class="md-nav__icon md-icon"></span>
+              
+  
+  Niveau 3 - Release manager Salesforce DevOps
+
+            </label>
+            <ul class="md-nav__list" data-md-scrollfix>
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../level-3-release-manager/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Commencer ici
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../level-3-release-manager/3-1-configure-the-pipeline-up-to-production/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Lab 3.1 - Configurer la pipeline CI/CD jusqu'à la production
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../level-3-release-manager/3-2-review-a-contributor-pull-request/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Lab 3.2 - Relire et merger la Pull Request d'un contributeur
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../level-3-release-manager/3-3-deploy-to-integration-and-read-the-log/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Lab 3.3 - Lire le log de déploiement, et ce que .forceignore lui cache
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../level-3-release-manager/3-4-merge-colliding-pull-requests/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Lab 3.4 - Trois Pull Requests se percutent : choisir l'ordre de merge
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../level-3-release-manager/3-5-promote-to-uat-and-write-release-notes/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Lab 3.5 - Promouvoir en UAT et écrire les notes de version
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../level-3-release-manager/3-6-release-to-production-and-read-dora-metrics/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Lab 3.6 - Livrer en production et lire vos métriques DORA
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../level-3-release-manager/3-7-hotfix-and-retrofit/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Lab 3.7 - La production est cassée : hotfix et retrofit
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../level-3-release-manager/3-8-monitor-your-production-org/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Lab 3.8 - Monitorer votre org de production
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../level-3-release-manager/3-9-generate-the-project-documentation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Lab 3.9 - Générer la documentation du projet Salesforce
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../level-3-release-manager/3-10-promote-a-subset-with-promotion-branches/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Lab 3.10 - Promouvoir un sous-ensemble avec les promotion branches (Beta)
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../level-3-release-manager/3-11-capstone-run-a-weekly-release-cycle/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Lab 3.11 - Épreuve finale : mener un cycle de release hebdomadaire
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+            </ul>
+          </nav>
+        
+      
+    </li>
+  
+
+      
+    
+      
+      
+      
+        
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../help/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Aide
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+      
+    
+      
+      
+      
+        
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../BACKLOG/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Backlog
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+      
+    
+      
+      
+      
+        
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../badges/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Badges
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+      
+    
+      
+      
+      
+        
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="https://sfdx-hardis.cloudity.com/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  sfdx-hardis documentation
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+      
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  
+                    
+                    
+                    
+                      
+                    
+                    
+                      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+                      <div class="md-sidebar-button__wrapper">
+                        <label class="md-sidebar-button" for="__toc"></label>
+                      </div>
+                    
+                  
+                  <div class="md-sidebar__inner">
+                    
+
+
+<nav class="md-nav md-nav--secondary" aria-label="Table des matières">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table des matières
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#la-situation" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        La situation
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#avant-de-commencer" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Avant de commencer
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#les-etapes" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Les étapes
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Les étapes">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-sortir-vos-modifications-de-lorg" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        1. Sortir vos modifications de l'org
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-demander-a-lorg-ce-qui-a-change" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        2. Demander à l'org ce qui a changé
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-prendre-les-votres-laisser-le-reste" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        3. Prendre les vôtres, laisser le reste
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#4-commiter-ce-que-vous-avez-rapatrie" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        4. Commiter ce que vous avez rapatrié
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#5-le-publier" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        5. Le publier
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#6-lire-le-package-avant-de-pousser" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        6. Lire le package avant de pousser
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#7-lire-ce-que-la-commande-a-fait-a-vos-fichiers" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        7. Lire ce que la commande a fait à vos fichiers
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#8-pousser" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        8. Pousser
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#ce-que-vous-devez-voir" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Ce que vous devez voir
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#verifiez-votre-travail" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Vérifiez votre travail
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#pour-aller-plus-loin" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Pour aller plus loin
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+  
+    <a href="https://github.com/hardisgroupcom/sfdx-hardis-training/edit/main/labs/fr/level-1-contributor-basics/1-5-retrieve-commit-and-publish-your-changes.md" title="Editer cette page" class="md-content__button md-icon" rel="edit">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-file-pen" viewBox="0 0 24 24"><path d="M12.659 22H18a2 2 0 0 0 2-2V8a2.4 2.4 0 0 0-.706-1.706l-3.588-3.588A2.4 2.4 0 0 0 14 2H6a2 2 0 0 0-2 2v9.34"/><path d="M14 2v5a1 1 0 0 0 1 1h5M10.378 12.622a1 1 0 0 1 3 3.003L8.36 20.637a2 2 0 0 1-.854.506l-2.867.837a.5.5 0 0 1-.62-.62l.836-2.869a2 2 0 0 1 .506-.853z"/></svg>
+    </a>
+  
+  
+
+
+<h1 id="lab-15-recuperer-commiter-et-publier-vos-modifications-salesforce">Lab 1.5 - Récupérer, commiter et publier vos modifications Salesforce<a class="headerlink" href="#lab-15-recuperer-commiter-et-publier-vos-modifications-salesforce" title="Permanent link">&para;</a></h1>
+<p><strong>Niveau</strong> : 1 Contributeur, les bases</p>
+<p><strong>Durée</strong> : ~20 min</p>
+<p><strong>Vous allez</strong> : rapatrier vos modifications d'org dans le repository, décider lesquelles appartiennent
+à votre story, et pousser une branche prête à être relue.</p>
+<h2 id="la-situation">La situation<a class="headerlink" href="#la-situation" title="Permanent link">&para;</a></h2>
+<p>Votre champ existe dans une seule org. Si votre portable rendait l'âme ce soir, la story aussi.
+Publier, c'est ce qui transforme "ça marche dans mon org" en "l'équipe l'a".</p>
+<p>C'est l'étape où se concentre l'essentiel de la réflexion dans un projet CI/CD, et celle que les gens
+expédient. Allez lentement cette fois-ci, et chaque story suivante prendra cinq minutes.</p>
+<h2 id="avant-de-commencer">Avant de commencer<a class="headerlink" href="#avant-de-commencer" title="Permanent link">&para;</a></h2>
+<ul class="task-list">
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <a href="../1-4-build-a-custom-field-in-your-org/">Lab 1.4</a> terminé : le champ existe dans <code>helios-dev</code>, accordé à l'équipe de pose, sur la
+      présentation de page</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> Vous êtes toujours sur <code>features/US-014-panels-required</code></li>
+</ul>
+<h2 id="les-etapes">Les étapes<a class="headerlink" href="#les-etapes" title="Permanent link">&para;</a></h2>
+<h3 id="1-sortir-vos-modifications-de-lorg">1. Sortir vos modifications de l'org<a class="headerlink" href="#1-sortir-vos-modifications-de-lorg" title="Permanent link">&para;</a></h3>
+<p>Votre champ est dans Salesforce. Rien de lui n'est encore sur votre machine, et git voit uniquement
+ce qui est sur votre machine.</p>
+<p>Dans le panneau <strong>DevOps Pipeline</strong>, sous <strong>Project Contribution Workflow</strong>, cliquez sur la carte
+<strong>Commit changes</strong> <span class="pill-ref pill-ref-1">(1)</span>.</p>
+<p><a class="glightbox" data-type="image" href="../../../_assets/annotated/vscode/pipeline-cards-level1--commit-changes.png"><img alt="La carte Commit changes du panneau DevOps Pipeline" src="../../../_assets/annotated/vscode/pipeline-cards-level1--commit-changes.png" /></a></p>
+<p>Elle ouvre le <strong>Metadata Retriever</strong>, par lequel commence chaque publication.</p>
+<h3 id="2-demander-a-lorg-ce-qui-a-change">2. Demander à l'org ce qui a changé<a class="headerlink" href="#2-demander-a-lorg-ce-qui-a-change" title="Permanent link">&para;</a></h3>
+<p>Vérifiez que l'org <span class="pill-ref pill-ref-1">(1)</span> indique <code>helios-dev</code>, celle dans laquelle vous avez construit.
+<strong>Recent Changes</strong> <span class="pill-ref pill-ref-2">(2)</span> est déjà sélectionné : il demande à Salesforce ce qui a été modifié
+récemment plutôt que de lister les dizaines de milliers de composants que contient une org. Cliquez
+sur <strong>Search Metadata</strong> <span class="pill-ref pill-ref-3">(3)</span>.</p>
+<p><a class="glightbox" data-type="image" href="../../../_assets/annotated/vscode/metadata-retriever-recent-changes--find.png"><img alt="Le Metadata Retriever listant les modifications récentes de l'org" src="../../../_assets/annotated/vscode/metadata-retriever-recent-changes--find.png" /></a></p>
+<p>Le nombre de résultats est en <span class="pill-ref pill-ref-4">(4)</span> : quelques dizaines sur votre org, moins sur l'image. Chaque
+ligne dit ce qu'elle est, son nom, qui l'a touchée en dernier et quand. Toutes portent votre nom, et
+la plupart ne sont pas votre story.</p>
+<div class="admonition info">
+<p class="admonition-title">Pourquoi la liste est plus longue que votre story</p>
+<p>Une scratch org se souvient de chaque composant qui y est arrivé, quelle qu'en soit la voie. Au
+Lab 1.2, <strong>Set up my training environment</strong> a déployé toute l'application Helios dans
+<code>helios-dev</code> sous votre utilisateur : chaque objet, champ et permission set de l'application est
+donc dans cette liste, daté du Lab 1.2. Vos quatre modifications sont celles datées d'il y a
+quelques minutes.</p>
+<p>Cliquez sur l'en-tête de colonne <strong>Last Updated Date</strong>, deux fois si besoin, pour que les plus
+récentes soient en premier. Sur une org d'équipe, les lignes plus anciennes seraient vos
+collègues et Salesforce déplaçant des choses tout seul. Dans les deux cas, c'est exactement
+pourquoi l'étape suivante est une décision et non un bouton.</p>
+</div>
+<h3 id="3-prendre-les-votres-laisser-le-reste">3. Prendre les vôtres, laisser le reste<a class="headerlink" href="#3-prendre-les-votres-laisser-le-reste" title="Permanent link">&para;</a></h3>
+<p>Triez par <strong>Last Updated Date</strong>, du plus récent au plus ancien, et retrouvez vos quatre.
+Cochez-les, et elles seules, par leur nom plutôt que par leur position : Salesforce modifie
+des composants de son côté, et l'un d'eux qui se glisse entre les vôtres est exactement ce
+dont cette étape parle :</p>
+<ol>
+<li><strong>PermissionSet</strong> <code>Helios_Delivery_Manager</code> <span class="pill-ref pill-ref-1">(1)</span> - l'accès en écriture des planificateurs</li>
+<li><strong>PermissionSet</strong> <code>Helios_Delivery_Crew</code> <span class="pill-ref pill-ref-2">(2)</span> - l'accès en lecture de l'équipe de pose</li>
+<li><strong>Layout</strong> <code>Installation__c-Installation Layout</code> <span class="pill-ref pill-ref-3">(3)</span> - le placement, modifié quand vous avez
+   coché la présentation de page dans l'assistant de champ</li>
+<li><strong>CustomField</strong> <code>Installation__c.Panels_Required__c</code> <span class="pill-ref pill-ref-4">(4)</span> - le champ</li>
+</ol>
+<p>Puis cliquez sur <strong>Retrieve 4 selected</strong> <span class="pill-ref pill-ref-5">(5)</span>.</p>
+<p><a class="glightbox" data-type="image" href="../../../_assets/annotated/vscode/metadata-retriever-selected--us-014.png"><img alt="Le Metadata Retriever avec les quatre composants de US-014 cochés" src="../../../_assets/annotated/vscode/metadata-retriever-selected--us-014.png" /></a></p>
+<p>Deux règles prennent cette décision à votre place, et elles sont tout ce lab :</p>
+<ul>
+<li><strong>Si vous n'avez pas voulu le modifier, il n'a rien à faire dans votre story.</strong> Le commiter rend
+  votre Pull Request parlante d'autre chose que US-014, et le relecteur ne peut plus dire quelle
+  partie est la vôtre</li>
+<li><strong>Dans le doute, laissez-le de côté.</strong> Rien n'est perdu. C'est toujours dans votre org, et vous
+  pourrez le publier dans une story ultérieure une fois que vous saurez ce que c'est</li>
+</ul>
+<p>Le retriever écrit ces quatre composants dans <code>force-app/</code> sous forme de fichiers. Il ne change rien
+dans Salesforce et rien sur votre branche pour l'instant.</p>
+<div class="admonition note">
+<p class="admonition-title">S'il dit que la récupération a échoué à cause de conflits de sources</p>
+<p><strong>Failed to retrieve metadata due to source conflicts</strong> veut dire que les fichiers de votre
+machine et les composants de l'org ont changé tous les deux depuis leur dernier accord. Ici ce
+n'est pas un conflit, c'est le but : vous avez modifié l'org exprès, et c'est l'org qui a
+raison. Prenez l'option qui écrase les fichiers locaux et relancez la récupération. Cela
+compte sur un vrai projet, où quelqu'un d'autre a pu écrire ces fichiers ; pas ici, où rien
+d'autre que votre propre org n'y a touché.</p>
+</div>
+<h3 id="4-commiter-ce-que-vous-avez-rapatrie">4. Commiter ce que vous avez rapatrié<a class="headerlink" href="#4-commiter-ce-que-vous-avez-rapatrie" title="Permanent link">&para;</a></h3>
+<p>Ouvrez le panneau <strong>Source Control</strong> <span class="pill-ref pill-ref-1">(1)</span> : dans la barre de gauche, l'icône dessinée comme trois
+petits cercles reliés par des traits, à la manière d'une branche. Les quatre fichiers écrits par la
+récupération y attendent <span class="pill-ref pill-ref-2">(2)</span>.</p>
+<p><a class="glightbox" data-type="image" href="../../../_assets/annotated/vscode/source-control-retrieved--commit.png"><img alt="Le panneau Source Control avec les quatre fichiers récupérés" src="../../../_assets/annotated/vscode/source-control-retrieved--commit.png" /></a></p>
+<div class="admonition tip">
+<p class="admonition-title">Lisez la liste en arborescence</p>
+<p>Par défaut le panneau affiche les chemins complets, et un chemin Salesforce est assez long pour
+être illisible. Le menu <strong>...</strong> à droite de l'en-tête <strong>Changes</strong> propose <strong>View as Tree</strong> :
+les mêmes fichiers, repliés dans les dossiers où ils vivent. Réglez-le une fois et VS Code s'en
+souvient.</p>
+</div>
+<p>Cliquez sur chacun. VS Code ouvre le <em>diff</em> du fichier, l'avant et l'après côte à côte, avec les
+lignes ajoutées en vert et les lignes supprimées en rouge. Lire les quatre prend une minute, et c'est
+le dernier moment où une erreur est gratuite.</p>
+<p>Puis mettez-les dans le commit <strong>un par un</strong>. Pointez un fichier : une rangée de petites icônes
+apparaît à droite de son nom. Le <strong>+</strong> est <strong>Stage Changes</strong>, et il déplace ce fichier-là dans un
+groupe appelé <strong>Staged Changes</strong> juste au-dessus. Faites-le pour chacun des quatre, et lisez le nom
+au moment où vous cliquez.</p>
+<div class="admonition danger">
+<p class="admonition-title">N'utilisez jamais Stage All Changes</p>
+<p>Le <strong>+</strong> sur l'en-tête du groupe <strong>Changes</strong> stage tout ce que le panneau voit, y compris des
+fichiers que vous n'avez jamais regardés : un log qui traîne, quelque chose qu'un installeur a
+laissé, un fichier écrit par une autre commande pendant que vous travailliez. Le panneau
+ci-dessus n'affiche que vos quatre fichiers, et les vôtres ne seront pas toujours aussi rangés.</p>
+<p>Le staging est le seul moment où vous décidez de ce que contient votre story. Le faire fichier
+par fichier prend dix secondes et c'est la différence entre une Pull Request qu'un relecteur peut
+lire et une qu'il faut démêler. Sur un vrai projet, c'est l'habitude que les gens remarquent.</p>
+</div>
+<p>Les quatre fichiers stagés, tapez un message <span class="pill-ref pill-ref-3">(3)</span> et cliquez sur <strong>Commit</strong> <span class="pill-ref pill-ref-4">(4)</span>. Le bouton
+commite ce qui est stagé et laisse tout le reste tranquille.</p>
+<p>Écrivez le message pour la personne qui relira demain, pas pour vous aujourd'hui. Première ligne
+courte, puis une ligne vide, puis le pourquoi :</p>
+<blockquote>
+<p>US-014 Panels Required on Installation</p>
+<p>Adds Panels_Required__c on Installation__c so the crew knows how many panels to load.
+Read access for the crew on Helios_Delivery_Crew, edit access for planners on
+Helios_Delivery_Manager, field added to the Installation layout.</p>
+</blockquote>
+<p>Ce texte suit votre branche partout : c'est ce que le relecteur voit dans la Pull Request, et c'est
+ce que trouvera quiconque lira l'historique de ce projet dans deux ans.</p>
+<div class="admonition tip">
+<p class="admonition-title">Que faire du fichier que vous n'avez pas demandé</p>
+<p>Laissez-le hors du staging et il reste hors de votre commit, ce qui suffit pour l'instant. Si
+vous savez ce que c'est et que vous savez que c'est sans intérêt, faites un clic droit dessus et
+<strong>Discard Changes</strong>. Si vous ne savez pas ce que c'est, laissez-le tranquille et demandez : un
+fichier que vous ne savez pas expliquer est un fichier qui n'a rien à faire dans votre story, et
+le supprimer à l'aveugle ne vaut pas mieux que le commiter à l'aveugle.</p>
+</div>
+<p>Votre travail est maintenant dans le repository, sur votre branche, sur votre machine. Il reste à le
+préparer pour l'équipe, et c'est ce que fait Save / Publish.</p>
+<h3 id="5-le-publier">5. Le publier<a class="headerlink" href="#5-le-publier" title="Permanent link">&para;</a></h3>
+<p>Dans le panneau <strong>DevOps Pipeline</strong>, cliquez sur la carte <strong>Save / Publish</strong> <span class="pill-ref pill-ref-1">(1)</span>.</p>
+<p><a class="glightbox" data-type="image" href="../../../_assets/annotated/vscode/pipeline-cards-level1--save-publish.png"><img alt="La carte Save / Publish du panneau DevOps Pipeline" src="../../../_assets/annotated/vscode/pipeline-cards-level1--save-publish.png" /></a></p>
+<p>La première question est celle qui piège tout le monde.</p>
+<p><a class="glightbox" data-type="image" href="../../../_assets/annotated/vscode/work-save-commit-ready.png"><img alt="La commande Save / Publish demandant si la métadonnée est déjà commitée" src="../../../_assets/annotated/vscode/work-save-commit-ready.png" /></a></p>
+<p>Répondez <span class="pill-ref pill-ref-1">(1)</span>, <em>Yes, my commit(s) are ready!</em>, parce qu'ils le sont : vous avez récupéré et
+commité aux étapes ci-dessus. <span class="pill-ref pill-ref-2">(2)</span> demande à la commande de tirer l'org à votre place, et la
+troisième réponse explique ce qu'est un commit, ce qui ne coûte rien à lire.</p>
+<div class="admonition tip">
+<p class="admonition-title">Commitez d'abord, à chaque fois</p>
+<p><span class="pill-ref pill-ref-2">(2)</span> existe pour le jour où vous avez oublié de récupérer et de commiter. Ce cours n'en a
+jamais besoin, parce que l'habitude qu'il enseigne est celle du dessus : récupérer avec le
+Metadata Retriever, lire le diff, stager fichier par fichier, commiter. Gardez cette habitude et
+la réponse est toujours <span class="pill-ref pill-ref-1">(1)</span>.</p>
+</div>
+<h3 id="6-lire-le-package-avant-de-pousser">6. Lire le package avant de pousser<a class="headerlink" href="#6-lire-le-package-avant-de-pousser" title="Permanent link">&para;</a></h3>
+<p>La commande marque une pause avant de pousser et vous demande de confirmer <span class="pill-ref pill-ref-1">(1)</span>. Profitez de la
+pause : c'est le dernier coup d'œil que vous aurez sur votre story avant qu'elle quitte votre
+machine.</p>
+<p>Cliquez sur le rapport <strong>Git Delta package.xml</strong> en bas du panneau de la commande <span class="pill-ref pill-ref-2">(2)</span>. C'est la
+liste de ce que vos commits ont changé par rapport à <code>integration</code>, calculée à partir de git, et le
+nombre sur le bouton est le nombre de composants qu'elle contient : <strong>4</strong>.</p>
+<p><a class="glightbox" data-type="image" href="../../../_assets/annotated/vscode/work-save-package-xml.png"><img alt="La commande Save / Publish en attente de réponse, avec le rapport package.xml en bas" src="../../../_assets/annotated/vscode/work-save-package-xml.png" /></a></p>
+<p>Vous cherchez un bloc par type de chose que vous avez modifiée, chacun nommant ce qu'il contient. Vos
+quatre doivent toutes y être : le champ <code>Installation__c.Panels_Required__c</code>, la présentation de page
+<code>Installation__c-Installation Layout</code>, et les permission sets <code>Helios_Delivery_Crew</code> et
+<code>Helios_Delivery_Manager</code>.</p>
+<p><strong>Cette liste est votre story, telle que la pipeline la voit.</strong> Si un composant que vous attendiez
+manque ici, git ne sait pas que vous l'avez modifié, et il manquera aussi en intégration : le
+déploiement échouera, ou pire, réussira en ne faisant que la moitié de ce que vous vouliez. La lire
+avant chaque push est la seule habitude qui sépare un contributeur qui a des ennuis de déploiement
+d'un contributeur qui n'en a pas.</p>
+<p>Ouvrez ensuite le manifeste complet, <code>manifest/package.xml</code>. Dans le panneau <strong>DevOps Pipeline</strong>,
+cliquez sur le menu <strong>Deployment packages</strong> <span class="pill-ref pill-ref-1">(1)</span> de l'en-tête, l'icône d'une boîte avec une
+flèche, puis sur <strong>Package XML</strong> <span class="pill-ref pill-ref-2">(2)</span>.</p>
+<p><a class="glightbox" data-type="image" href="../../../_assets/annotated/vscode/pipeline-packages-menu--package-xml.png"><img alt="Le menu Deployment packages du panneau DevOps Pipeline, ouvert" src="../../../_assets/annotated/vscode/pipeline-packages-menu--package-xml.png" /></a></p>
+<p>Le visualiseur de package s'ouvre sur le fichier. Chaque ligne est un type de composant, avec le
+nombre que le fichier en liste. Dépliez <strong>CustomField</strong> <span class="pill-ref pill-ref-1">(1)</span> :
+<code>Installation__c.Panels_Required__c</code> y est.</p>
+<p><a class="glightbox" data-type="image" href="../../../_assets/annotated/vscode/package-xml--custom-field.png"><img alt="Le visualiseur de package sur manifest/package.xml" src="../../../_assets/annotated/vscode/package-xml--custom-field.png" /></a></p>
+<p>Il est bien plus long que le rapport, et c'est correct : c'est la liste de <strong>tout ce que ce projet
+déploie</strong>, l'application Helios entière, et chaque story y ajoute ses nouveaux composants. Save /
+Publish vient d'y fusionner votre delta, ce qui pour US-014 veut dire une seule ligne nouvelle,
+<code>Installation__c.Panels_Required__c</code> : la présentation de page et les deux permission sets y étaient
+déjà, parce que l'application les a toujours eus. Chaque déploiement d'<code>integration</code> envoie ce
+fichier entier, et Salesforce calcule ce qui a réellement changé.</p>
+<details>
+<summary>Sous le capot : à quoi ressemblent ces blocs</summary>
+<p>Le visualiseur lit et écrit un fichier ordinaire, <code>manifest/package.xml</code>, et <strong>Edit File</strong> dans son
+en-tête l'ouvre en texte. Le fichier est du XML, et chaque bloc associe une liste de <code>members</code> au
+<code>name</code> de ce qu'ils sont :</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nt">&lt;types&gt;</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="w">    </span><span class="nt">&lt;members&gt;</span>Installation__c.Panels_Required__c<span class="nt">&lt;/members&gt;</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="w">    </span><span class="nt">&lt;name&gt;</span>CustomField<span class="nt">&lt;/name&gt;</span>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="nt">&lt;/types&gt;</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="nt">&lt;types&gt;</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="w">    </span><span class="nt">&lt;members&gt;</span>Installation__c-Installation<span class="w"> </span>Layout<span class="nt">&lt;/members&gt;</span>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="w">    </span><span class="nt">&lt;name&gt;</span>Layout<span class="nt">&lt;/name&gt;</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="nt">&lt;/types&gt;</span>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="nt">&lt;types&gt;</span>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="w">    </span><span class="nt">&lt;members&gt;</span>Helios_Delivery_Crew<span class="nt">&lt;/members&gt;</span>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="w">    </span><span class="nt">&lt;members&gt;</span>Helios_Delivery_Manager<span class="nt">&lt;/members&gt;</span>
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a><span class="w">    </span><span class="nt">&lt;name&gt;</span>PermissionSet<span class="nt">&lt;/name&gt;</span>
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="nt">&lt;/types&gt;</span>
+</code></pre></div>
+<p>Salesforce appelle cela un manifeste, et tous les outils de déploiement de la plateforme lisent le
+même format. Le compteur du bouton de rapport compte les entrées et non les blocs, il peut donc en
+afficher une de plus que prévu quand une modification entraîne son objet parent avec elle.</p>
+<p><code>manifest/package.xml</code> a la même forme, avec tous les composants de l'application. Un projet peut
+demander à la pipeline de ne déployer que le delta à la place, avec <code>useDeltaDeployment</code>, et celui-ci
+ne le fait pas : un déploiement complet est plus lent et n'oublie jamais rien, ce qui est le bon
+compromis pour une formation.</p>
+</details>
+<h3 id="7-lire-ce-que-la-commande-a-fait-a-vos-fichiers">7. Lire ce que la commande a fait à vos fichiers<a class="headerlink" href="#7-lire-ce-que-la-commande-a-fait-a-vos-fichiers" title="Permanent link">&para;</a></h3>
+<p>Remontez dans le panneau de la commande. Entre vos réponses, elle a affiché quelques lignes à propos
+du nettoyage : des références à des composants supprimés, et les positions en pixels à l'intérieur
+des Flows. C'est le nettoyage automatique du projet, et il tourne à chaque publication, sur le
+travail de tout le monde, pour que personne n'ait à se souvenir des règles de la maison.</p>
+<p>Sur cette story il n'a presque rien à faire, parce que vous avez modifié un champ, une présentation
+de page et un permission set, et que les règles d'ici visent les Profiles et les Flows. Il a aussi
+commité ce qu'il a modifié, par-dessus votre propre commit. Le Niveau 2 a tout un lab sur le jour où
+le nettoyage enlève quelque chose que vous vouliez garder.</p>
+<details>
+<summary>Sous le capot : ce que "Save / Publish" vient de faire</summary>
+<p>Le panneau a lancé :</p>
+<div class="highlight"><pre><span></span><code>sf hardis:work:save
+</code></pre></div>
+<p>qui a effectué, dans cet ordre :</p>
+<ol>
+<li><strong>Calculé le delta</strong>, le Git Delta package.xml, à partir du diff git entre votre branche et
+   <code>integration</code>, et <strong>l'a fusionné dans <code>manifest/package.xml</code></strong>. Pas à partir de ce que vous avez
+   coché dans le retriever : à partir de ce que vos commits ont réellement changé. C'est
+   habituellement la même chose, et la minute passée à lire le rapport est la minute où vous
+   découvrez que ce n'est pas le cas</li>
+<li>
+<p><strong>Appliqué les règles de nettoyage</strong> déclarées dans <code>config/.sfdx-hardis.yml</code> :</p>
+<div class="highlight"><pre><span></span><code>  autoCleanTypes:
+    - destructivechanges
+    - localfields
+    - productrequest
+    - flowPositions
+    - minimizeProfiles
+</code></pre></div>
+<p><code>flowPositions</code> retire les coordonnées en pixels des éléments de flow, qui changent chaque fois
+ que quelqu'un ouvre un flow et produisent des conflits qui ne veulent rien dire.
+ <code>minimizeProfiles</code> retire des Profiles tout ce qu'un Permission Set devrait porter</p>
+</li>
+<li>
+<p><strong>Retiré des Profiles les permissions utilisateur</strong> listées sous <code>autoRemoveUserPermissions</code>, que
+   ce projet a décidé de ne jamais laisser voyager d'une org à l'autre par un déploiement. Les
+   Profiles uniquement : un Permission Set garde tout ce qu'on lui a donné</p>
+</li>
+<li><strong>Commité ce qu'il a modifié</strong>, sous <code>chore(sfdx-hardis): update package content</code> et
+   <code>chore(sfdx-hardis): clean sfdx project</code>. Ces commits sont ceux de l'outil, pas les vôtres : le
+   vôtre est celui que vous avez écrit à l'étape 4</li>
+<li><strong>Poussé</strong> la branche sur votre fork (votre copie personnelle du repository du cours sur GitHub, par
+   exemple <code>github.com/my-username/sfdx-hardis-training</code>)</li>
+</ol>
+<p>Chacune de ces étapes est de la configuration, pas de la magie. Tout ce qu'il a fait est dans
+<code>config/.sfdx-hardis.yml</code>, et un projet qui veut un autre comportement change ce fichier.</p>
+<!-- command-links:start -->
+<p>Documentation de la commande : <a href="https://sfdx-hardis.cloudity.com/hardis/work/save/">hardis:work:save</a></p>
+<!-- command-links:end -->
+</details>
+<h3 id="8-pousser">8. Pousser<a class="headerlink" href="#8-pousser" title="Permanent link">&para;</a></h3>
+<p>La commande demande avant de pousser : c'est la question marquée <span class="pill-ref pill-ref-1">(1)</span> sur l'image de l'étape 6.
+Répondez <strong>Yes</strong> et la branche part sur votre fork
+(<code>github.com/my-username/sfdx-hardis-training</code>). Si vous avez répondu <strong>No</strong>, ouvrez le panneau
+<strong>Source Control</strong> et cliquez sur <strong>Publish Branch</strong>.</p>
+<h2 id="ce-que-vous-devez-voir">Ce que vous devez voir<a class="headerlink" href="#ce-que-vous-devez-voir" title="Permanent link">&para;</a></h2>
+<ul>
+<li>Le rapport <strong>Git Delta package.xml</strong> nommant vos quatre composants et rien que vous n'ayez touché :
+  le champ, la présentation de page et les deux permission sets</li>
+<li><code>manifest/package.xml</code> gagnant une ligne, le nouveau champ, dans un commit fait par l'outil</li>
+<li>Votre branche sur GitHub, dans votre fork (<code>github.com/my-username/sfdx-hardis-training</code>), sous
+  <strong>Branches</strong></li>
+<li>Le panneau DevOps Pipeline toujours sans votre branche : il dessine une branche dès qu'elle a une
+  Pull Request, et la vôtre en reçoit une au <a href="../1-6-pull-request-deployment-check-and-merge/">Lab 1.6</a></li>
+</ul>
+<details class="troubleshoot">
+<summary>En cas de problème</summary>
+<p><strong>Recent Changes liste des choses que je n'ai jamais touchées.</strong>
+Normal sur n'importe quelle org : le déploiement que le <a href="../1-2-create-your-dev-hub-scratch-orgs-and-pipeline/">Lab 1.2</a> a fait dans cette org compte aussi
+comme une modification, et le brassage interne de Salesforce également. Ne cochez que vos quatre. La
+colonne <strong>Last Updated Date</strong> est le moyen le plus rapide de trancher : triez dessus, et les vôtres
+sont en haut.</p>
+<p><strong>La récupération échoue avec "Failed to retrieve metadata due to source conflicts".</strong>
+Une scratch org garde trace de ce qu'elle a échangé en dernier avec votre projet. Quand les fichiers
+de votre machine ont changé dans son dos, après un <strong>Reset this level</strong> ou une branche que vous avez
+jetée, elle refuse de les écraser sans demander. Cliquez sur <strong>I don't care, overwrite!</strong> : ce que
+vous voulez, c'est la version de l'org, et git vous montre quand même le diff avant que quoi que ce
+soit ne soit commité.</p>
+<p><strong>Recent Changes ne trouve rien du tout.</strong>
+Vous regardez la mauvaise org. Vérifiez que le sélecteur en haut à droite indique <code>helios-dev</code>, et
+que la section Status du panneau sfdx-hardis dit la même chose.</p>
+<p><strong><code>manifest/package.xml</code> est vide.</strong>
+Vous n'avez aucun commit sur cette branche, il n'y a donc aucune différence à décrire. Revenez à
+l'étape 4 : récupérer écrit des fichiers, commiter est ce qui les met sur la branche.</p>
+<p><strong>Un fichier que vous n'avez pas touché montre des suppressions que vous ne comprenez pas.</strong>
+C'est le nettoyage automatique qui fait son travail, et les Profiles sont là où vous le rencontrez le
+plus. Lisez les règles de nettoyage dans le bloc Sous le capot ci-dessus. Rien n'est perdu dans votre
+org : le nettoyage change ce qui est commité, jamais ce qui est dans Salesforce.</p>
+<p><strong>Le push est rejeté.</strong>
+Votre fork (<code>github.com/my-username/sfdx-hardis-training</code>) a bougé, en général parce que vous avez
+réinitialisé un niveau. Tirez d'abord : panneau Source Control, menu <strong>...</strong>, <strong>Pull</strong>.</p>
+</details>
+<h2 id="verifiez-votre-travail">Vérifiez votre travail<a class="headerlink" href="#verifiez-votre-travail" title="Permanent link">&para;</a></h2>
+<p>Welcome page &gt; <strong>Training: Level 1</strong> &gt; <strong>Check my work</strong>, puis choisissez le <strong>Lab 1.5</strong>.</p>
+<p>Il lit la copie de votre branche dans votre fork (<code>github.com/my-username/sfdx-hardis-training</code>),
+celle que Save / Publish a poussée : le champ, le permission set qui l'accorde, et la présentation de
+page qui le porte. Un commit resté sur votre machine ne compte pas, parce que personne d'autre ne
+peut le voir.</p>
+<h2 id="pour-aller-plus-loin">Pour aller plus loin<a class="headerlink" href="#pour-aller-plus-loin" title="Permanent link">&para;</a></h2>
+<ul>
+<li><a href="https://sfdx-hardis.cloudity.com/salesforce-devops-publish-user-story/">Publier votre User Story</a></li>
+<li><a href="https://sfdx-hardis.cloudity.com/salesforce-devops-config-cleaning/">Nettoyage automatique des sources</a></li>
+</ul>
+<p><a class="md-button md-button--primary" href="../1-6-pull-request-deployment-check-and-merge/">Suite : Lab 1.6 - Ouvrir une Pull Request, passer le contrôle de déploiement, merger</a></p>
+
+
+
+
+
+
+
+
+
+  
+  
+
+
+
+  
+
+
+
+
+  <h2 id="__comments">Questions and comments</h2>
+  <script src="https://giscus.app/client.js"
+          data-repo="hardisgroupcom/sfdx-hardis-training"
+          data-repo-id="R_kgDOUcjgQw"
+          data-category="Q&amp;A"
+          data-category-id="DIC_kwDOUcjgQ84DF-lC"
+          data-mapping="pathname"
+          data-strict="1"
+          data-reactions-enabled="1"
+          data-emit-metadata="0"
+          data-input-position="top"
+          data-theme="preferred_color_scheme"
+          data-lang="en"
+          data-loading="lazy"
+          crossorigin="anonymous"
+          async>
+  </script>
+
+  <script>
+    // Keep the Giscus iframe in sync with the palette toggle. It is a
+    // cross-origin frame, so its theme can only be changed by postMessage.
+    (function () {
+      if (window.__giscusThemeSync) {
+        return;
+      }
+      window.__giscusThemeSync = true;
+      var giscusTheme = function () {
+        var scheme = document.body.getAttribute("data-md-color-scheme");
+        return scheme === "slate" ? "dark" : "light";
+      };
+      var apply = function () {
+        var frame = document.querySelector("iframe.giscus-frame");
+        if (frame && frame.contentWindow) {
+          frame.contentWindow.postMessage(
+            { giscus: { setConfig: { theme: giscusTheme() } } },
+            "https://giscus.app"
+          );
+        }
+      };
+      new MutationObserver(apply).observe(document.body, {
+        attributes: true,
+        attributeFilter: ["data-md-color-scheme"]
+      });
+      window.addEventListener("message", function (event) {
+        if (event.origin === "https://giscus.app") {
+          apply();
+        }
+      });
+    })();
+  </script>
+
+                
+              </article>
+            </div>
+          
+          
+  <script>var tabs=__md_get("__tabs");if(Array.isArray(tabs))e:for(var set of document.querySelectorAll(".tabbed-set")){var labels=set.querySelector(".tabbed-labels");for(var tab of tabs)for(var label of labels.getElementsByTagName("label"))if(label.innerText.trim()===tab){var input=document.getElementById(label.htmlFor);input.checked=!0;continue e}}</script>
+
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-circle-arrow-up" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="m16 12-4-4-4 4M12 16V8"/></svg>
+  Retour en haut de la page
+</button>
+        
+      </main>
+      
+        
+
+
+
+
+<footer class="md-footer">
+  
+    
+      
+      <nav class="md-footer__inner md-grid" aria-label="Pied de page" >
+        
+          
+          <a href="../1-4-build-a-custom-field-in-your-org/" class="md-footer__link md-footer__link--prev" aria-label="Précédent: Lab 1.4 - Construire un champ personnalisé dans votre org Salesforce">
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-arrow-left" viewBox="0 0 24 24"><path d="m12 19-7-7 7-7M19 12H5"/></svg>
+            </div>
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Précédent
+              </span>
+              <div class="md-ellipsis">
+                Lab 1.4 - Construire un champ personnalisé dans votre org Salesforce
+              </div>
+            </div>
+          </a>
+        
+        
+          
+          <a href="../1-6-pull-request-deployment-check-and-merge/" class="md-footer__link md-footer__link--next" aria-label="Suivant: Lab 1.6 - Ouvrir une Pull Request, passer le contrôle de déploiement, merger">
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Suivant
+              </span>
+              <div class="md-ellipsis">
+                Lab 1.6 - Ouvrir une Pull Request, passer le contrôle de déploiement, merger
+              </div>
+            </div>
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-arrow-right" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+            </div>
+          </a>
+        
+      </nav>
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      Cloudity and friends
+    </div>
+  
+  
+</div>
+      
+        
+<div class="md-social">
+  
+    
+    
+    
+    
+    <a href="https://github.com/hardisgroupcom/sfdx-hardis" target="_blank" rel="noopener" title="sfdx-hardis on GitHub" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.3.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2026 Fonticons, Inc.--><path fill="currentColor" d="M216.5 362.5c-66-8-112.5-55.5-112.5-117 0-25 9-52 24-70-6.5-16.5-5.5-51.5 2-66 20-2.5 47 8 63 22.5 19-6 39-9 63.5-9s44.5 3 62.5 8.5c15.5-14 43-24.5 63-22 7 13.5 8 48.5 1.5 65.5 16 19 24.5 44.5 24.5 70.5 0 61.5-46.5 108-113.5 116.5 17 11 28.5 35 28.5 62.5v52c0 15 12.5 23.5 27.5 17.5C441 459.5 512 369 512 257 512 115.5 397 0 255.5 0S0 115.5 0 257c0 111 70.5 203 165.5 237.5 13.5 5 26.5-4 26.5-17.5v-40c-7 3-16 5-24 5-33 0-52.5-18-66.5-51.5-5.5-13.5-11.5-21.5-23-23-6-.5-8-3-8-6 0-6 10-10.5 20-10.5 14.5 0 27 9 40 27.5 10 14.5 20.5 21 33 21s20.5-4.5 32-16c8.5-8.5 15-16 21-21"/></svg>
+    </a>
+  
+    
+    
+    
+    
+    <a href="https://sfdx-hardis.cloudity.com/" target="_blank" rel="noopener" title="sfdx-hardis documentation" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.3.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2026 Fonticons, Inc.--><path fill="currentColor" d="M384 512H96c-53 0-96-43-96-96V96C0 43 43 0 96 0h304c26.5 0 48 21.5 48 48v288c0 20.9-13.4 38.7-32 45.3V448c17.7 0 32 14.3 32 32s-14.3 32-32 32zM96 384c-17.7 0-32 14.3-32 32s14.3 32 32 32h256v-64zm32-232c0 13.3 10.7 24 24 24h176c13.3 0 24-10.7 24-24s-10.7-24-24-24H152c-13.3 0-24 10.7-24 24m24 72c-13.3 0-24 10.7-24 24s10.7 24 24 24h176c13.3 0 24-10.7 24-24s-10.7-24-24-24z"/></svg>
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog" role="status" aria-atomic="true">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      
+      
+        
+        
+      <script id="__config" type="application/json">{"annotate":null,"base":"../../..","features":["content.action.edit","content.code.copy","content.tabs.link","navigation.instant","navigation.tracking","navigation.top","navigation.footer","search.suggest","search.highlight","toc.follow"],"redirect":null,"search":"../../../assets/javascripts/workers/search.7d14d953.min.js","tags":null,"translations":{"clipboard.copied":"Copié dans le presse-papier","clipboard.copy":"Copier dans le presse-papier","clipboard.error":"Could not copy to clipboard","search.result.more.one":"1 de plus sur cette page","search.result.more.other":"# de plus sur cette page","search.result.none":"Aucun document trouvé","search.result.one":"1 document trouvé","search.result.other":"# documents trouvés","search.result.placeholder":"Taper pour démarrer la recherche","search.result.term.missing":"Non trouvé","select.version":"Sélectionner la version"},"version":null}</script>
+    
+    
+      <script src="../../../assets/javascripts/bundle.67a597eb.min.js"></script>
+      
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/tablesort/5.2.1/tablesort.min.js"></script>
+      
+        <script src="../../../theme/javascripts/tables.js"></script>
+      
+        <script src="../../../theme/javascripts/lightbox.js"></script>
+      
+        <script src="../../../theme/javascripts/after-footer.js"></script>
+      
+        <script src="../../../theme/javascripts/language-switch.js"></script>
+      
+    
+  </body>
+</html>

@@ -1,0 +1,8 @@
+{
+  "id": "US-020",
+  "subject": "Refactor InstallationScheduler",
+  "url": "https://sfdx-hardis-training.github.io/BACKLOG/US-020/",
+  "owner": "Mariia Pyvovarchuk",
+  "branch": "training/mate-us-020-apex-refactor",
+  "lab": "3.4"
+}

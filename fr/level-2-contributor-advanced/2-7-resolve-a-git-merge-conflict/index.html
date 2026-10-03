@@ -1,0 +1,2458 @@
+
+<!doctype html>
+<html lang="fr" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Une collègue a mergé en premier sur le même flow et le même permission set. Résolvez les deux conflits Git dans VS Code sans perdre le travail de personne.">
+      
+      
+      
+        <link rel="canonical" href="https://sfdx-hardis-training.github.io/fr/level-2-contributor-advanced/2-7-resolve-a-git-merge-conflict/">
+      
+      
+        <link rel="prev" href="../2-6-permission-sets-and-profiles/">
+      
+      
+        <link rel="next" href="../2-8-recover-from-committing-the-wrong-metadata/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../../theme/images/badge-mark.svg">
+      <meta name="generator" content="zensical-0.0.67">
+    
+    
+      
+        <title>Lab 2.7 - Résoudre un conflit de merge Git avec un collègue - Salesforce DevOps with sfdx-hardis</title>
+      
+    
+    
+      
+        
+      
+      <link rel="stylesheet" href="../../../assets/stylesheets/modern/main.4ae390e2.min.css">
+      
+        
+          
+        
+        <link rel="stylesheet" href="../../../assets/stylesheets/modern/palette.96d1a7e4.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+    
+    
+      <link rel="stylesheet" href="../../../theme/stylesheets/extra.css">
+    
+    <script>__md_scope=new URL("../../..",location),__md_scope.pathname.endsWith("/")||(__md_scope=new URL(__md_scope.pathname+"/",location)),__md_hash=e=>[...e].reduce(((e,t)=>(e<<5)-e+t.charCodeAt(0)),0),__md_get=(e,t=localStorage,_=__md_scope)=>JSON.parse(t.getItem(_.pathname+"."+e)),__md_set=(e,t,_=localStorage,a=__md_scope)=>{try{_.setItem(a.pathname+"."+e,JSON.stringify(t))}catch(e){}},document.documentElement.setAttribute("data-platform",navigator.platform)</script>
+    
+      
+  
+
+
+  
+  
+
+<script id="__analytics">function __md_analytics(){function e(){dataLayer.push(arguments)}window.dataLayer=window.dataLayer||[],e("js",new Date),e("config","G-SE20CZ58E1"),document.addEventListener("DOMContentLoaded",(function(){document.forms.search&&document.forms.search.query.addEventListener("blur",(function(){this.value&&e("event","search",{search_term:this.value})}));document$.subscribe((function(){var t=document.forms.feedback;if(void 0!==t)for(var a of t.querySelectorAll("[type=submit]"))a.addEventListener("click",(function(a){a.preventDefault();var n=document.location.pathname,d=this.getAttribute("data-md-value");e("event","feedback",{page:n,data:d}),t.firstElementChild.disabled=!0;var r=t.querySelector(".md-feedback__note [data-md-value='"+d+"']");r&&(r.hidden=!1)})),t.hidden=!1})),location$.subscribe((function(t){e("config","G-SE20CZ58E1",{page_path:t.pathname})}))}));var t=document.createElement("script");t.async=!0,t.src="https://www.googletagmanager.com/gtag/js?id=G-SE20CZ58E1",document.getElementById("__analytics").insertAdjacentElement("afterEnd",t)}</script>
+  
+    <script>"undefined"!=typeof __md_analytics&&__md_analytics()</script>
+  
+
+    
+    
+  
+  
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Salesforce DevOps with sfdx-hardis">
+  <meta property="og:locale" content="fr">
+  <meta property="og:title" content="Lab 2.7 - Résoudre un conflit de merge Git avec un collègue">
+  <meta property="og:description" content="Une collègue a mergé en premier sur le même flow et le même permission set. Résolvez les deux conflits Git dans VS Code sans perdre le travail de personne.">
+  <meta property="og:url" content="https://sfdx-hardis-training.github.io/fr/level-2-contributor-advanced/2-7-resolve-a-git-merge-conflict/">
+  <meta property="og:image" content="https://sfdx-hardis-training.github.io/_assets/social/course.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="Lab 2.7 - Résoudre un conflit de merge Git avec un collègue">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Lab 2.7 - Résoudre un conflit de merge Git avec un collègue">
+  <meta name="twitter:description" content="Une collègue a mergé en premier sur le même flow et le même permission set. Résolvez les deux conflits Git dans VS Code sans perdre le travail de personne.">
+  <meta name="twitter:image" content="https://sfdx-hardis-training.github.io/_assets/social/course.png">
+
+  <script>
+    (function () {
+      var here = "fr";
+      var alternates = {"en":"en/level-2-contributor-advanced/2-7-resolve-a-git-merge-conflict/","fr":"fr/level-2-contributor-advanced/2-7-resolve-a-git-merge-conflict/"};
+      var base = new URL("../../.." || ".", window.location.href).pathname;
+      try {
+        var asked = new URLSearchParams(window.location.search).get("lang");
+        if (asked) {
+          document.cookie =
+            "course-language=" + encodeURIComponent(asked) + "; path=" + base + "; max-age=31536000; samesite=lax";
+        }
+        var cookie = document.cookie.split("; ").filter(function (one) {
+          return one.indexOf("course-language=") === 0;
+        })[0];
+        if (!cookie) {
+          return;
+        }
+        var preferred = asked || decodeURIComponent(cookie.slice("course-language=".length));
+        if (!preferred || preferred === here) {
+          return;
+        }
+        var target = alternates[preferred];
+        if (typeof target !== "string") {
+          return;
+        }
+        var url = new URL(target, new URL(base, window.location.href)).pathname;
+        if (url !== window.location.pathname) {
+          window.location.replace(url + window.location.search + window.location.hash);
+        }
+      } catch (error) {
+        // A browser with no cookies stays where it is, which is the page asked for
+      }
+    })();
+  </script>
+
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="custom" data-md-color-accent="custom">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer" aria-label="Navigation"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#lab-27-resoudre-un-conflit-de-merge-git-avec-un-collegue" class="md-skip">
+          Aller au contenu
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+        <aside class="md-banner">
+          <div class="md-banner__inner md-grid md-typeset">
+            
+            
+      <strong>Ce niveau est en phase de relecture.</strong> Il est complet et a été déroulé de bout
+      en bout, et maintenant il a besoin de vous. Si une étape ne fonctionne pas, ou si l'écran ne
+      correspond pas à ce que dit la page, merci de
+      <a href="#__comments">laisser un commentaire en bas de cette page</a>. C'est le moyen le plus
+      rapide de faire corriger le problème, et cela aide la personne suivante.
+    
+          </div>
+          
+        </aside>
+      
+    </div>
+    
+    
+      
+
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="En-tête">
+    <a href="/fr/" title="Salesforce DevOps with sfdx-hardis" class="md-header__button md-logo" aria-label="Salesforce DevOps with sfdx-hardis" data-md-component="logo">
+      
+  <img src="../../../theme/images/cloudity-text-logo-white.svg" alt="Salesforce DevOps with sfdx-hardis">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer" aria-label="Navigation">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-menu" viewBox="0 0 24 24"><path d="M4 5h16M4 12h16M4 19h16"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Salesforce DevOps with sfdx-hardis
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Lab 2.7 - Résoudre un conflit de merge Git avec un collègue
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="none" data-md-color-scheme="default" data-md-color-primary="custom" data-md-color-accent="custom"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="none" data-md-color-scheme="slate" data-md-color-primary="custom" data-md-color-accent="custom"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+      
+
+
+
+  
+
+  
+    
+    
+  
+
+<div class="md-header__option">
+  <div class="md-select md-select--language">
+    <button class="md-header__button md-header__button--flag" aria-label="Sélectionner la langue">
+      
+        <img src="../../../theme/images/flags/fr.svg" alt="Français" class="md-select__flag md-select__flag--current">
+      
+    </button>
+    <div class="md-select__inner">
+      <ul class="md-select__list">
+        
+          
+          <li class="md-select__item"><a href="../../../en/level-2-contributor-advanced/2-7-resolve-a-git-merge-conflict/" hreflang="en" data-course-home="/" class="md-select__link">
+              
+                <img src="../../../theme/images/flags/gb.svg" alt="" class="md-select__flag">
+              
+              English
+            </a>
+          </li>
+        
+          
+          <li class="md-select__item"><a href="././" hreflang="fr" data-course-home="/fr/" class="md-select__link">
+              
+                <img src="../../../theme/images/flags/fr.svg" alt="" class="md-select__flag">
+              
+              Français
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</div>
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search" aria-label="Recherche">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-search" viewBox="0 0 24 24"><path d="m21 21-4.34-4.34"/><circle cx="11" cy="11" r="8"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog" aria-label="Recherche">
+  <button type="button" class="md-search__button">
+    Recherche
+  </button>
+</div>
+      
+    
+    <div class="md-header__source">
+      
+        <a href="https://github.com/hardisgroupcom/sfdx-hardis-training" title="Aller au dépôt" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.3.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2026 Fonticons, Inc.--><path fill="currentColor" d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    hardisgroupcom/sfdx-hardis-training
+  </div>
+</a>
+      
+    </div>
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0" data-course-lang="fr" data-course-base="../../.." data-course-alt-en="en/level-2-contributor-advanced/2-7-resolve-a-git-merge-conflict/" data-course-alt-fr="fr/level-2-contributor-advanced/2-7-resolve-a-git-merge-conflict/">
+  <label class="md-nav__title" for="__drawer">
+    <a href="/fr/" title="Salesforce DevOps with sfdx-hardis" class="md-nav__button md-logo" aria-label="Salesforce DevOps with sfdx-hardis" data-md-component="logo">
+      
+  <img src="../../../theme/images/cloudity-text-logo-white.svg" alt="Salesforce DevOps with sfdx-hardis">
+
+    </a>
+    Salesforce DevOps with sfdx-hardis
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/hardisgroupcom/sfdx-hardis-training" title="Aller au dépôt" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.3.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2026 Fonticons, Inc.--><path fill="currentColor" d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    hardisgroupcom/sfdx-hardis-training
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+      
+    
+      
+      
+      
+    
+      
+      
+      
+    
+      
+      
+      
+    
+      
+      
+      
+    
+      
+      
+      
+    
+      
+      
+      
+    
+      
+      
+      
+        
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Accueil
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+      
+    
+      
+      
+      
+        
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_9" >
+        
+          
+          <label class="md-nav__link" for="__nav_9" id="__nav_9_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Niveau 1 - Contributeur Salesforce DevOps, les bases
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        
+          <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_9_label" aria-expanded="false">
+            <label class="md-nav__title" for="__nav_9">
+              <span class="md-nav__icon md-icon"></span>
+              
+  
+  Niveau 1 - Contributeur Salesforce DevOps, les bases
+
+            </label>
+            <ul class="md-nav__list" data-md-scrollfix>
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../level-1-contributor-basics/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Commencer ici
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../level-1-contributor-basics/1-1-install-vs-code-and-sfdx-hardis/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Lab 1.1 - Installer VS Code, Git et sfdx-hardis
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../level-1-contributor-basics/1-2-create-your-dev-hub-scratch-orgs-and-pipeline/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Lab 1.2 - Créer votre Dev Hub, vos scratch orgs et votre pipeline CI/CD
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../level-1-contributor-basics/1-3-start-a-user-story-on-a-git-branch/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Lab 1.3 - Démarrer une User Story sur sa propre branche Git
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../level-1-contributor-basics/1-4-build-a-custom-field-in-your-org/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Lab 1.4 - Construire un champ personnalisé dans votre org Salesforce
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../level-1-contributor-basics/1-5-retrieve-commit-and-publish-your-changes/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Lab 1.5 - Récupérer, commiter et publier vos modifications Salesforce
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../level-1-contributor-basics/1-6-pull-request-deployment-check-and-merge/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Lab 1.6 - Ouvrir une Pull Request, passer le contrôle de déploiement, merger
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../level-1-contributor-basics/1-7-capstone-deliver-a-user-story-on-your-own/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Lab 1.7 - Épreuve finale : livrer une User Story tout seul
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+            </ul>
+          </nav>
+        
+      
+    </li>
+  
+
+      
+    
+      
+      
+      
+        
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_10" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_10" id="__nav_10_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Niveau 2 - Contributeur Salesforce DevOps avancé
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        
+          <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_10_label" aria-expanded="true">
+            <label class="md-nav__title" for="__nav_10">
+              <span class="md-nav__icon md-icon"></span>
+              
+  
+  Niveau 2 - Contributeur Salesforce DevOps avancé
+
+            </label>
+            <ul class="md-nav__list" data-md-scrollfix>
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Commencer ici
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../2-1-backpromote-your-teammates-work/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Lab 2.1 - Backpromote : remettre votre org de dev au niveau de l'équipe
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../2-2-fix-a-missing-dependency-deployment-error/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Lab 2.2 - Corriger une erreur de déploiement due à une dépendance manquante
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../2-3-fix-broken-records-with-an-apex-deployment-action/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Lab 2.3 - Réparer des enregistrements cassés avec une deployment action Apex
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../2-4-ship-reference-data-and-a-batch-with-deployment-actions/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Lab 2.4 - Livrer des données de référence et un batch avec des deployment actions
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../2-5-pass-code-quality-and-apex-test-coverage/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Lab 2.5 - Passer la barrière de qualité de code et la couverture de tests Apex
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../2-6-permission-sets-and-profiles/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Lab 2.6 - Permission sets, profils, et pourquoi une autorisation disparaît
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Lab 2.7 - Résoudre un conflit de merge Git avec un collègue
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="././" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Lab 2.7 - Résoudre un conflit de merge Git avec un collègue
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+
+<nav class="md-nav md-nav--secondary" aria-label="Table des matières">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table des matières
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#la-situation" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        La situation
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#avant-de-commencer" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Avant de commencer
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#les-etapes" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Les étapes
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Les étapes">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-demarrer-votre-propre-modification" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        1. Démarrer votre propre modification
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-pendant-que-vous-construisiez-mariia-a-merge" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        2. Pendant que vous construisiez, Mariia a mergé
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-publier-et-voir-la-pull-request-refuser-de-merger" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        3. Publier, et voir la Pull Request refuser de merger
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#4-merger-integration-dans-votre-branche" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        4. Merger integration dans votre branche
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#5-resoudre-le-permission-set-prendre-les-deux" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        5. Résoudre le permission set : prendre les deux
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#6-resoudre-le-flow-comprendre-les-deux-puis-decider" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        6. Résoudre le flow : comprendre les deux, puis décider
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#7-terminer-le-merge-et-revalider" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        7. Terminer le merge et revalider
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#8-verifier-que-les-deux-modifications-ont-survecu" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        8. Vérifier que les deux modifications ont survécu
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#ce-que-vous-devez-voir" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Ce que vous devez voir
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#verifiez-votre-travail" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Vérifiez votre travail
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#pour-aller-plus-loin" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Pour aller plus loin
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../2-8-recover-from-committing-the-wrong-metadata/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Lab 2.8 - Se remettre d'avoir commité la mauvaise métadonnée
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../2-9-capstone-deliver-a-user-story-that-has-it-all/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Lab 2.9 - Épreuve finale : livrer une User Story qui a tout
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+            </ul>
+          </nav>
+        
+      
+    </li>
+  
+
+      
+    
+      
+      
+      
+        
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_11" >
+        
+          
+          <label class="md-nav__link" for="__nav_11" id="__nav_11_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Niveau 3 - Release manager Salesforce DevOps
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        
+          <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_11_label" aria-expanded="false">
+            <label class="md-nav__title" for="__nav_11">
+              <span class="md-nav__icon md-icon"></span>
+              
+  
+  Niveau 3 - Release manager Salesforce DevOps
+
+            </label>
+            <ul class="md-nav__list" data-md-scrollfix>
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../level-3-release-manager/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Commencer ici
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../level-3-release-manager/3-1-configure-the-pipeline-up-to-production/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Lab 3.1 - Configurer la pipeline CI/CD jusqu'à la production
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../level-3-release-manager/3-2-review-a-contributor-pull-request/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Lab 3.2 - Relire et merger la Pull Request d'un contributeur
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../level-3-release-manager/3-3-deploy-to-integration-and-read-the-log/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Lab 3.3 - Lire le log de déploiement, et ce que .forceignore lui cache
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../level-3-release-manager/3-4-merge-colliding-pull-requests/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Lab 3.4 - Trois Pull Requests se percutent : choisir l'ordre de merge
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../level-3-release-manager/3-5-promote-to-uat-and-write-release-notes/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Lab 3.5 - Promouvoir en UAT et écrire les notes de version
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../level-3-release-manager/3-6-release-to-production-and-read-dora-metrics/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Lab 3.6 - Livrer en production et lire vos métriques DORA
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../level-3-release-manager/3-7-hotfix-and-retrofit/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Lab 3.7 - La production est cassée : hotfix et retrofit
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../level-3-release-manager/3-8-monitor-your-production-org/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Lab 3.8 - Monitorer votre org de production
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../level-3-release-manager/3-9-generate-the-project-documentation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Lab 3.9 - Générer la documentation du projet Salesforce
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../level-3-release-manager/3-10-promote-a-subset-with-promotion-branches/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Lab 3.10 - Promouvoir un sous-ensemble avec les promotion branches (Beta)
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../level-3-release-manager/3-11-capstone-run-a-weekly-release-cycle/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Lab 3.11 - Épreuve finale : mener un cycle de release hebdomadaire
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+            </ul>
+          </nav>
+        
+      
+    </li>
+  
+
+      
+    
+      
+      
+      
+        
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../help/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Aide
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+      
+    
+      
+      
+      
+        
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../BACKLOG/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Backlog
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+      
+    
+      
+      
+      
+        
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../badges/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Badges
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+      
+    
+      
+      
+      
+        
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="https://sfdx-hardis.cloudity.com/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  sfdx-hardis documentation
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+      
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  
+                    
+                    
+                    
+                      
+                    
+                    
+                      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+                      <div class="md-sidebar-button__wrapper">
+                        <label class="md-sidebar-button" for="__toc"></label>
+                      </div>
+                    
+                  
+                  <div class="md-sidebar__inner">
+                    
+
+
+<nav class="md-nav md-nav--secondary" aria-label="Table des matières">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table des matières
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#la-situation" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        La situation
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#avant-de-commencer" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Avant de commencer
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#les-etapes" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Les étapes
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Les étapes">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-demarrer-votre-propre-modification" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        1. Démarrer votre propre modification
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-pendant-que-vous-construisiez-mariia-a-merge" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        2. Pendant que vous construisiez, Mariia a mergé
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-publier-et-voir-la-pull-request-refuser-de-merger" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        3. Publier, et voir la Pull Request refuser de merger
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#4-merger-integration-dans-votre-branche" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        4. Merger integration dans votre branche
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#5-resoudre-le-permission-set-prendre-les-deux" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        5. Résoudre le permission set : prendre les deux
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#6-resoudre-le-flow-comprendre-les-deux-puis-decider" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        6. Résoudre le flow : comprendre les deux, puis décider
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#7-terminer-le-merge-et-revalider" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        7. Terminer le merge et revalider
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#8-verifier-que-les-deux-modifications-ont-survecu" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        8. Vérifier que les deux modifications ont survécu
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#ce-que-vous-devez-voir" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Ce que vous devez voir
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#verifiez-votre-travail" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Vérifiez votre travail
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#pour-aller-plus-loin" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Pour aller plus loin
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+  
+    <a href="https://github.com/hardisgroupcom/sfdx-hardis-training/edit/main/labs/fr/level-2-contributor-advanced/2-7-resolve-a-git-merge-conflict.md" title="Editer cette page" class="md-content__button md-icon" rel="edit">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-file-pen" viewBox="0 0 24 24"><path d="M12.659 22H18a2 2 0 0 0 2-2V8a2.4 2.4 0 0 0-.706-1.706l-3.588-3.588A2.4 2.4 0 0 0 14 2H6a2 2 0 0 0-2 2v9.34"/><path d="M14 2v5a1 1 0 0 0 1 1h5M10.378 12.622a1 1 0 0 1 3 3.003L8.36 20.637a2 2 0 0 1-.854.506l-2.867.837a.5.5 0 0 1-.62-.62l.836-2.869a2 2 0 0 1 .506-.853z"/></svg>
+    </a>
+  
+  
+
+
+<h1 id="lab-27-resoudre-un-conflit-de-merge-git-avec-un-collegue">Lab 2.7 - Résoudre un conflit de merge Git avec un collègue<a class="headerlink" href="#lab-27-resoudre-un-conflit-de-merge-git-avec-un-collegue" title="Permanent link">&para;</a></h1>
+<p><strong>Niveau</strong> : 2 Contributeur avancé</p>
+<p><strong>Durée</strong> : ~35 min</p>
+<p><strong>Vous allez</strong> : affronter un vrai conflit de merge sur deux fichiers qui entrent en conflit de façon
+très différente, et résoudre les deux sans perdre le travail de personne.</p>
+<h2 id="la-situation">La situation<a class="headerlink" href="#la-situation" title="Permanent link">&para;</a></h2>
+<p>Mariia Pyvovarchuk travaillait sur <strong>US-018 - Cap the crew size a planner can assign</strong>, dans le même
+flow et le même permission set que vous. Elle a mergé ce matin. Pas vous.</p>
+<blockquote>
+<p>Les conflits Git sur un projet Salesforce prennent presque toujours l'une de deux formes : un
+permission set où deux personnes ont ajouté des entrées différentes, et un Flow où deux personnes
+ont changé la logique. Le premier est mécanique. Le second exige que vous compreniez les deux
+modifications.</p>
+</blockquote>
+<h2 id="avant-de-commencer">Avant de commencer<a class="headerlink" href="#avant-de-commencer" title="Permanent link">&para;</a></h2>
+<ul class="task-list">
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <a href="../2-6-permission-sets-and-profiles/">Lab 2.6</a> terminé et mergé</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> Rien en attente dans le panneau <strong>Source Control</strong> auquel vous teniez encore</li>
+</ul>
+<h2 id="les-etapes">Les étapes<a class="headerlink" href="#les-etapes" title="Permanent link">&para;</a></h2>
+<h3 id="1-demarrer-votre-propre-modification">1. Démarrer votre propre modification<a class="headerlink" href="#1-demarrer-votre-propre-modification" title="Permanent link">&para;</a></h3>
+<p><strong>New User Story</strong> <span class="pill-ref pill-ref-2">(2)</span>, sous <strong>Project Contribution Workflow</strong> <span class="pill-ref pill-ref-1">(1)</span>. Nom
+<code>US-034-crew-override</code>, org <code>helios-dev</code>.</p>
+<p><a class="glightbox" data-type="image" href="../../../_assets/annotated/vscode/pipeline-cards--new-user-story.png"><img alt="La carte New User Story du panneau DevOps Pipeline" src="../../../_assets/annotated/vscode/pipeline-cards--new-user-story.png" /></a></p>
+<p>Dans <code>helios-dev</code> :</p>
+<ol>
+<li>Ouvrez le flow <code>Installation Assign Crew</code> et ajoutez une décision pour qu'une installation dont le
+   type de toiture est <code>Flat</code> reçoive une équipe d'au moins 3 personnes, quoi que le flow ait décidé
+   par ailleurs. Reliez-la à la <strong>même affectation</strong> sur laquelle le flow se termine déjà, pour que
+   la nouvelle règle tourne après le changement de statut.
+   <strong>Save</strong>, puis <strong>Activate</strong> : chaque enregistrement d'un flow crée une nouvelle version, et seule
+   la version active s'exécute</li>
+<li>Sur le permission set <code>Helios Delivery Manager</code>, accordez l'accès en écriture sur
+   <code>Installation__c.Crew_Notes__c</code>, pour qu'un planificateur puisse dire pourquoi une équipe a été
+   renforcée</li>
+</ol>
+<p>Dans Flow Builder, avec le canevas en <strong>Auto-Layout</strong>, le flow se lit alors ainsi : l'affectation
+sur laquelle il se terminait déjà, <strong>Move To Scheduled</strong> <span class="pill-ref pill-ref-1">(1)</span>, votre nouvelle décision <span class="pill-ref pill-ref-2">(2)</span>,
+et sur sa branche de toiture plate l'affectation qui porte l'équipe à trois <span class="pill-ref pill-ref-3">(3)</span>.</p>
+<p><a class="glightbox" data-type="image" href="../../../_assets/annotated/salesforce/flow-builder-assign-crew.png"><img alt="Le flow Installation Assign Crew avec la décision de toiture plate après Move To Scheduled" src="../../../_assets/annotated/salesforce/flow-builder-assign-crew.png" /></a></p>
+<p>Faites un retrieve du flow et du permission set, commitez-les, et <strong>arrêtez-vous là</strong> : ne publiez
+pas encore.</p>
+<h3 id="2-pendant-que-vous-construisiez-mariia-a-merge">2. Pendant que vous construisiez, Mariia a mergé<a class="headerlink" href="#2-pendant-que-vous-construisiez-mariia-a-merge" title="Permanent link">&para;</a></h3>
+<p>Mariia n'existe pas. Son travail, si, et la formation le reproduit à l'intérieur de <strong>votre propre</strong>
+fork pour que vous puissiez réellement le relire et le merger. Faites-le <strong>après</strong> que votre propre
+modification existe, parce que c'est la situation dont parle ce lab : vous avez branché, elle a
+mergé, et aucun des deux ne savait pour l'autre.</p>
+<p><strong>Training: Level 2</strong> <span class="pill-ref pill-ref-1">(1)</span> &gt; <strong>Simulate my teammates</strong> <span class="pill-ref pill-ref-2">(2)</span>, depuis la Welcome page ou depuis
+la liste des commandes sfdx-hardis.</p>
+<p><a class="glightbox" data-type="image" href="../../../_assets/annotated/vscode/sidebar-commands-custom-menu-2--training-menu.png"><img alt="Le menu Training du niveau 2 dans la liste des commandes sfdx-hardis" src="../../../_assets/annotated/vscode/sidebar-commands-custom-menu-2--training-menu.png" /></a></p>
+<p>Le panneau de commande pose trois questions :</p>
+<table>
+<thead>
+<tr>
+<th>Question</th>
+<th>Réponse</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Which teammate work do you need?</td>
+<td><strong>US-018 Cap the crew size a planner can assign</strong></td>
+</tr>
+<tr>
+<td>Create it?</td>
+<td><strong>Yes</strong></td>
+</tr>
+<tr>
+<td>Merge it for you once its checks pass?</td>
+<td><strong>Yes</strong>, sauf si vous voulez la merger vous-même sur GitHub</td>
+</tr>
+</tbody>
+</table>
+<p>Cela crée la branche <code>training/mate-us-018-crew-capacity</code> à partir de votre <code>integration</code> actuelle,
+commite les modifications de Mariia sous son nom, la pousse sur votre fork (votre copie personnelle
+du repository du cours sur GitHub, par exemple <code>github.com/my-username/sfdx-hardis-training</code>),
+ouvre la Pull Request et affiche son adresse.</p>
+<p>Avec <strong>Yes</strong>, le panneau attend les checks, deux à quatre minutes, merge la Pull Request et écrit
+<strong>Pull Request merged into its base branch</strong>. Avec <strong>No</strong>, ouvrez l'adresse affichée, jetez un œil à
+<strong>Files changed</strong>, et mergez-la avec <strong>Squash and merge</strong> une fois les checks verts : les mêmes clics
+qu'au <a href="../2-1-backpromote-your-teammates-work/">Lab 2.1</a>, étape 1b, où chacun a sa capture d'écran.
+Si vous la mergez sur GitHub pendant que le panneau attend encore, il s'en aperçoit et s'arrête.</p>
+<p>Dans les deux cas, Mariia est maintenant dans <code>integration</code>, et vous êtes en retard.</p>
+<details>
+<summary>Sous le capot : pourquoi la collègue est rejouée plutôt que préexistante</summary>
+<p>La commande a lancé :</p>
+<div class="highlight"><pre><span></span><code>node scripts/training.mjs simulate
+</code></pre></div>
+<p>qui a copié les fichiers de <code>scripts/simulate/us-018-crew-capacity/files/</code> par-dessus votre copie de
+travail, les a commités avec le nom et l'e-mail de Mariia, a poussé la branche sur <strong>votre</strong> fork et
+y a ouvert la Pull Request avec <code>gh pr create</code>.</p>
+<p>Il ne peut pas en être autrement. Une Pull Request vit dans un repository : vous ne pouvez pas en
+relire une qui existe chez quelqu'un d'autre. Et une branche livrée dans le repository il y a des
+mois ne partagerait pas d'ancêtre sensé avec l'<code>integration</code> que vous avez construite au fil de cinq
+labs : le conflit serait donc soit absent, soit absurde.</p>
+<p>Le même jeu de correctifs a produit les vraies Pull Requests de collègues sur le repository public
+de formation : ce que vous relisez est donc, octet pour octet, ce que montrent les captures d'écran.</p>
+</details>
+<h3 id="3-publier-et-voir-la-pull-request-refuser-de-merger">3. Publier, et voir la Pull Request refuser de merger<a class="headerlink" href="#3-publier-et-voir-la-pull-request-refuser-de-merger" title="Permanent link">&para;</a></h3>
+<p>Publiez maintenant votre propre modification : <strong>Save / Publish</strong>, poussez, et ouvrez la Pull Request
+vers <code>integration</code>.</p>
+<p>GitHub affiche :</p>
+<blockquote>
+<p>This branch has conflicts that must be resolved
+<code>force-app/main/default/flows/Installation_Assign_Crew.flow-meta.xml</code>
+<code>force-app/main/default/permissionsets/Helios_Delivery_Manager.permissionset-meta.xml</code></p>
+</blockquote>
+<p>Deux fichiers, deux sortes de problèmes complètement différentes.</p>
+<p>Ni l'un ni l'autre n'est git qui fait des difficultés. Les deux modifications sont réelles, les deux
+sont voulues, et dans les deux fichiers vous avez écrit tous les deux au même endroit : Mariia a
+accordé un champ sur le permission set à une ligne de là où vous avez accordé le vôtre, et elle a
+relié le même élément d'affectation dans le flow à une décision à elle. Un outil de merge ne peut pas
+savoir lequel de deux connecteurs doit l'emporter. Vous, si.</p>
+<h3 id="4-merger-integration-dans-votre-branche">4. Merger integration dans votre branche<a class="headerlink" href="#4-merger-integration-dans-votre-branche" title="Permanent link">&para;</a></h3>
+<p>Ouvrez le panneau <strong>Source Control</strong>, l'icône de trois petits cercles reliés par des traits dans la
+barre de gauche.</p>
+<p>Assurez-vous d'abord que votre machine sait ce que Mariia a mergé. Ouvrez la <strong>Command Palette</strong> :
+<strong>View &gt; Command Palette</strong> dans la barre de menus, ou <code>Ctrl+Shift+P</code> (<code>Cmd+Shift+P</code> sur un Mac).
+Tapez <code>Git: Fetch</code> et choisissez <strong>Git: Fetch</strong> <span class="pill-ref pill-ref-1">(1)</span>. Rien ne change dans vos fichiers : le fetch
+ne fait que télécharger ce qui est nouveau sur GitHub.</p>
+<p><a class="glightbox" data-type="image" href="../../../_assets/annotated/vscode/git-palette-fetch--fetch.png"><img alt="La Command Palette filtrée sur Git: Fetch" src="../../../_assets/annotated/vscode/git-palette-fetch--fetch.png" /></a></p>
+<p>Puis la Command Palette à nouveau, tapez <code>Git: Merge</code>, et choisissez <strong>Git: Merge...</strong> <span class="pill-ref pill-ref-1">(1)</span>. La
+même commande est dans le menu <strong>...</strong> en haut du panneau Source Control, sous <strong>Branch</strong>.</p>
+<p><a class="glightbox" data-type="image" href="../../../_assets/annotated/vscode/git-palette-merge--merge.png"><img alt="La Command Palette filtrée sur Git: Merge" src="../../../_assets/annotated/vscode/git-palette-merge--merge.png" /></a></p>
+<p>VS Code demande quelle branche merger. Tapez <code>integration</code> et choisissez <strong>origin/integration</strong>
+<span class="pill-ref pill-ref-1">(1)</span>, listée sous <strong>remote branches</strong> : la copie d'<code>integration</code> qui est sur GitHub, avec le
+travail de Mariia dedans. Pas l'<code>integration</code> toute seule si elle est aussi listée : c'est la copie
+de votre machine, que vous n'avez pas mise à jour depuis que vous avez branché.</p>
+<p><a class="glightbox" data-type="image" href="../../../_assets/annotated/vscode/git-merge-pick--origin-integration.png"><img alt="Le sélecteur de branche de Git: Merge..., avec origin/integration" src="../../../_assets/annotated/vscode/git-merge-pick--origin-integration.png" /></a></p>
+<p>Deux fichiers reviennent marqués en conflit. Ils apparaissent dans le panneau sous <strong>Merge Changes</strong>
+<span class="pill-ref pill-ref-1">(1)</span>, chacun avec un <strong>!</strong> <span class="pill-ref pill-ref-2">(2)</span>, et la barre d'état dit qu'un merge est en cours.</p>
+<p><a class="glightbox" data-type="image" href="../../../_assets/annotated/vscode/git-merge-conflicts--merge-changes.png"><img alt="Le panneau Source Control avec les fichiers en conflit sous Merge Changes" src="../../../_assets/annotated/vscode/git-merge-conflicts--merge-changes.png" /></a></p>
+<p>La capture ne montre que le permission set. La vôtre montre aussi le flow <code>Installation_Assign_Crew</code>,
+avec son propre <strong>!</strong> : deux fichiers, comme GitHub l'a dit.</p>
+<details>
+<summary>Sous le capot : ce qu'a lancé Merge Branch</summary>
+<div class="highlight"><pre><span></span><code>git fetch origin
+git merge origin/integration
+</code></pre></div>
+<p>Un conflit n'est pas une erreur. C'est git qui dit que deux personnes ont écrit au même endroit et
+qu'il ne devinera pas laquelle le pensait.</p>
+</details>
+<h3 id="5-resoudre-le-permission-set-prendre-les-deux">5. Résoudre le permission set : prendre les deux<a class="headerlink" href="#5-resoudre-le-permission-set-prendre-les-deux" title="Permanent link">&para;</a></h3>
+<p>Cliquez sur le fichier de permission set sous <strong>Merge Changes</strong>, puis sur <strong>Resolve in Merge Editor</strong>
+en bas à droite du fichier. VS Code ouvre son éditeur de merge : <strong>Incoming</strong> <span class="pill-ref pill-ref-1">(1)</span>, la version de
+Mariia venue d'<code>integration</code>, à gauche, <strong>Current</strong> <span class="pill-ref pill-ref-2">(2)</span>, la vôtre, à droite, et le <strong>Result</strong>
+<span class="pill-ref pill-ref-3">(3)</span> que vous construisez en bas, qui part de la version depuis laquelle vous avez tous les deux
+branché.</p>
+<p><a class="glightbox" data-type="image" href="../../../_assets/annotated/vscode/git-merge-editor--parts.png"><img alt="L'éditeur de merge sur le permission set Helios Delivery Manager" src="../../../_assets/annotated/vscode/git-merge-editor--parts.png" /></a></p>
+<p>Celui-ci est mécanique, et vous pouvez trancher sans comprendre le XML : <strong>les deux entrées ont leur
+place</strong>. Mariia a accordé un champ, vous en avez accordé un autre, et un permission set en contient
+autant qu'il en faut. Gardez les deux côtés : cliquez sur <strong>Accept Incoming</strong> <span class="pill-ref pill-ref-1">(1)</span> au-dessus de la
+ligne surlignée du volet <strong>Incoming</strong>, puis sur <strong>Accept Current</strong> <span class="pill-ref pill-ref-2">(2)</span> au-dessus de celle du
+volet <strong>Current</strong>.</p>
+<p><a class="glightbox" data-type="image" href="../../../_assets/annotated/vscode/git-merge-editor--accept-both.png"><img alt="L'éditeur de merge, avec Accept Incoming et Accept Current" src="../../../_assets/annotated/vscode/git-merge-editor--accept-both.png" /></a></p>
+<p>Lisez maintenant le <strong>Result</strong> <span class="pill-ref pill-ref-1">(1)</span> avant toute chose :</p>
+<p><a class="glightbox" data-type="image" href="../../../_assets/annotated/vscode/git-merge-editor-accepted--result.png"><img alt="L'éditeur de merge après avoir accepté les deux côtés, avec Complete Merge" src="../../../_assets/annotated/vscode/git-merge-editor-accepted--result.png" /></a></p>
+<p>L'éditeur a gardé les deux lignes, et les a mises dans le même bloc : un seul <code>&lt;fieldPermissions&gt;</code>
+avec deux lignes <code>&lt;field&gt;</code>, ce que Salesforce refuse. Git merge des lignes, pas des permissions. Vous
+voulez deux blocs complets, un par champ, le <code>Crew_Capacity_Cap__c</code> de Mariia en premier et votre
+<code>Crew_Notes__c</code> en second. Tapez-le dans le volet <strong>Result</strong> : après la première ligne <code>&lt;field&gt;</code>,
+ajoutez les quatre lignes qui ferment le premier bloc et ouvrent le second :</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="w">        </span><span class="nt">&lt;readable&gt;</span>true<span class="nt">&lt;/readable&gt;</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="w">    </span><span class="nt">&lt;/fieldPermissions&gt;</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="w">    </span><span class="nt">&lt;fieldPermissions&gt;</span>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="w">        </span><span class="nt">&lt;editable&gt;</span>true<span class="nt">&lt;/editable&gt;</span>
+</code></pre></div>
+<p>Copiez-les d'ici : on ne demande à personne d'écrire du XML de mémoire. La section sous le capot
+ci-dessous montre le résultat que vous visez. Cliquez ensuite sur <strong>Complete Merge</strong> <span class="pill-ref pill-ref-2">(2)</span>.</p>
+<p><strong>Prendre les deux</strong> est la bonne réponse pour presque tous les conflits de permission set. Choisir
+un côté est la façon dont la permission d'un collègue disparaît en silence, sans que personne s'en
+aperçoive avant que quelqu'un ne voie plus un champ.</p>
+<details>
+<summary>Sous le capot : à quoi ressemblait vraiment le conflit</summary>
+<p>Git entre en conflit sur des lignes, pas sur du XML : les marqueurs ont donc atterri à l'intérieur
+d'un bloc plutôt qu'autour de deux :</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="w">    </span><span class="nt">&lt;fieldPermissions&gt;</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="w">        </span><span class="nt">&lt;editable&gt;</span>true<span class="nt">&lt;/editable&gt;</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="err">&lt;&lt;&lt;&lt;&lt;&lt;</span><span class="nt">&lt; HEAD</span>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="w">        </span><span class="err">&lt;field</span><span class="nt">&gt;</span>Installation__c.Crew_Notes__c<span class="nt">&lt;/field&gt;</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>=======
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="w">        </span><span class="nt">&lt;field&gt;</span>Installation__c.Crew_Capacity_Cap__c<span class="nt">&lt;/field&gt;</span>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>&gt;&gt;&gt;&gt;&gt;&gt;&gt;<span class="w"> </span>origin/integration
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="w">        </span><span class="nt">&lt;readable&gt;</span>true<span class="nt">&lt;/readable&gt;</span>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="w">    </span><span class="nt">&lt;/fieldPermissions&gt;</span>
+</code></pre></div>
+<p>Une fois les quatre lignes ajoutées, le résultat contient deux blocs complets, par ordre
+alphabétique, ce qui est de toute façon la façon dont Salesforce les écrit :</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="w">    </span><span class="nt">&lt;fieldPermissions&gt;</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="w">        </span><span class="nt">&lt;editable&gt;</span>true<span class="nt">&lt;/editable&gt;</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">        </span><span class="nt">&lt;field&gt;</span>Installation__c.Crew_Capacity_Cap__c<span class="nt">&lt;/field&gt;</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="w">        </span><span class="nt">&lt;readable&gt;</span>true<span class="nt">&lt;/readable&gt;</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="w">    </span><span class="nt">&lt;/fieldPermissions&gt;</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="w">    </span><span class="nt">&lt;fieldPermissions&gt;</span>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="w">        </span><span class="nt">&lt;editable&gt;</span>true<span class="nt">&lt;/editable&gt;</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="w">        </span><span class="nt">&lt;field&gt;</span>Installation__c.Crew_Notes__c<span class="nt">&lt;/field&gt;</span>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="w">        </span><span class="nt">&lt;readable&gt;</span>true<span class="nt">&lt;/readable&gt;</span>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="w">    </span><span class="nt">&lt;/fieldPermissions&gt;</span>
+</code></pre></div>
+</details>
+<h3 id="6-resoudre-le-flow-comprendre-les-deux-puis-decider">6. Résoudre le flow : comprendre les deux, puis décider<a class="headerlink" href="#6-resoudre-le-flow-comprendre-les-deux-puis-decider" title="Permanent link">&para;</a></h3>
+<p>Celui-là, vous ne pouvez pas le résoudre en prenant les deux, parce que les deux modifications sont
+dans le même chemin de décision.</p>
+<ul>
+<li><strong>La modification de Mariia</strong> plafonne l'équipe à ce que l'installation autorise : jamais plus de N</li>
+<li><strong>La vôtre</strong> porte l'équipe à au moins 3 sur les toitures plates : jamais moins de 3</li>
+</ul>
+<p>Lues séparément, les deux sont correctes. Ensemble, elles peuvent se contredire sur une toiture plate
+dont le plafond est 2.</p>
+<p>C'est le moment qui compte, et la réponse n'est pas technique : <strong>allez demander à Mariia</strong>. Sur un
+vrai projet, un conflit dans la logique métier est une conversation, pas une stratégie de merge.</p>
+<p>Pour ce lab, la décision a été prise pour vous : <strong>le plafond l'emporte</strong>. Une équipe plus grande que
+ce que l'installation autorise est un problème de sécurité ; une équipe de 2 sur une toiture plate
+est une journée lente. Résolvez de sorte que votre minimum s'applique <strong>seulement s'il ne dépasse pas
+le plafond de Mariia</strong>.</p>
+<p>Faites-le dans Flow Builder, pas dans le fichier. Un flow est stocké sous forme de XML que personne
+ne sait lire de façon fiable, développeurs compris, et un flow qui se déploie mais se comporte mal
+est pire qu'un flow qui échoue.</p>
+<ol>
+<li>Ouvrez le fichier de flow sous <strong>Merge Changes</strong> dans l'éditeur de merge, de la même façon.
+   Cliquez sur <strong>Accept Incoming</strong> au-dessus de chaque conflit du volet <strong>Incoming</strong>, puis sur
+   <strong>Complete Merge</strong> : la version entière de Mariia l'emporte pour l'instant</li>
+<li>
+<p><strong>Save / Publish User Story</strong> n'est pas encore ce que vous voulez. Envoyez d'abord ce que le merge
+   a apporté dans votre org de dev, pour que <code>helios-dev</code> ait le champ de Mariia, son autorisation et
+   son plafond : dans l'<strong>Explorer</strong>, clic droit sur le dossier <code>force-app</code>, puis <strong>SFDX: Deploy This
+   Source to Org</strong>, la même commande que le <a href="../2-5-pass-code-quality-and-apex-test-coverage/">Lab 2.5</a> utilisait sur une classe</p>
+<p>Elle déploie tous les fichiers du dossier tels qu'ils sont sur votre machine, et rien d'autre. La
+ commande sfdx-hardis <strong>Push from local files to Salesforce org</strong> enverrait à votre org toutes les
+ modifications que git a vues depuis la dernière synchronisation, suppressions comprises, ce qui
+ est plus que ce que cette étape demande</p>
+</li>
+<li>
+<p>Ouvrez la version du flow de Mariia, qui est la <strong>plus récente</strong>. Ouvrir le flow depuis son nom
+   peut tomber sur une version plus ancienne, sans sa décision <strong>Crew Over Cap</strong> : dans Setup,
+   <strong>Flows</strong>, ouvrez le menu au bout de la ligne <code>Installation Assign Crew</code>, <strong>View Details and
+   Versions</strong>, et ouvrez la version en haut de la liste. Rajoutez votre règle de toiture plate,
+   <strong>avant</strong> son plafond : le flow porte d'abord l'équipe d'une toiture plate à trois, et son
+   plafond, qui tourne maintenant en dernier, a le dernier mot. Votre décision <span class="pill-ref pill-ref-1">(1)</span> vient en
+   premier, sa décision <strong>Crew Over Cap</strong> <span class="pill-ref pill-ref-2">(2)</span> en dernier. <strong>Save</strong>, puis <strong>Activate</strong></p>
+<p><a class="glightbox" data-type="image" href="../../../_assets/annotated/salesforce/flow-builder-assign-crew-full.png"><img alt="Le flow reconstruit : le minimum de toiture plate d'abord, le plafond en dernier" src="../../../_assets/annotated/salesforce/flow-builder-assign-crew-full.png" /></a></p>
+</li>
+<li>
+<p>Revenez dans VS Code, faites un retrieve du flow reconstruit avec <strong>Commit changes</strong>, et indexez-le
+   dans <strong>Source Control</strong>, à côté du permission set. Ne commitez pas encore : un merge se termine
+   par un seul commit, et l'étape suivante le fait</p>
+</li>
+</ol>
+<p>Plus long à décrire, bien plus rapide à faire, et vous voyez ce que vous construisez.</p>
+<details>
+<summary>Sous le capot : le résoudre dans le fichier à la place</summary>
+<p>Si vous savez lire du XML de flow et que vous y tenez : prenez la version de Mariia de l'élément et
+de ses connecteurs comme base, rajoutez votre décision de toiture plate avant son plafond, et
+supprimez tous les marqueurs de conflit. Publiez ensuite, ce qui rejoue les règles de nettoyage sur
+ce que vous avez écrit à la main.</p>
+<p>Le risque n'est pas que cela échoue. Le risque est que cela se déploie et que les décisions
+s'exécutent dans un ordre que vous n'aviez pas prévu, ce qu'aucun contrôle n'attrape et qu'aucun test
+de ce projet ne couvre.</p>
+</details>
+<h3 id="7-terminer-le-merge-et-revalider">7. Terminer le merge et revalider<a class="headerlink" href="#7-terminer-le-merge-et-revalider" title="Permanent link">&para;</a></h3>
+<p><strong>Complete Merge</strong> a déplacé chaque fichier de <strong>Merge Changes</strong> vers <strong>Staged Changes</strong>. Quand les
+deux y sont, la zone de message affiche déjà
+<code>Merge remote-tracking branch 'origin/integration'</code> : cliquez sur <strong>Commit</strong>, puis sur
+<strong>Sync Changes</strong> pour pousser.</p>
+<p>Puis <strong>republiez</strong> : <strong>Save / Publish User Story</strong>. Cela compte. Le merge a produit du XML à la main,
+et publier rejoue les règles de nettoyage dessus et reconstruit <code>manifest/package.xml</code> à partir de ce
+que votre branche change désormais. Sauter cette étape est la façon dont un marqueur de conflit
+oublié atteint un déploiement.</p>
+<p>Regardez le contrôle passer au vert, puis mergez.</p>
+<h3 id="8-verifier-que-les-deux-modifications-ont-survecu">8. Vérifier que les deux modifications ont survécu<a class="headerlink" href="#8-verifier-que-les-deux-modifications-ont-survecu" title="Permanent link">&para;</a></h3>
+<p>Dans <code>helios-integration</code> :</p>
+<ul>
+<li>Le flow plafonne l'équipe, la règle de Mariia</li>
+<li>Le flow renforce les équipes de toiture plate, votre règle, sans casser le plafond</li>
+<li>Le permission set accorde les deux champs</li>
+</ul>
+<p>S'il manque l'un des deux côtés, la résolution a perdu du travail, et l'audit du badge le dira.</p>
+<h2 id="ce-que-vous-devez-voir">Ce que vous devez voir<a class="headerlink" href="#ce-que-vous-devez-voir" title="Permanent link">&para;</a></h2>
+<ul>
+<li>Aucun marqueur de conflit nulle part : cherchez <code>&lt;&lt;&lt;&lt;&lt;&lt;&lt;</code> dans le repository</li>
+<li>Les deux permissions de champ dans <code>Helios_Delivery_Manager</code></li>
+<li>Les deux comportements dans le flow</li>
+</ul>
+<details class="troubleshoot">
+<summary>En cas de problème</summary>
+<p><strong><code>Error parsing file: Element assignments is duplicated at this location in type Flow</code>.</strong>
+Votre résolution a laissé le flow avec ses éléments dans le désordre. Un fichier de flow groupe tous
+les éléments de même nature : toutes les affectations, puis toutes les décisions. Si votre merge a
+déposé un élément conservé entre deux blocs d'une autre nature, remontez-le auprès des siens. L'ordre
+à l'intérieur de chaque groupe n'a pas d'importance, le groupement si.</p>
+<p><strong><code>Element field is duplicated at this location in type PermissionSetFieldPermissions</code>.</strong>
+Vous avez gardé les deux côtés à l'intérieur d'une seule autorisation au lieu de garder les deux
+autorisations. Un bloc <code>&lt;fieldPermissions&gt;</code> nomme un champ : la correction est deux blocs, pas un
+bloc avec deux lignes <code>&lt;field&gt;</code>.</p>
+<p><strong>Le flow refuse de se déployer après le merge : "duplicate element name".</strong>
+Vous avez gardé les deux côtés d'un élément qui ne peut exister qu'une fois. Les noms d'éléments de
+flow sont uniques. Renommez-en un ou supprimez-en un.</p>
+<p><strong>Vous avez perdu votre modification entièrement.</strong>
+Vous avez accepté le côté de Mariia sur tout le fichier. Dans le panneau <strong>Source Control</strong>, menu
+<strong>...</strong> &gt; <strong>Branch</strong> &gt; <strong>Abort Merge</strong>, puis reprenez l'étape 4.</p>
+<p><strong>Le contrôle échoue sur un marqueur de conflit.</strong>
+Cherchez <code>&lt;&lt;&lt;&lt;&lt;&lt;&lt;</code>, <code>=======</code> et <code>&gt;&gt;&gt;&gt;&gt;&gt;&gt;</code> dans tout le repository. Un marqueur dans un fichier XML
+est parfois toléré syntaxiquement par git et toujours fatal pour Salesforce.</p>
+<p><strong>Vous n'arrivez pas du tout à démêler.</strong>
+<strong>Training: Level 2 &gt; Reset this level</strong>, puis refaites depuis l'étape 1. Perdre vingt minutes vaut
+mieux que merger quelque chose que vous ne comprenez pas.</p>
+</details>
+<h2 id="verifiez-votre-travail">Vérifiez votre travail<a class="headerlink" href="#verifiez-votre-travail" title="Permanent link">&para;</a></h2>
+<p>Welcome page &gt; <strong>Training: Level 2</strong> &gt; <strong>Check my work</strong>, puis choisissez le <strong>Lab 2.7</strong>.</p>
+<p>Le contrôle vérifie des <strong>résultats, pas une procédure</strong> : les deux modifications présentes et
+correctes sur <code>integration</code>, aucun marqueur restant. Peu importe comment vous y êtes arrivé, y
+compris en résolvant dans l'éditeur web de GitHub ou en refaisant le travail dans Flow Builder, cela
+passe.</p>
+<h2 id="pour-aller-plus-loin">Pour aller plus loin<a class="headerlink" href="#pour-aller-plus-loin" title="Permanent link">&para;</a></h2>
+<ul>
+<li><a href="https://sfdx-hardis.cloudity.com/salesforce-devops-work-on-user-story-profiles/">Profils et permission sets</a></li>
+<li><a href="https://sfdx-hardis.cloudity.com/salesforce-devops-config-overwrite/">Gestion des écrasements</a></li>
+</ul>
+<p><a class="md-button md-button--primary" href="../2-8-recover-from-committing-the-wrong-metadata/">Suite : Lab 2.8 - Se remettre d'avoir commité la mauvaise métadonnée</a></p>
+
+
+
+
+
+
+
+
+
+  
+  
+
+
+
+  
+
+
+
+
+  <h2 id="__comments">Questions and comments</h2>
+  <script src="https://giscus.app/client.js"
+          data-repo="hardisgroupcom/sfdx-hardis-training"
+          data-repo-id="R_kgDOUcjgQw"
+          data-category="Q&amp;A"
+          data-category-id="DIC_kwDOUcjgQ84DF-lC"
+          data-mapping="pathname"
+          data-strict="1"
+          data-reactions-enabled="1"
+          data-emit-metadata="0"
+          data-input-position="top"
+          data-theme="preferred_color_scheme"
+          data-lang="en"
+          data-loading="lazy"
+          crossorigin="anonymous"
+          async>
+  </script>
+
+  <script>
+    // Keep the Giscus iframe in sync with the palette toggle. It is a
+    // cross-origin frame, so its theme can only be changed by postMessage.
+    (function () {
+      if (window.__giscusThemeSync) {
+        return;
+      }
+      window.__giscusThemeSync = true;
+      var giscusTheme = function () {
+        var scheme = document.body.getAttribute("data-md-color-scheme");
+        return scheme === "slate" ? "dark" : "light";
+      };
+      var apply = function () {
+        var frame = document.querySelector("iframe.giscus-frame");
+        if (frame && frame.contentWindow) {
+          frame.contentWindow.postMessage(
+            { giscus: { setConfig: { theme: giscusTheme() } } },
+            "https://giscus.app"
+          );
+        }
+      };
+      new MutationObserver(apply).observe(document.body, {
+        attributes: true,
+        attributeFilter: ["data-md-color-scheme"]
+      });
+      window.addEventListener("message", function (event) {
+        if (event.origin === "https://giscus.app") {
+          apply();
+        }
+      });
+    })();
+  </script>
+
+                
+              </article>
+            </div>
+          
+          
+  <script>var tabs=__md_get("__tabs");if(Array.isArray(tabs))e:for(var set of document.querySelectorAll(".tabbed-set")){var labels=set.querySelector(".tabbed-labels");for(var tab of tabs)for(var label of labels.getElementsByTagName("label"))if(label.innerText.trim()===tab){var input=document.getElementById(label.htmlFor);input.checked=!0;continue e}}</script>
+
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-circle-arrow-up" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="m16 12-4-4-4 4M12 16V8"/></svg>
+  Retour en haut de la page
+</button>
+        
+      </main>
+      
+        
+
+
+
+
+<footer class="md-footer">
+  
+    
+      
+      <nav class="md-footer__inner md-grid" aria-label="Pied de page" >
+        
+          
+          <a href="../2-6-permission-sets-and-profiles/" class="md-footer__link md-footer__link--prev" aria-label="Précédent: Lab 2.6 - Permission sets, profils, et pourquoi une autorisation disparaît">
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-arrow-left" viewBox="0 0 24 24"><path d="m12 19-7-7 7-7M19 12H5"/></svg>
+            </div>
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Précédent
+              </span>
+              <div class="md-ellipsis">
+                Lab 2.6 - Permission sets, profils, et pourquoi une autorisation disparaît
+              </div>
+            </div>
+          </a>
+        
+        
+          
+          <a href="../2-8-recover-from-committing-the-wrong-metadata/" class="md-footer__link md-footer__link--next" aria-label="Suivant: Lab 2.8 - Se remettre d&#x27;avoir commité la mauvaise métadonnée">
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Suivant
+              </span>
+              <div class="md-ellipsis">
+                Lab 2.8 - Se remettre d'avoir commité la mauvaise métadonnée
+              </div>
+            </div>
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-arrow-right" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+            </div>
+          </a>
+        
+      </nav>
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      Cloudity and friends
+    </div>
+  
+  
+</div>
+      
+        
+<div class="md-social">
+  
+    
+    
+    
+    
+    <a href="https://github.com/hardisgroupcom/sfdx-hardis" target="_blank" rel="noopener" title="sfdx-hardis on GitHub" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.3.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2026 Fonticons, Inc.--><path fill="currentColor" d="M216.5 362.5c-66-8-112.5-55.5-112.5-117 0-25 9-52 24-70-6.5-16.5-5.5-51.5 2-66 20-2.5 47 8 63 22.5 19-6 39-9 63.5-9s44.5 3 62.5 8.5c15.5-14 43-24.5 63-22 7 13.5 8 48.5 1.5 65.5 16 19 24.5 44.5 24.5 70.5 0 61.5-46.5 108-113.5 116.5 17 11 28.5 35 28.5 62.5v52c0 15 12.5 23.5 27.5 17.5C441 459.5 512 369 512 257 512 115.5 397 0 255.5 0S0 115.5 0 257c0 111 70.5 203 165.5 237.5 13.5 5 26.5-4 26.5-17.5v-40c-7 3-16 5-24 5-33 0-52.5-18-66.5-51.5-5.5-13.5-11.5-21.5-23-23-6-.5-8-3-8-6 0-6 10-10.5 20-10.5 14.5 0 27 9 40 27.5 10 14.5 20.5 21 33 21s20.5-4.5 32-16c8.5-8.5 15-16 21-21"/></svg>
+    </a>
+  
+    
+    
+    
+    
+    <a href="https://sfdx-hardis.cloudity.com/" target="_blank" rel="noopener" title="sfdx-hardis documentation" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.3.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2026 Fonticons, Inc.--><path fill="currentColor" d="M384 512H96c-53 0-96-43-96-96V96C0 43 43 0 96 0h304c26.5 0 48 21.5 48 48v288c0 20.9-13.4 38.7-32 45.3V448c17.7 0 32 14.3 32 32s-14.3 32-32 32zM96 384c-17.7 0-32 14.3-32 32s14.3 32 32 32h256v-64zm32-232c0 13.3 10.7 24 24 24h176c13.3 0 24-10.7 24-24s-10.7-24-24-24H152c-13.3 0-24 10.7-24 24m24 72c-13.3 0-24 10.7-24 24s10.7 24 24 24h176c13.3 0 24-10.7 24-24s-10.7-24-24-24z"/></svg>
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog" role="status" aria-atomic="true">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      
+      
+        
+        
+      <script id="__config" type="application/json">{"annotate":null,"base":"../../..","features":["content.action.edit","content.code.copy","content.tabs.link","navigation.instant","navigation.tracking","navigation.top","navigation.footer","search.suggest","search.highlight","toc.follow"],"redirect":null,"search":"../../../assets/javascripts/workers/search.7d14d953.min.js","tags":null,"translations":{"clipboard.copied":"Copié dans le presse-papier","clipboard.copy":"Copier dans le presse-papier","clipboard.error":"Could not copy to clipboard","search.result.more.one":"1 de plus sur cette page","search.result.more.other":"# de plus sur cette page","search.result.none":"Aucun document trouvé","search.result.one":"1 document trouvé","search.result.other":"# documents trouvés","search.result.placeholder":"Taper pour démarrer la recherche","search.result.term.missing":"Non trouvé","select.version":"Sélectionner la version"},"version":null}</script>
+    
+    
+      <script src="../../../assets/javascripts/bundle.67a597eb.min.js"></script>
+      
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/tablesort/5.2.1/tablesort.min.js"></script>
+      
+        <script src="../../../theme/javascripts/tables.js"></script>
+      
+        <script src="../../../theme/javascripts/lightbox.js"></script>
+      
+        <script src="../../../theme/javascripts/after-footer.js"></script>
+      
+        <script src="../../../theme/javascripts/language-switch.js"></script>
+      
+    
+  </body>
+</html>

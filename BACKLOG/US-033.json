@@ -1,0 +1,8 @@
+{
+  "id": "US-033",
+  "subject": "Crews can read the panel batch cost",
+  "url": "https://sfdx-hardis-training.github.io/BACKLOG/US-033/",
+  "owner": "You",
+  "branch": "features/US-033-batch-cost-visibility",
+  "lab": "2.6"
+}

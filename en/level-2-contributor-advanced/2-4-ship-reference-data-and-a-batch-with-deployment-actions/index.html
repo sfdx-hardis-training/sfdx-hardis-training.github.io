@@ -1,0 +1,2534 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="A green deployment is not a working feature. Ship reference data, a scheduled Apex batch and a manual step as sfdx-hardis deployment actions.">
+      
+      
+      
+        <link rel="canonical" href="https://sfdx-hardis-training.github.io/en/level-2-contributor-advanced/2-4-ship-reference-data-and-a-batch-with-deployment-actions/">
+      
+      
+        <link rel="prev" href="../2-3-fix-broken-records-with-an-apex-deployment-action/">
+      
+      
+        <link rel="next" href="../2-5-pass-code-quality-and-apex-test-coverage/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../../theme/images/badge-mark.svg">
+      <meta name="generator" content="zensical-0.0.67">
+    
+    
+      
+        <title>Lab 2.4 - Ship reference data and a batch with deployment actions - Salesforce DevOps with sfdx-hardis</title>
+      
+    
+    
+      
+        
+      
+      <link rel="stylesheet" href="../../../assets/stylesheets/modern/main.4ae390e2.min.css">
+      
+        
+          
+        
+        <link rel="stylesheet" href="../../../assets/stylesheets/modern/palette.96d1a7e4.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+    
+    
+      <link rel="stylesheet" href="../../../theme/stylesheets/extra.css">
+    
+    <script>__md_scope=new URL("../../..",location),__md_scope.pathname.endsWith("/")||(__md_scope=new URL(__md_scope.pathname+"/",location)),__md_hash=e=>[...e].reduce(((e,t)=>(e<<5)-e+t.charCodeAt(0)),0),__md_get=(e,t=localStorage,_=__md_scope)=>JSON.parse(t.getItem(_.pathname+"."+e)),__md_set=(e,t,_=localStorage,a=__md_scope)=>{try{_.setItem(a.pathname+"."+e,JSON.stringify(t))}catch(e){}},document.documentElement.setAttribute("data-platform",navigator.platform)</script>
+    
+      
+  
+
+
+  
+  
+
+<script id="__analytics">function __md_analytics(){function e(){dataLayer.push(arguments)}window.dataLayer=window.dataLayer||[],e("js",new Date),e("config","G-SE20CZ58E1"),document.addEventListener("DOMContentLoaded",(function(){document.forms.search&&document.forms.search.query.addEventListener("blur",(function(){this.value&&e("event","search",{search_term:this.value})}));document$.subscribe((function(){var t=document.forms.feedback;if(void 0!==t)for(var a of t.querySelectorAll("[type=submit]"))a.addEventListener("click",(function(a){a.preventDefault();var n=document.location.pathname,d=this.getAttribute("data-md-value");e("event","feedback",{page:n,data:d}),t.firstElementChild.disabled=!0;var r=t.querySelector(".md-feedback__note [data-md-value='"+d+"']");r&&(r.hidden=!1)})),t.hidden=!1})),location$.subscribe((function(t){e("config","G-SE20CZ58E1",{page_path:t.pathname})}))}));var t=document.createElement("script");t.async=!0,t.src="https://www.googletagmanager.com/gtag/js?id=G-SE20CZ58E1",document.getElementById("__analytics").insertAdjacentElement("afterEnd",t)}</script>
+  
+    <script>"undefined"!=typeof __md_analytics&&__md_analytics()</script>
+  
+
+    
+    
+  
+  
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Salesforce DevOps with sfdx-hardis">
+  <meta property="og:locale" content="en">
+  <meta property="og:title" content="Lab 2.4 - Ship reference data and a batch with deployment actions">
+  <meta property="og:description" content="A green deployment is not a working feature. Ship reference data, a scheduled Apex batch and a manual step as sfdx-hardis deployment actions.">
+  <meta property="og:url" content="https://sfdx-hardis-training.github.io/en/level-2-contributor-advanced/2-4-ship-reference-data-and-a-batch-with-deployment-actions/">
+  <meta property="og:image" content="https://sfdx-hardis-training.github.io/_assets/social/course.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="Lab 2.4 - Ship reference data and a batch with deployment actions">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Lab 2.4 - Ship reference data and a batch with deployment actions">
+  <meta name="twitter:description" content="A green deployment is not a working feature. Ship reference data, a scheduled Apex batch and a manual step as sfdx-hardis deployment actions.">
+  <meta name="twitter:image" content="https://sfdx-hardis-training.github.io/_assets/social/course.png">
+
+  <script>
+    (function () {
+      var here = "en";
+      var alternates = {"en":"en/level-2-contributor-advanced/2-4-ship-reference-data-and-a-batch-with-deployment-actions/","fr":"fr/level-2-contributor-advanced/2-4-ship-reference-data-and-a-batch-with-deployment-actions/"};
+      var base = new URL("../../.." || ".", window.location.href).pathname;
+      try {
+        var asked = new URLSearchParams(window.location.search).get("lang");
+        if (asked) {
+          document.cookie =
+            "course-language=" + encodeURIComponent(asked) + "; path=" + base + "; max-age=31536000; samesite=lax";
+        }
+        var cookie = document.cookie.split("; ").filter(function (one) {
+          return one.indexOf("course-language=") === 0;
+        })[0];
+        if (!cookie) {
+          return;
+        }
+        var preferred = asked || decodeURIComponent(cookie.slice("course-language=".length));
+        if (!preferred || preferred === here) {
+          return;
+        }
+        var target = alternates[preferred];
+        if (typeof target !== "string") {
+          return;
+        }
+        var url = new URL(target, new URL(base, window.location.href)).pathname;
+        if (url !== window.location.pathname) {
+          window.location.replace(url + window.location.search + window.location.hash);
+        }
+      } catch (error) {
+        // A browser with no cookies stays where it is, which is the page asked for
+      }
+    })();
+  </script>
+
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="custom" data-md-color-accent="custom">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer" aria-label="Navigation"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#lab-24-ship-reference-data-and-a-batch-with-deployment-actions" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+        <aside class="md-banner">
+          <div class="md-banner__inner md-grid md-typeset">
+            
+            
+      <strong>This level is in QA.</strong> It is complete and has been run end to end, and now it
+      needs you. If a step does not work, or the screen does not match what the page says, please
+      <a href="#__comments">leave a comment at the bottom of that page</a>. That is the fastest way
+      to get it fixed, and it helps the next person too.
+    
+          </div>
+          
+        </aside>
+      
+    </div>
+    
+    
+      
+
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="/" title="Salesforce DevOps with sfdx-hardis" class="md-header__button md-logo" aria-label="Salesforce DevOps with sfdx-hardis" data-md-component="logo">
+      
+  <img src="../../../theme/images/cloudity-text-logo-white.svg" alt="Salesforce DevOps with sfdx-hardis">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer" aria-label="Navigation">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-menu" viewBox="0 0 24 24"><path d="M4 5h16M4 12h16M4 19h16"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Salesforce DevOps with sfdx-hardis
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Lab 2.4 - Ship reference data and a batch with deployment actions
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="none" data-md-color-scheme="default" data-md-color-primary="custom" data-md-color-accent="custom"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="none" data-md-color-scheme="slate" data-md-color-primary="custom" data-md-color-accent="custom"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+      
+
+
+
+  
+    
+    
+  
+
+  
+
+<div class="md-header__option">
+  <div class="md-select md-select--language">
+    <button class="md-header__button md-header__button--flag" aria-label="Select language">
+      
+        <img src="../../../theme/images/flags/gb.svg" alt="English" class="md-select__flag md-select__flag--current">
+      
+    </button>
+    <div class="md-select__inner">
+      <ul class="md-select__list">
+        
+          
+          <li class="md-select__item"><a href="././" hreflang="en" data-course-home="/" class="md-select__link">
+              
+                <img src="../../../theme/images/flags/gb.svg" alt="" class="md-select__flag">
+              
+              English
+            </a>
+          </li>
+        
+          
+          <li class="md-select__item"><a href="../../../fr/level-2-contributor-advanced/2-4-ship-reference-data-and-a-batch-with-deployment-actions/" hreflang="fr" data-course-home="/fr/" class="md-select__link">
+              
+                <img src="../../../theme/images/flags/fr.svg" alt="" class="md-select__flag">
+              
+              Français
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</div>
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search" aria-label="Search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-search" viewBox="0 0 24 24"><path d="m21 21-4.34-4.34"/><circle cx="11" cy="11" r="8"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog" aria-label="Search">
+  <button type="button" class="md-search__button">
+    Search
+  </button>
+</div>
+      
+    
+    <div class="md-header__source">
+      
+        <a href="https://github.com/hardisgroupcom/sfdx-hardis-training" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.3.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2026 Fonticons, Inc.--><path fill="currentColor" d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    hardisgroupcom/sfdx-hardis-training
+  </div>
+</a>
+      
+    </div>
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0" data-course-lang="en" data-course-base="../../.." data-course-alt-en="en/level-2-contributor-advanced/2-4-ship-reference-data-and-a-batch-with-deployment-actions/" data-course-alt-fr="fr/level-2-contributor-advanced/2-4-ship-reference-data-and-a-batch-with-deployment-actions/">
+  <label class="md-nav__title" for="__drawer">
+    <a href="/" title="Salesforce DevOps with sfdx-hardis" class="md-nav__button md-logo" aria-label="Salesforce DevOps with sfdx-hardis" data-md-component="logo">
+      
+  <img src="../../../theme/images/cloudity-text-logo-white.svg" alt="Salesforce DevOps with sfdx-hardis">
+
+    </a>
+    Salesforce DevOps with sfdx-hardis
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/hardisgroupcom/sfdx-hardis-training" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.3.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2026 Fonticons, Inc.--><path fill="currentColor" d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    hardisgroupcom/sfdx-hardis-training
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+      
+        
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Home
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+      
+    
+      
+      
+      
+        
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Level 1 - Contributor basics
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        
+          <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+            <label class="md-nav__title" for="__nav_2">
+              <span class="md-nav__icon md-icon"></span>
+              
+  
+  Level 1 - Contributor basics
+
+            </label>
+            <ul class="md-nav__list" data-md-scrollfix>
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../level-1-contributor-basics/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Start here
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../level-1-contributor-basics/1-1-install-vs-code-and-sfdx-hardis/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Lab 1.1 - Install VS Code, Git and sfdx-hardis
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../level-1-contributor-basics/1-2-create-your-dev-hub-scratch-orgs-and-pipeline/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Lab 1.2 - Create your Dev Hub, scratch orgs and CI/CD pipeline
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../level-1-contributor-basics/1-3-start-a-user-story-on-a-git-branch/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Lab 1.3 - Start a User Story on its own Git branch
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../level-1-contributor-basics/1-4-build-a-custom-field-in-your-org/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Lab 1.4 - Build a custom field in your Salesforce org
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../level-1-contributor-basics/1-5-retrieve-commit-and-publish-your-changes/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Lab 1.5 - Retrieve, commit and publish your Salesforce changes
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../level-1-contributor-basics/1-6-pull-request-deployment-check-and-merge/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Lab 1.6 - Open a Pull Request, pass the deployment check, merge
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../level-1-contributor-basics/1-7-capstone-deliver-a-user-story-on-your-own/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Lab 1.7 - Capstone: deliver a User Story on your own
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+            </ul>
+          </nav>
+        
+      
+    </li>
+  
+
+      
+    
+      
+      
+      
+        
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Level 2 - Contributor advanced
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        
+          <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="true">
+            <label class="md-nav__title" for="__nav_3">
+              <span class="md-nav__icon md-icon"></span>
+              
+  
+  Level 2 - Contributor advanced
+
+            </label>
+            <ul class="md-nav__list" data-md-scrollfix>
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Start here
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../2-1-backpromote-your-teammates-work/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Lab 2.1 - Backpromote: catch your dev org up with the team
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../2-2-fix-a-missing-dependency-deployment-error/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Lab 2.2 - Fix a deployment error caused by a missing dependency
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../2-3-fix-broken-records-with-an-apex-deployment-action/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Lab 2.3 - Fix broken records with an Apex deployment action
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Lab 2.4 - Ship reference data and a batch with deployment actions
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="././" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Lab 2.4 - Ship reference data and a batch with deployment actions
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+
+<nav class="md-nav md-nav--secondary" aria-label="On this page">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      On this page
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#the-situation" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        The situation
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#before-you-start" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Before you start
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#steps" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Steps
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Steps">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-take-the-story-and-build-the-metadata" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        1. Take the story and build the metadata
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-publish-and-watch-nothing-fail" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        2. Publish and watch nothing fail
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-build-a-data-workspace-for-the-reference-records" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        3. Build a data workspace for the reference records
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#4-declare-the-three-actions" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        4. Declare the three actions
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#5-read-the-pull-request-comment" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        5. Read the Pull Request comment
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#6-verify-in-the-integration-org" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        6. Verify in the integration org
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#what-you-should-see" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        What you should see
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#check-your-work" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Check your work
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#go-deeper" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Go deeper
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../2-5-pass-code-quality-and-apex-test-coverage/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Lab 2.5 - Pass the code quality gate and Apex test coverage
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../2-6-permission-sets-and-profiles/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Lab 2.6 - Permission sets, profiles and why a grant disappears
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../2-7-resolve-a-git-merge-conflict/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Lab 2.7 - Resolve a Git merge conflict with a teammate
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../2-8-recover-from-committing-the-wrong-metadata/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Lab 2.8 - Recover from committing the wrong metadata
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../2-9-capstone-deliver-a-user-story-that-has-it-all/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Lab 2.9 - Capstone: deliver a User Story that has it all
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+            </ul>
+          </nav>
+        
+      
+    </li>
+  
+
+      
+    
+      
+      
+      
+        
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Level 3 - Release Manager
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        
+          <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+            <label class="md-nav__title" for="__nav_4">
+              <span class="md-nav__icon md-icon"></span>
+              
+  
+  Level 3 - Release Manager
+
+            </label>
+            <ul class="md-nav__list" data-md-scrollfix>
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../level-3-release-manager/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Start here
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../level-3-release-manager/3-1-configure-the-pipeline-up-to-production/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Lab 3.1 - Configure the CI/CD pipeline up to production
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../level-3-release-manager/3-2-review-a-contributor-pull-request/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Lab 3.2 - Review and merge a contributor Pull Request
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../level-3-release-manager/3-3-deploy-to-integration-and-read-the-log/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Lab 3.3 - Read the deployment log, and what .forceignore hides from it
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../level-3-release-manager/3-4-merge-colliding-pull-requests/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Lab 3.4 - Three Pull Requests collide: choose the merge order
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../level-3-release-manager/3-5-promote-to-uat-and-write-release-notes/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Lab 3.5 - Promote to UAT and write the release notes
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../level-3-release-manager/3-6-release-to-production-and-read-dora-metrics/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Lab 3.6 - Release to production and read your DORA metrics
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../level-3-release-manager/3-7-hotfix-and-retrofit/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Lab 3.7 - Production is broken: hotfix and retrofit
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../level-3-release-manager/3-8-monitor-your-production-org/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Lab 3.8 - Monitor your production org
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../level-3-release-manager/3-9-generate-the-project-documentation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Lab 3.9 - Generate the Salesforce project documentation
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../level-3-release-manager/3-10-promote-a-subset-with-promotion-branches/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Lab 3.10 - Promote a subset with promotion branches (Beta)
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../level-3-release-manager/3-11-capstone-run-a-weekly-release-cycle/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Lab 3.11 - Capstone: run a weekly release cycle
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+            </ul>
+          </nav>
+        
+      
+    </li>
+  
+
+      
+    
+      
+      
+      
+        
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../help/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Help
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+      
+    
+      
+      
+      
+        
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../BACKLOG/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Backlog
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+      
+    
+      
+      
+      
+        
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../badges/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Badges
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+      
+    
+      
+      
+      
+    
+      
+      
+      
+    
+      
+      
+      
+    
+      
+      
+      
+    
+      
+      
+      
+    
+      
+      
+      
+    
+      
+      
+      
+    
+      
+      
+      
+        
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="https://sfdx-hardis.cloudity.com/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  sfdx-hardis documentation
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+      
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  
+                    
+                    
+                    
+                      
+                    
+                    
+                      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+                      <div class="md-sidebar-button__wrapper">
+                        <label class="md-sidebar-button" for="__toc"></label>
+                      </div>
+                    
+                  
+                  <div class="md-sidebar__inner">
+                    
+
+
+<nav class="md-nav md-nav--secondary" aria-label="On this page">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      On this page
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#the-situation" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        The situation
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#before-you-start" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Before you start
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#steps" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Steps
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Steps">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-take-the-story-and-build-the-metadata" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        1. Take the story and build the metadata
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-publish-and-watch-nothing-fail" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        2. Publish and watch nothing fail
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-build-a-data-workspace-for-the-reference-records" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        3. Build a data workspace for the reference records
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#4-declare-the-three-actions" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        4. Declare the three actions
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#5-read-the-pull-request-comment" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        5. Read the Pull Request comment
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#6-verify-in-the-integration-org" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        6. Verify in the integration org
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#what-you-should-see" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        What you should see
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#check-your-work" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Check your work
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#go-deeper" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Go deeper
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+  
+    <a href="https://github.com/hardisgroupcom/sfdx-hardis-training/edit/main/labs/en/level-2-contributor-advanced/2-4-ship-reference-data-and-a-batch-with-deployment-actions.md" title="Edit this page" class="md-content__button md-icon" rel="edit">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-file-pen" viewBox="0 0 24 24"><path d="M12.659 22H18a2 2 0 0 0 2-2V8a2.4 2.4 0 0 0-.706-1.706l-3.588-3.588A2.4 2.4 0 0 0 14 2H6a2 2 0 0 0-2 2v9.34"/><path d="M14 2v5a1 1 0 0 0 1 1h5M10.378 12.622a1 1 0 0 1 3 3.003L8.36 20.637a2 2 0 0 1-.854.506l-2.867.837a.5.5 0 0 1-.62-.62l.836-2.869a2 2 0 0 1 .506-.853z"/></svg>
+    </a>
+  
+  
+
+
+<h1 id="lab-24-ship-reference-data-and-a-batch-with-deployment-actions">Lab 2.4 - Ship reference data and a batch with deployment actions<a class="headerlink" href="#lab-24-ship-reference-data-and-a-batch-with-deployment-actions" title="Permanent link">&para;</a></h1>
+<p><strong>Level</strong>: 2 Contributor advanced</p>
+<p><strong>Time</strong>: ~30 min</p>
+<p><strong>You will</strong>: meet the worst kind of failure, the one where nothing fails, and fix it with three
+deployment actions of three different kinds.</p>
+<h2 id="the-situation">The situation<a class="headerlink" href="#the-situation" title="Permanent link">&para;</a></h2>
+<blockquote>
+<p><strong>US-026 - Crew capacity reference data and nightly recalculation</strong></p>
+<p>As a planner, I want capacity rules per crew type and a nightly job that recalculates them, so
+that the planning board is right every morning and I get a summary of it in my inbox.</p>
+<p>Acceptance criteria:</p>
+<ul>
+<li>12 Crew Capacity records exist in every org</li>
+<li>The batch is scheduled nightly</li>
+<li>The planner receives the morning summary email</li>
+</ul>
+</blockquote>
+<p>You build it, the deployment is green, everyone signs it off, and three weeks later a planner says
+the board has never updated. The metadata arrived. Nothing else did.</p>
+<p><strong>A deployment carries metadata. It does not carry records, it does not carry scheduled jobs, and
+it does not carry anything a human had to click in Setup.</strong> Every one of those has to be declared,
+or it happens once in your org and nowhere else, forever.</p>
+<h2 id="before-you-start">Before you start<a class="headerlink" href="#before-you-start" title="Permanent link">&para;</a></h2>
+<ul class="task-list">
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <a href="../2-3-fix-broken-records-with-an-apex-deployment-action/">Lab 2.3</a> finished and merged</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>helios-dev</code> level with <code>integration</code></li>
+</ul>
+<h2 id="steps">Steps<a class="headerlink" href="#steps" title="Permanent link">&para;</a></h2>
+<h3 id="1-take-the-story-and-build-the-metadata">1. Take the story and build the metadata<a class="headerlink" href="#1-take-the-story-and-build-the-metadata" title="Permanent link">&para;</a></h3>
+<p><strong>New User Story</strong> <span class="pill-ref pill-ref-2">(2)</span>, under <strong>Project Contribution Workflow</strong> <span class="pill-ref pill-ref-1">(1)</span> of the DevOps Pipeline
+panel. Name <code>US-026-crew-capacity-data</code>, org <code>helios-dev</code>.</p>
+<p><a class="glightbox" data-type="image" href="../../../_assets/annotated/vscode/pipeline-cards--new-user-story.png"><img alt="The New User Story card of the DevOps Pipeline panel" src="../../../_assets/annotated/vscode/pipeline-cards--new-user-story.png" /></a></p>
+<p>In <code>helios-dev</code>, create:</p>
+<ul>
+<li>A custom object <strong>Crew Capacity</strong> (<code>Crew_Capacity__c</code>), with:<ul>
+<li><code>External_Id__c</code>, Text 40, <strong>External Id</strong>, <strong>Unique</strong></li>
+<li><code>Crew_Type__c</code>, Picklist: <code>Roof</code>, <code>Ground</code>, <code>Electrical</code></li>
+<li><code>Roof_Type__c</code>, Picklist: <code>Tile</code>, <code>Slate</code>, <code>Flat</code>, <code>Metal</code></li>
+<li><code>Panels_Per_Day__c</code>, Number 3,0</li>
+</ul>
+</li>
+<li>A tab for it, so the records can be found in the app: <strong>Setup &gt; Tabs</strong>, <strong>New</strong> under <strong>Custom
+  Object Tabs</strong>, object <strong>Crew Capacity</strong>, any tab style. Keep the profile visibility the wizard
+  offers. On the last screen, <strong>Add to Custom Apps</strong>, untick <strong>Include Tab</strong> at the top of the list,
+  then tick <strong>Helios Delivery</strong> alone: the other apps have no use for it</li>
+<li>An Apex class <code>CrewCapacityBatch</code> that recalculates <code>Total_Capacity_kW__c</code> on planned
+  installations and that Salesforce can run on a schedule, plus its test class
+  <code>CrewCapacityBatchTest</code>. <strong>You do not have to write these</strong>, and they are the one thing in this
+  list you do not create in the org. From <code>scripts/apex/samples/</code> in the repository, copy
+  <code>CrewCapacityBatch.cls</code>, <code>CrewCapacityBatchTest.cls</code> and their two <code>.cls-meta.xml</code> files into
+  <code>force-app/main/default/classes/</code>, in the Explorer, with copy and paste, as in <a href="../2-3-fix-broken-records-with-an-apex-deployment-action/">Lab 2.3</a>. What they
+  compute matters far less here than the fact that somebody has to schedule them in every org,
+  which is the whole point of the lab</li>
+<li>The access, on <strong>Helios Delivery Manager</strong>: <strong>Read</strong>, <strong>Create</strong> and <strong>Edit</strong> on Crew Capacity,
+  <strong>Read</strong> and <strong>Edit</strong> on its four fields, and under <strong>Tab Settings</strong> on the same page, <strong>Available</strong>
+  and <strong>Visible</strong>. Planners maintain these numbers, and it is also the permission set the pipeline's
+  own user holds in every org: without it the data load of step 4 would find fields it is not
+  allowed to write. The tab setting is what shows the tab in the other orgs, where the profile
+  visibility you kept in the wizard never travels</li>
+</ul>
+<p>Then the records. Helios supports 12 combinations, three crew types by four roof types, and each
+one needs a Crew Capacity record saying how many panels a day that crew lays on that roof. Typing
+twelve records teaches nothing this lab is about, so the Training menu creates them:
+<strong>Training: Level 2</strong> <span class="pill-ref pill-ref-1">(1)</span> &gt; <strong>Create my lab records</strong> <span class="pill-ref pill-ref-2">(2)</span>, pick <strong>Lab 2.4 - the 12 Crew
+Capacity records</strong>, then <strong>helios-dev</strong>, and answer <strong>Yes</strong> to <strong>Create them?</strong>.</p>
+<p><a class="glightbox" data-type="image" href="../../../_assets/annotated/vscode/sidebar-commands-custom-menu-2--lab-records.png"><img alt="The Level 2 Training menu, with Create my lab records" src="../../../_assets/annotated/vscode/sidebar-commands-custom-menu-2--lab-records.png" /></a></p>
+<p>The panel first checks that your object and its four fields are in the org, then creates the
+records, lists them, and ends with a <strong>See them in the org</strong> link. Open it, or open the <strong>Crew
+Capacity</strong> tab of the Helios Delivery app and pick the <strong>All</strong> list view: it reads <strong>12 items</strong>
+<span class="pill-ref pill-ref-1">(1)</span>, from <code>CAP-ROOF-TILE</code> to <code>CAP-ELECTRICAL-METAL</code>. If the
+panel says a field is missing, finish the object first, then run it again: it updates the same
+twelve records rather than creating more.</p>
+<p><a class="glightbox" data-type="image" href="../../../_assets/annotated/salesforce/crew-capacity-records.png"><img alt="The All list of Crew Capacity in helios-dev, with its 12 records" src="../../../_assets/annotated/salesforce/crew-capacity-records.png" /></a></p>
+<details>
+<summary>Under the hood: how the records were created</summary>
+<p>The menu entry ran:</p>
+<div class="highlight"><pre><span></span><code>node scripts/training.mjs records
+</code></pre></div>
+<p>which loaded <code>scripts/lab-records/lab-2-4/Crew_Capacity__c.csv</code> into <code>helios-dev</code> with
+<code>sf data upsert bulk</code>, matching on <code>External_Id__c</code>, and added an <strong>All</strong> list view to the object
+when it had none, so the link has a list to open. On a real project somebody enters these
+records in the org, or loads them from a spreadsheet: either way they exist in one org only, which
+is the problem the rest of this lab solves.</p>
+</details>
+<h3 id="2-publish-and-watch-nothing-fail">2. Publish and watch nothing fail<a class="headerlink" href="#2-publish-and-watch-nothing-fail" title="Permanent link">&para;</a></h3>
+<p>Retrieve the object, its fields, its tab, the <code>Helios_Delivery</code> app and <code>Helios_Delivery_Manager</code>
+with <strong>Commit changes</strong>. The two Apex classes are not retrieved: they are already files of the
+project, and Source Control lists the four you copied next to what you retrieved. Commit all of it,
+then <strong>Save / Publish</strong>, push, Pull Request. The check is green. Merge. The deployment is green.</p>
+<p>Now open <code>helios-integration</code> and look:</p>
+<ul>
+<li>The <strong>Crew Capacity</strong> tab is in the Helios Delivery app, <strong>with zero records</strong></li>
+<li><code>CrewCapacityBatch</code> exists, <strong>scheduled nowhere</strong></li>
+<li>Nobody checked that the org is allowed to send the batch's summary email</li>
+</ul>
+<p>The feature is in the org and completely inert. This is worse than a failure, because a failure
+tells you.</p>
+<h3 id="3-build-a-data-workspace-for-the-reference-records">3. Build a data workspace for the reference records<a class="headerlink" href="#3-build-a-data-workspace-for-the-reference-records" title="Permanent link">&para;</a></h3>
+<p>The story is merged, so what is missing goes into a second Pull Request for the same story. <strong>New
+User Story</strong>, name <code>US-026-crew-capacity-actions</code>, org <code>helios-dev</code>: a follow-up branch is how a
+team finishes a story, and sfdx-hardis says it itself at the end of every Save / Publish, <strong>do not
+reuse the same branch</strong>.</p>
+<p>On the Welcome page, click <strong>Data Workbench</strong>. The panel that opens is titled <strong>Data
+Import/Export Workbench</strong>. <strong>Create Workspace</strong> <span class="pill-ref pill-ref-1">(1)</span> sits at the top right, and the workspaces
+the project already carries are listed on the left <span class="pill-ref pill-ref-2">(2)</span>: <code>HeliosBaseline</code> is the one the Training
+menu uses to seed your org.</p>
+<p>A workspace is a folder of CSV files plus the recipe that says which object each one fills and how.
+It is run by <a href="https://github.com/forcedotcom/SFDX-Data-Move-Utility">SFDMU</a>, the data loader
+sfdx-hardis uses, and nothing in it is specific to one org.</p>
+<p><a class="glightbox" data-type="image" href="../../../_assets/annotated/vscode/data-workbench.png"><img alt="The Data Import/Export Workbench, where SFDMU workspaces are created and run" src="../../../_assets/annotated/vscode/data-workbench.png" /></a></p>
+<p>The picture was taken at the end of this step, so it already lists <code>HeliosCrewRefData</code> under
+<code>HeliosBaseline</code>. Yours lists <code>HeliosBaseline</code> alone until you create it.</p>
+<p>Create a new workspace:</p>
+<ol>
+<li><strong>Create Workspace</strong> <span class="pill-ref pill-ref-1">(1)</span>, and fill in its three fields:<ul>
+<li><strong>Workspace Name</strong>: <code>HeliosCrewRefData</code>, the name of its folder under <code>scripts/data/</code></li>
+<li><strong>Display Label</strong>: <code>Crew capacity reference data</code>, the name the panels show, for example when
+   you pick this workspace in a deployment action in step 4</li>
+<li><strong>Description</strong>: <code>The 12 Crew Capacity records every org needs: panels a day per crew type and
+   roof type.</code></li>
+</ul>
+</li>
+<li>
+<p><strong>Add Object</strong>, and paste this into <strong>SOQL Query</strong>. It names the object and the four fields you
+   created:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="k">SELECT</span><span class="w"> </span><span class="n">External_Id__c</span><span class="p">,</span><span class="w"> </span><span class="n">Crew_Type__c</span><span class="p">,</span><span class="w"> </span><span class="n">Roof_Type__c</span><span class="p">,</span><span class="w"> </span><span class="n">Panels_Per_Day__c</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">Crew_Capacity__c</span>
+</code></pre></div>
+</li>
+<li>
+<p><strong>Operation</strong>: <strong>Upsert</strong></p>
+</li>
+<li><strong>External Id (for Upsert)</strong>: <code>External_Id__c</code></li>
+</ol>
+<p>Then <strong>Export data</strong>. It asks two questions: whether to use your default org, <code>helios-dev</code>, and
+whether you confirm the export. Yes to both. The panel pulls your 12 records into
+<code>scripts/data/HeliosCrewRefData/Crew_Capacity__c.csv</code>.</p>
+<p>Open that file <span class="pill-ref pill-ref-1">(1)</span> and read it. Twelve rows, one column per field, each with a stable external
+id <span class="pill-ref pill-ref-3">(3)</span>, and an <code>Id</code> column first <span class="pill-ref pill-ref-2">(2)</span>: the record ids of <code>helios-dev</code>, which mean nothing anywhere else and which
+the import ignores, because it matches on the external id. That file is now versioned, reviewed
+and deployed like any other source. The <code>logs</code>, <code>reports</code> and <code>target</code> folders the export also
+wrote next to it are git-ignored: nothing to commit there.</p>
+<p><a class="glightbox" data-type="image" href="../../../_assets/annotated/vscode/editor-crew-capacity-csv.png"><img alt="The exported Crew_Capacity__c.csv, open in the editor" src="../../../_assets/annotated/vscode/editor-crew-capacity-csv.png" /></a></p>
+<div class="admonition tip">
+<p class="admonition-title">Why the external id is not optional</p>
+<p><code>Upsert</code> on <code>External_Id__c</code> means running the import twice updates the same twelve records
+instead of creating twelve more. Without a stable external id the import is not repeatable, and
+an import that is not repeatable cannot be part of a pipeline.</p>
+</div>
+<h3 id="4-declare-the-three-actions">4. Declare the three actions<a class="headerlink" href="#4-declare-the-three-actions" title="Permanent link">&para;</a></h3>
+<p>Actions belong to a Pull Request, so it has to exist first: commit the workspace, its
+<code>export.json</code> and the CSV file, <strong>Save / Publish</strong>, and open the Pull Request. Then open it in the
+<strong>DevOps Pipeline</strong> panel, <strong>Deployment Actions</strong> tab, and add three.</p>
+<p><strong>One: load the reference data.</strong></p>
+<p><a class="glightbox" data-type="image" href="../../../_assets/annotated/vscode/pipeline-edit-action-data.png"><img alt="The Edit Deployment Action dialog, with the Data type selected" src="../../../_assets/annotated/vscode/pipeline-edit-action-data.png" /></a></p>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Type</td>
+<td><strong>Data</strong></td>
+</tr>
+<tr>
+<td>Label</td>
+<td><code>Load crew capacity reference data</code></td>
+</tr>
+<tr>
+<td>When</td>
+<td>After Metadata Deployment</td>
+</tr>
+<tr>
+<td>SFDMU Project Path</td>
+<td><code>HeliosCrewRefData</code></td>
+</tr>
+<tr>
+<td>Execution Contexts</td>
+<td>Deployment job only</td>
+</tr>
+<tr>
+<td>Target orgs</td>
+<td>All target orgs</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Deployment job only</strong>, not both jobs, because a validation job is a rehearsal: it checks the
+metadata and changes nothing. An import writes records for real, so it has no business running
+during a check.</p>
+<p><strong>Type</strong> <span class="pill-ref pill-ref-1">(1)</span> decides which fields the rest of the dialog shows. <strong>SFDMU Project Path</strong> <span class="pill-ref pill-ref-2">(2)</span>
+is a dropdown of the workspaces under <code>scripts/data/</code>, so it names <code>HeliosCrewRefData</code> rather than
+its path. <strong>Target orgs</strong> <span class="pill-ref pill-ref-3">(3)</span> on <strong>All target orgs</strong> means every org the pipeline deploys to.</p>
+<p><strong>Two: schedule the batch.</strong></p>
+<p><a class="glightbox" data-type="image" href="../../../_assets/annotated/vscode/pipeline-edit-action-schedule-batch.png"><img alt="The Edit Deployment Action dialog, with the Schedule Batch type selected" src="../../../_assets/annotated/vscode/pipeline-edit-action-schedule-batch.png" /></a></p>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Type</td>
+<td><strong>Schedule Batch</strong></td>
+</tr>
+<tr>
+<td>Label</td>
+<td><code>Schedule the nightly crew capacity recalculation</code></td>
+</tr>
+<tr>
+<td>Apex Class Name</td>
+<td><code>CrewCapacityBatch</code></td>
+</tr>
+<tr>
+<td>Cron Expression</td>
+<td><code>0 0 2 * * ?</code> (every night at 02:00)</td>
+</tr>
+<tr>
+<td>Scheduled Job Name (Optional)</td>
+<td><code>Helios crew capacity nightly</code></td>
+</tr>
+<tr>
+<td>Run Only Once By Org</td>
+<td>yes</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Schedule Batch</strong> <span class="pill-ref pill-ref-1">(1)</span> replaces the script field with two of its own: <strong>Apex Class Name</strong>
+<span class="pill-ref pill-ref-2">(2)</span>, a dropdown of the classes Salesforce can run on a schedule, read from your default org and
+from the project, and <strong>Cron Expression</strong> <span class="pill-ref pill-ref-3">(3)</span>, which the dialog explains with examples under the
+field.</p>
+<p>In your list the class reads <strong>CrewCapacityBatch (in the project, not in the default org yet)</strong>.
+That is expected, and it is the right one to pick: the class went from the repository to
+<code>helios-integration</code> through the pipeline and never to <code>helios-dev</code>, where you did not need it. The
+action runs in the orgs the pipeline deploys to, and the class is there before it runs.</p>
+<p><strong>Three: the one nobody can automate.</strong></p>
+<p><a class="glightbox" data-type="image" href="../../../_assets/annotated/vscode/pipeline-edit-action-manual.png"><img alt="The Edit Deployment Action dialog, with the Manual type selected" src="../../../_assets/annotated/vscode/pipeline-edit-action-manual.png" /></a></p>
+<p>Some things have no API. Email deliverability is the best known one: whether an org may send
+email at all is a setting in Setup that no deployment can change. The batch emails the planner a
+summary when it finishes, and in an org where deliverability is not <strong>All email</strong>, that email is
+dropped without a word.</p>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Type</td>
+<td><strong>Manual</strong></td>
+</tr>
+<tr>
+<td>Label</td>
+<td><code>Set Email Deliverability to All Email</code></td>
+</tr>
+<tr>
+<td>When</td>
+<td><strong>Before Metadata Deployment</strong></td>
+</tr>
+<tr>
+<td>Instructions</td>
+<td>the four numbered lines below</td>
+</tr>
+<tr>
+<td>Target orgs</td>
+<td>All target orgs</td>
+</tr>
+</tbody>
+</table>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>1. Open **Setup**, type `Deliverability` in the Quick Find box, and open it.
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>2. Under **Access to Send Email**, set **Access level** to **All email**.
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>3. Click **Save**.
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>4. Check: the page reads **All email**. If it already did, there is nothing to do.
+</code></pre></div>
+<p>On your scratch orgs it already reads <strong>All email</strong>, so the step takes ten seconds. On a real
+project it is the step people forget: every sandbox refresh puts a sandbox back to <strong>System email
+only</strong>, and the first sign of it is a planner asking why the summary stopped arriving.</p>
+<p><strong>Manual</strong> <span class="pill-ref pill-ref-1">(1)</span> leaves one field that matters, <strong>Instructions</strong> <span class="pill-ref pill-ref-2">(2)</span>, a multi-line box that
+takes Markdown: number the clicks, and finish with what the person should see afterwards.
+<strong>Target orgs</strong> <span class="pill-ref pill-ref-3">(3)</span> stays on <strong>All target orgs</strong>, because this click is needed in every org.</p>
+<p><strong>When</strong> is <strong>Before Metadata Deployment</strong>, unlike the two others. The org must be allowed to send
+email before anything that sends one arrives in it, so the person merging does this click first,
+then merges. A manual step declared before the deployment is listed first in the Pull Request
+comment, which is where they read it.</p>
+<p>A manual step does not do anything. It <strong>appears in the Pull Request comment and in the deployment
+report</strong>, so the person releasing to production is told, in the release itself, that there is a
+click to make. That is the difference between a manual step that gets done and one that lives in a
+Confluence page nobody opens.</p>
+<p>So write it for somebody who has never seen your story: every click, in order, with the exact names
+on the screen, and what the page shows when it is done, like the four lines above. The release
+manager does it in an org you have never opened, often on release day. If they have to guess what
+you meant, they will guess, and a wrong guess in production is worse than no step at all.</p>
+<h3 id="5-read-the-pull-request-comment">5. Read the Pull Request comment<a class="headerlink" href="#5-read-the-pull-request-comment" title="Permanent link">&para;</a></h3>
+<p>The editor wrote the three actions into <code>scripts/actions/</code>, in a file named after your Pull Request.
+Commit it, <strong>Save / Publish</strong>.</p>
+<p>This time the check turns <strong>red</strong>, and on purpose. The deliverability step runs <strong>before</strong> the
+deployment, so it has to be done before the merge, and sfdx-hardis stops the check until somebody
+says it is. Its log names the step and the three ways to mark it, and sfdx-hardis posts a
+<strong>Deployment Actions</strong> comment on the Pull Request:</p>
+<p><a class="glightbox" data-type="image" href="../../../_assets/annotated/web/github-pr-deployment-actions.png"><img alt="The Deployment Actions comment of the US-026 Pull Request" src="../../../_assets/annotated/web/github-pr-deployment-actions.png" /></a></p>
+<ul>
+<li><strong>Pending manual actions</strong> <span class="pill-ref pill-ref-1">(1)</span>: your deliverability step, with a checkbox, for <code>integration</code></li>
+<li><strong>Status by org branch</strong> <span class="pill-ref pill-ref-2">(2)</span>: one row per action, with its moment. The deliverability step,
+  <strong>pre-deploy</strong>, waits for somebody; the import and the schedule, <strong>post-deploy</strong>, are marked
+  <strong>skipped</strong>, because a check changes nothing</li>
+</ul>
+<p>Do the click in <code>helios-integration</code> (it already reads <strong>All email</strong> on your scratch orgs, so it is
+a ten-second check), then tick the box <span class="pill-ref pill-ref-1">(1)</span>. In VS Code, <strong>Mark as done in integration</strong> on the
+step, in the <strong>Deployment Actions</strong> tab of your Pull Request, does the same.</p>
+<p>Then run the check again: on the Pull Request, open <strong>Checks</strong> and click <strong>Re-run all jobs</strong>. It
+reads your tick, records the step as done in <code>integration</code>, skips it, and goes green.</p>
+<p>Merge, and watch the deployment job: the data import runs, the batch gets scheduled, and the manual
+step is skipped, because it is done in <code>integration</code> already.</p>
+<details>
+<summary>Under the hood: why the check stopped</summary>
+<p>A manual action declared <strong>Before Metadata Deployment</strong> has to be performed before the merge. The
+validation job stops right after its pre-deployment actions while one of them is not marked as
+performed in the target org branch. A draft Pull Request (or one with <code>draft</code> in its title) is not
+stopped, so you can keep checking a story in progress. Projects that do not want this set
+<code>failValidationOnPendingManualActions: false</code> in <code>config/.sfdx-hardis.yml</code>.</p>
+</details>
+<h3 id="6-verify-in-the-integration-org">6. Verify in the integration org<a class="headerlink" href="#6-verify-in-the-integration-org" title="Permanent link">&para;</a></h3>
+<p>Do not take the green tick for it. <strong>Open the org and look:</strong></p>
+<ul>
+<li>The <strong>Crew Capacity</strong> tab of the Helios Delivery app, on its <strong>All</strong> list view, has 12 records</li>
+<li><strong>Setup &gt; Scheduled Jobs</strong> lists <code>Helios crew capacity nightly</code></li>
+<li>The manual step reads <strong>done</strong> for <code>integration</code> under <strong>Status by org branch</strong>, with the date
+  of your tick</li>
+</ul>
+<p>You did the click before the merge, which is what a real release needs: the person merging does it
+and ticks the box, and the pipeline does not let the merge through until they have. That is the
+point: you did it <strong>because the pipeline told you to</strong>, not because you remembered.</p>
+<div class="admonition warning">
+<p class="admonition-title">If the records are not there and the job was green</p>
+<p>Read the deployment log for the line <strong>Listing Post-deployment actions</strong>. When it is followed by
+<em>No post-deployment actions defined</em>, the actions were never found, and the deployment happily
+carried on without them.</p>
+<p>That happened for real while this course was being written. The CI job could not read its own
+git history, so the tool could not work out which Pull Requests the merge carried, and it
+reported no actions rather than a failure. It is fixed in this project, and sfdx-hardis now
+stops instead of carrying on. The habit it leaves behind is the one worth keeping: when a
+feature arrives empty, read the log for that line before you blame the import.</p>
+</div>
+<div class="admonition danger">
+<p class="admonition-title">A data import succeeds when the object is missing</p>
+<p>This one is worth knowing for the rest of your career, because it is SFDMU behaving as designed
+and it looks exactly like success:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>[WARNING] Describe failed for {Crew_Capacity__c}: The requested resource does not exist
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>[WARNING] {Crew_Capacity__c} is missing in the Target.
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>[WARNING] {Crew_Capacity__c} Object will be excluded from the process.
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>[WARNING] Object set 1 has no objects to process after validation. Skipping.
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>===== MIGRATION JOB ENDED =====
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>Command succeeded.
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>Exit code 0 (SUCCESS).
+</code></pre></div>
+<p><strong>Exit code 0.</strong> The action is reported as run, the job is green, and not one record was
+written. If the object never reached the org, for any reason, the import that was supposed to
+fill it says nothing louder than a warning nobody reads.</p>
+<p>That is why the check in this step is the records and not the tick, and it is why those two
+<code>WARNING</code> lines are worth searching for in a deployment log when a feature arrives empty.</p>
+</div>
+<p>The habit behind all of this: <strong>a green deployment is evidence that the metadata went in, and
+evidence of nothing else.</strong> The org is the only thing that tells you an action ran.</p>
+<details>
+<summary>Under the hood: the three action types</summary>
+<p>All three are entries in the same YAML file under <code>scripts/actions/</code>:</p>
+<div class="highlight"><pre><span></span><code>commandsPreDeploy:
+  - id: email-deliverability
+    label: Set Email Deliverability to All Email
+    type: manual
+    parameters:
+      instructions: |
+        1. Open **Setup**, type `Deliverability` in the Quick Find box, and open it.
+        ...
+commandsPostDeploy:
+  - id: load-crew-capacity
+    label: Load crew capacity reference data
+    type: data
+    parameters:
+      sfdmuProject: HeliosCrewRefData
+    context: process-deployment-only
+  - id: schedule-crew-capacity
+    label: Schedule the nightly crew capacity recalculation
+    type: schedule-batch
+    parameters:
+      className: CrewCapacityBatch
+      cronExpression: "0 0 2 * * ?"
+      jobName: Helios crew capacity nightly
+    context: process-deployment-only
+    runOnlyOnceByOrg: true
+</code></pre></div>
+<p>The data import runs SFDMU through <code>sf hardis:org:data:import</code>, the same command the Training menu
+uses to seed your org. The schedule action runs anonymous Apex that calls <code>System.schedule</code>. The
+manual action runs nothing at all and only produces text.</p>
+<p>Note what they have in common: <strong>they are files in the repository, reviewed in a Pull Request,
+replayed identically in every org.</strong> A colleague can read the diff and see that this story needs
+data, a job and a click, which is information that otherwise exists only in the head of whoever
+built it.</p>
+<!-- command-links:start -->
+<p>Command documentation: <a href="https://sfdx-hardis.cloudity.com/hardis/org/data/import/">hardis:org:data:import</a></p>
+<!-- command-links:end -->
+</details>
+<h2 id="what-you-should-see">What you should see<a class="headerlink" href="#what-you-should-see" title="Permanent link">&para;</a></h2>
+<ul>
+<li>Twelve Crew Capacity records in <code>helios-integration</code></li>
+<li><code>Helios crew capacity nightly</code> in <strong>Setup &gt; Scheduled Jobs</strong></li>
+<li>The manual step listed in the deployment report, ticked off by you</li>
+</ul>
+<details class="troubleshoot">
+<summary>If it goes wrong</summary>
+<p><strong>The Crew Capacity tab is missing from the app in <code>helios-integration</code>.</strong>
+Either the tab or the <code>Helios_Delivery</code> app was not in your Pull Request, or the tab is not
+<strong>Visible</strong> under <strong>Tab Settings</strong> of <code>Helios_Delivery_Manager</code>. The profile visibility you set in
+the wizard stays in <code>helios-dev</code>. Fix it there, retrieve the missing piece, and publish again.</p>
+<p><strong>The data import fails on field level security.</strong>
+The CI user cannot write the fields: the grant of step 1 is missing from <code>Helios_Delivery_Manager</code>,
+or never reached the repository. A deployment grants no field permissions to anybody by itself. Add
+them in <code>helios-dev</code>, retrieve the permission set, and publish again.</p>
+<p><strong>The import creates duplicates every run.</strong>
+The operation is <code>Insert</code>, not <code>Upsert</code>, or the external id is not set. Open the workspace in the
+<strong>Data Workbench</strong> panel and correct both there.</p>
+<p><strong>The schedule action fails with <code>Invalid cron expression</code>.</strong>
+Salesforce cron has seconds and a day-of-week field: <code>0 0 2 * * ?</code>, not <code>0 2 * * *</code>.</p>
+<p><strong>The batch is scheduled twice.</strong>
+<code>runOnlyOnceByOrg</code> is unticked and the deployment ran twice. Delete the duplicate in <strong>Setup &gt;
+Scheduled Jobs</strong> and tick it.</p>
+</details>
+<h2 id="check-your-work">Check your work<a class="headerlink" href="#check-your-work" title="Permanent link">&para;</a></h2>
+<p>Welcome page &gt; <strong>Training: Level 2</strong> &gt; <strong>Check my work</strong>, then pick <strong>Lab 2.4</strong>.</p>
+<h2 id="go-deeper">Go deeper<a class="headerlink" href="#go-deeper" title="Permanent link">&para;</a></h2>
+<ul>
+<li><a href="https://sfdx-hardis.cloudity.com/salesforce-devops-agent-data-workspaces/">Data workspaces with SFDMU</a></li>
+<li><a href="https://sfdx-hardis.cloudity.com/salesforce-devops-work-on-user-story-deployment-actions/">Deployment actions</a></li>
+</ul>
+<p><a class="md-button md-button--primary" href="../2-5-pass-code-quality-and-apex-test-coverage/">Next: Lab 2.5 - Pass the code quality gate and Apex test coverage</a></p>
+
+
+
+
+
+
+
+
+
+  
+  
+
+
+
+  
+
+
+
+
+  <h2 id="__comments">Questions and comments</h2>
+  <script src="https://giscus.app/client.js"
+          data-repo="hardisgroupcom/sfdx-hardis-training"
+          data-repo-id="R_kgDOUcjgQw"
+          data-category="Q&amp;A"
+          data-category-id="DIC_kwDOUcjgQ84DF-lC"
+          data-mapping="pathname"
+          data-strict="1"
+          data-reactions-enabled="1"
+          data-emit-metadata="0"
+          data-input-position="top"
+          data-theme="preferred_color_scheme"
+          data-lang="en"
+          data-loading="lazy"
+          crossorigin="anonymous"
+          async>
+  </script>
+
+  <script>
+    // Keep the Giscus iframe in sync with the palette toggle. It is a
+    // cross-origin frame, so its theme can only be changed by postMessage.
+    (function () {
+      if (window.__giscusThemeSync) {
+        return;
+      }
+      window.__giscusThemeSync = true;
+      var giscusTheme = function () {
+        var scheme = document.body.getAttribute("data-md-color-scheme");
+        return scheme === "slate" ? "dark" : "light";
+      };
+      var apply = function () {
+        var frame = document.querySelector("iframe.giscus-frame");
+        if (frame && frame.contentWindow) {
+          frame.contentWindow.postMessage(
+            { giscus: { setConfig: { theme: giscusTheme() } } },
+            "https://giscus.app"
+          );
+        }
+      };
+      new MutationObserver(apply).observe(document.body, {
+        attributes: true,
+        attributeFilter: ["data-md-color-scheme"]
+      });
+      window.addEventListener("message", function (event) {
+        if (event.origin === "https://giscus.app") {
+          apply();
+        }
+      });
+    })();
+  </script>
+
+                
+              </article>
+            </div>
+          
+          
+  <script>var tabs=__md_get("__tabs");if(Array.isArray(tabs))e:for(var set of document.querySelectorAll(".tabbed-set")){var labels=set.querySelector(".tabbed-labels");for(var tab of tabs)for(var label of labels.getElementsByTagName("label"))if(label.innerText.trim()===tab){var input=document.getElementById(label.htmlFor);input.checked=!0;continue e}}</script>
+
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-circle-arrow-up" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="m16 12-4-4-4 4M12 16V8"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        
+
+
+
+
+<footer class="md-footer">
+  
+    
+      
+      <nav class="md-footer__inner md-grid" aria-label="Footer" >
+        
+          
+          <a href="../2-3-fix-broken-records-with-an-apex-deployment-action/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Lab 2.3 - Fix broken records with an Apex deployment action">
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-arrow-left" viewBox="0 0 24 24"><path d="m12 19-7-7 7-7M19 12H5"/></svg>
+            </div>
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Previous
+              </span>
+              <div class="md-ellipsis">
+                Lab 2.3 - Fix broken records with an Apex deployment action
+              </div>
+            </div>
+          </a>
+        
+        
+          
+          <a href="../2-5-pass-code-quality-and-apex-test-coverage/" class="md-footer__link md-footer__link--next" aria-label="Next: Lab 2.5 - Pass the code quality gate and Apex test coverage">
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Next
+              </span>
+              <div class="md-ellipsis">
+                Lab 2.5 - Pass the code quality gate and Apex test coverage
+              </div>
+            </div>
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-arrow-right" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+            </div>
+          </a>
+        
+      </nav>
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      Cloudity and friends
+    </div>
+  
+  
+</div>
+      
+        
+<div class="md-social">
+  
+    
+    
+    
+    
+    <a href="https://github.com/hardisgroupcom/sfdx-hardis" target="_blank" rel="noopener" title="sfdx-hardis on GitHub" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.3.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2026 Fonticons, Inc.--><path fill="currentColor" d="M216.5 362.5c-66-8-112.5-55.5-112.5-117 0-25 9-52 24-70-6.5-16.5-5.5-51.5 2-66 20-2.5 47 8 63 22.5 19-6 39-9 63.5-9s44.5 3 62.5 8.5c15.5-14 43-24.5 63-22 7 13.5 8 48.5 1.5 65.5 16 19 24.5 44.5 24.5 70.5 0 61.5-46.5 108-113.5 116.5 17 11 28.5 35 28.5 62.5v52c0 15 12.5 23.5 27.5 17.5C441 459.5 512 369 512 257 512 115.5 397 0 255.5 0S0 115.5 0 257c0 111 70.5 203 165.5 237.5 13.5 5 26.5-4 26.5-17.5v-40c-7 3-16 5-24 5-33 0-52.5-18-66.5-51.5-5.5-13.5-11.5-21.5-23-23-6-.5-8-3-8-6 0-6 10-10.5 20-10.5 14.5 0 27 9 40 27.5 10 14.5 20.5 21 33 21s20.5-4.5 32-16c8.5-8.5 15-16 21-21"/></svg>
+    </a>
+  
+    
+    
+    
+    
+    <a href="https://sfdx-hardis.cloudity.com/" target="_blank" rel="noopener" title="sfdx-hardis documentation" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.3.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2026 Fonticons, Inc.--><path fill="currentColor" d="M384 512H96c-53 0-96-43-96-96V96C0 43 43 0 96 0h304c26.5 0 48 21.5 48 48v288c0 20.9-13.4 38.7-32 45.3V448c17.7 0 32 14.3 32 32s-14.3 32-32 32zM96 384c-17.7 0-32 14.3-32 32s14.3 32 32 32h256v-64zm32-232c0 13.3 10.7 24 24 24h176c13.3 0 24-10.7 24-24s-10.7-24-24-24H152c-13.3 0-24 10.7-24 24m24 72c-13.3 0-24 10.7-24 24s10.7 24 24 24h176c13.3 0 24-10.7 24-24s-10.7-24-24-24z"/></svg>
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog" role="status" aria-atomic="true">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      
+      
+        
+        
+      <script id="__config" type="application/json">{"annotate":null,"base":"../../..","features":["content.action.edit","content.code.copy","content.tabs.link","navigation.instant","navigation.tracking","navigation.top","navigation.footer","search.suggest","search.highlight","toc.follow"],"redirect":null,"search":"../../../assets/javascripts/workers/search.7d14d953.min.js","tags":null,"translations":{"clipboard.copied":"Copied to clipboard","clipboard.copy":"Copy to clipboard","clipboard.error":"Could not copy to clipboard","search.result.more.one":"1 more on this page","search.result.more.other":"# more on this page","search.result.none":"No matching documents","search.result.one":"1 matching document","search.result.other":"# matching documents","search.result.placeholder":"Type to start searching","search.result.term.missing":"Missing","select.version":"Select version"},"version":null}</script>
+    
+    
+      <script src="../../../assets/javascripts/bundle.67a597eb.min.js"></script>
+      
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/tablesort/5.2.1/tablesort.min.js"></script>
+      
+        <script src="../../../theme/javascripts/tables.js"></script>
+      
+        <script src="../../../theme/javascripts/lightbox.js"></script>
+      
+        <script src="../../../theme/javascripts/after-footer.js"></script>
+      
+        <script src="../../../theme/javascripts/language-switch.js"></script>
+      
+    
+  </body>
+</html>

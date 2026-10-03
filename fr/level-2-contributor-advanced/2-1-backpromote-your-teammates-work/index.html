@@ -1,0 +1,2419 @@
+
+<!doctype html>
+<html lang="fr" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Votre org de développement est en retard sur integration. Faites-y entrer les stories mergées par vos collègues avec le panneau Backpromote de sfdx-hardis, en gardant votre propre travail.">
+      
+      
+      
+        <link rel="canonical" href="https://sfdx-hardis-training.github.io/fr/level-2-contributor-advanced/2-1-backpromote-your-teammates-work/">
+      
+      
+        <link rel="prev" href="../">
+      
+      
+        <link rel="next" href="../2-2-fix-a-missing-dependency-deployment-error/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../../theme/images/badge-mark.svg">
+      <meta name="generator" content="zensical-0.0.67">
+    
+    
+      
+        <title>Lab 2.1 - Backpromote : remettre votre org de dev au niveau de l'équipe - Salesforce DevOps with sfdx-hardis</title>
+      
+    
+    
+      
+        
+      
+      <link rel="stylesheet" href="../../../assets/stylesheets/modern/main.4ae390e2.min.css">
+      
+        
+          
+        
+        <link rel="stylesheet" href="../../../assets/stylesheets/modern/palette.96d1a7e4.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+    
+    
+      <link rel="stylesheet" href="../../../theme/stylesheets/extra.css">
+    
+    <script>__md_scope=new URL("../../..",location),__md_scope.pathname.endsWith("/")||(__md_scope=new URL(__md_scope.pathname+"/",location)),__md_hash=e=>[...e].reduce(((e,t)=>(e<<5)-e+t.charCodeAt(0)),0),__md_get=(e,t=localStorage,_=__md_scope)=>JSON.parse(t.getItem(_.pathname+"."+e)),__md_set=(e,t,_=localStorage,a=__md_scope)=>{try{_.setItem(a.pathname+"."+e,JSON.stringify(t))}catch(e){}},document.documentElement.setAttribute("data-platform",navigator.platform)</script>
+    
+      
+  
+
+
+  
+  
+
+<script id="__analytics">function __md_analytics(){function e(){dataLayer.push(arguments)}window.dataLayer=window.dataLayer||[],e("js",new Date),e("config","G-SE20CZ58E1"),document.addEventListener("DOMContentLoaded",(function(){document.forms.search&&document.forms.search.query.addEventListener("blur",(function(){this.value&&e("event","search",{search_term:this.value})}));document$.subscribe((function(){var t=document.forms.feedback;if(void 0!==t)for(var a of t.querySelectorAll("[type=submit]"))a.addEventListener("click",(function(a){a.preventDefault();var n=document.location.pathname,d=this.getAttribute("data-md-value");e("event","feedback",{page:n,data:d}),t.firstElementChild.disabled=!0;var r=t.querySelector(".md-feedback__note [data-md-value='"+d+"']");r&&(r.hidden=!1)})),t.hidden=!1})),location$.subscribe((function(t){e("config","G-SE20CZ58E1",{page_path:t.pathname})}))}));var t=document.createElement("script");t.async=!0,t.src="https://www.googletagmanager.com/gtag/js?id=G-SE20CZ58E1",document.getElementById("__analytics").insertAdjacentElement("afterEnd",t)}</script>
+  
+    <script>"undefined"!=typeof __md_analytics&&__md_analytics()</script>
+  
+
+    
+    
+  
+  
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Salesforce DevOps with sfdx-hardis">
+  <meta property="og:locale" content="fr">
+  <meta property="og:title" content="Lab 2.1 - Backpromote : remettre votre org de dev au niveau de l'équipe">
+  <meta property="og:description" content="Votre org de développement est en retard sur integration. Faites-y entrer les stories mergées par vos collègues avec le panneau Backpromote de sfdx-hardis, en gardant votre propre travail.">
+  <meta property="og:url" content="https://sfdx-hardis-training.github.io/fr/level-2-contributor-advanced/2-1-backpromote-your-teammates-work/">
+  <meta property="og:image" content="https://sfdx-hardis-training.github.io/_assets/social/course.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="Lab 2.1 - Backpromote : remettre votre org de dev au niveau de l'équipe">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Lab 2.1 - Backpromote : remettre votre org de dev au niveau de l'équipe">
+  <meta name="twitter:description" content="Votre org de développement est en retard sur integration. Faites-y entrer les stories mergées par vos collègues avec le panneau Backpromote de sfdx-hardis, en gardant votre propre travail.">
+  <meta name="twitter:image" content="https://sfdx-hardis-training.github.io/_assets/social/course.png">
+
+  <script>
+    (function () {
+      var here = "fr";
+      var alternates = {"en":"en/level-2-contributor-advanced/2-1-backpromote-your-teammates-work/","fr":"fr/level-2-contributor-advanced/2-1-backpromote-your-teammates-work/"};
+      var base = new URL("../../.." || ".", window.location.href).pathname;
+      try {
+        var asked = new URLSearchParams(window.location.search).get("lang");
+        if (asked) {
+          document.cookie =
+            "course-language=" + encodeURIComponent(asked) + "; path=" + base + "; max-age=31536000; samesite=lax";
+        }
+        var cookie = document.cookie.split("; ").filter(function (one) {
+          return one.indexOf("course-language=") === 0;
+        })[0];
+        if (!cookie) {
+          return;
+        }
+        var preferred = asked || decodeURIComponent(cookie.slice("course-language=".length));
+        if (!preferred || preferred === here) {
+          return;
+        }
+        var target = alternates[preferred];
+        if (typeof target !== "string") {
+          return;
+        }
+        var url = new URL(target, new URL(base, window.location.href)).pathname;
+        if (url !== window.location.pathname) {
+          window.location.replace(url + window.location.search + window.location.hash);
+        }
+      } catch (error) {
+        // A browser with no cookies stays where it is, which is the page asked for
+      }
+    })();
+  </script>
+
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="custom" data-md-color-accent="custom">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer" aria-label="Navigation"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#lab-21-backpromote-remettre-votre-org-de-dev-au-niveau-de-lequipe" class="md-skip">
+          Aller au contenu
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+        <aside class="md-banner">
+          <div class="md-banner__inner md-grid md-typeset">
+            
+            
+      <strong>Ce niveau est en phase de relecture.</strong> Il est complet et a été déroulé de bout
+      en bout, et maintenant il a besoin de vous. Si une étape ne fonctionne pas, ou si l'écran ne
+      correspond pas à ce que dit la page, merci de
+      <a href="#__comments">laisser un commentaire en bas de cette page</a>. C'est le moyen le plus
+      rapide de faire corriger le problème, et cela aide la personne suivante.
+    
+          </div>
+          
+        </aside>
+      
+    </div>
+    
+    
+      
+
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="En-tête">
+    <a href="/fr/" title="Salesforce DevOps with sfdx-hardis" class="md-header__button md-logo" aria-label="Salesforce DevOps with sfdx-hardis" data-md-component="logo">
+      
+  <img src="../../../theme/images/cloudity-text-logo-white.svg" alt="Salesforce DevOps with sfdx-hardis">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer" aria-label="Navigation">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-menu" viewBox="0 0 24 24"><path d="M4 5h16M4 12h16M4 19h16"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Salesforce DevOps with sfdx-hardis
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Lab 2.1 - Backpromote : remettre votre org de dev au niveau de l'équipe
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="none" data-md-color-scheme="default" data-md-color-primary="custom" data-md-color-accent="custom"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="none" data-md-color-scheme="slate" data-md-color-primary="custom" data-md-color-accent="custom"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+      
+
+
+
+  
+
+  
+    
+    
+  
+
+<div class="md-header__option">
+  <div class="md-select md-select--language">
+    <button class="md-header__button md-header__button--flag" aria-label="Sélectionner la langue">
+      
+        <img src="../../../theme/images/flags/fr.svg" alt="Français" class="md-select__flag md-select__flag--current">
+      
+    </button>
+    <div class="md-select__inner">
+      <ul class="md-select__list">
+        
+          
+          <li class="md-select__item"><a href="../../../en/level-2-contributor-advanced/2-1-backpromote-your-teammates-work/" hreflang="en" data-course-home="/" class="md-select__link">
+              
+                <img src="../../../theme/images/flags/gb.svg" alt="" class="md-select__flag">
+              
+              English
+            </a>
+          </li>
+        
+          
+          <li class="md-select__item"><a href="././" hreflang="fr" data-course-home="/fr/" class="md-select__link">
+              
+                <img src="../../../theme/images/flags/fr.svg" alt="" class="md-select__flag">
+              
+              Français
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</div>
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search" aria-label="Recherche">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-search" viewBox="0 0 24 24"><path d="m21 21-4.34-4.34"/><circle cx="11" cy="11" r="8"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog" aria-label="Recherche">
+  <button type="button" class="md-search__button">
+    Recherche
+  </button>
+</div>
+      
+    
+    <div class="md-header__source">
+      
+        <a href="https://github.com/hardisgroupcom/sfdx-hardis-training" title="Aller au dépôt" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.3.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2026 Fonticons, Inc.--><path fill="currentColor" d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    hardisgroupcom/sfdx-hardis-training
+  </div>
+</a>
+      
+    </div>
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0" data-course-lang="fr" data-course-base="../../.." data-course-alt-en="en/level-2-contributor-advanced/2-1-backpromote-your-teammates-work/" data-course-alt-fr="fr/level-2-contributor-advanced/2-1-backpromote-your-teammates-work/">
+  <label class="md-nav__title" for="__drawer">
+    <a href="/fr/" title="Salesforce DevOps with sfdx-hardis" class="md-nav__button md-logo" aria-label="Salesforce DevOps with sfdx-hardis" data-md-component="logo">
+      
+  <img src="../../../theme/images/cloudity-text-logo-white.svg" alt="Salesforce DevOps with sfdx-hardis">
+
+    </a>
+    Salesforce DevOps with sfdx-hardis
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/hardisgroupcom/sfdx-hardis-training" title="Aller au dépôt" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.3.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2026 Fonticons, Inc.--><path fill="currentColor" d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    hardisgroupcom/sfdx-hardis-training
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+      
+    
+      
+      
+      
+    
+      
+      
+      
+    
+      
+      
+      
+    
+      
+      
+      
+    
+      
+      
+      
+    
+      
+      
+      
+    
+      
+      
+      
+        
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Accueil
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+      
+    
+      
+      
+      
+        
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_9" >
+        
+          
+          <label class="md-nav__link" for="__nav_9" id="__nav_9_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Niveau 1 - Contributeur Salesforce DevOps, les bases
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        
+          <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_9_label" aria-expanded="false">
+            <label class="md-nav__title" for="__nav_9">
+              <span class="md-nav__icon md-icon"></span>
+              
+  
+  Niveau 1 - Contributeur Salesforce DevOps, les bases
+
+            </label>
+            <ul class="md-nav__list" data-md-scrollfix>
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../level-1-contributor-basics/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Commencer ici
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../level-1-contributor-basics/1-1-install-vs-code-and-sfdx-hardis/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Lab 1.1 - Installer VS Code, Git et sfdx-hardis
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../level-1-contributor-basics/1-2-create-your-dev-hub-scratch-orgs-and-pipeline/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Lab 1.2 - Créer votre Dev Hub, vos scratch orgs et votre pipeline CI/CD
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../level-1-contributor-basics/1-3-start-a-user-story-on-a-git-branch/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Lab 1.3 - Démarrer une User Story sur sa propre branche Git
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../level-1-contributor-basics/1-4-build-a-custom-field-in-your-org/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Lab 1.4 - Construire un champ personnalisé dans votre org Salesforce
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../level-1-contributor-basics/1-5-retrieve-commit-and-publish-your-changes/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Lab 1.5 - Récupérer, commiter et publier vos modifications Salesforce
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../level-1-contributor-basics/1-6-pull-request-deployment-check-and-merge/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Lab 1.6 - Ouvrir une Pull Request, passer le contrôle de déploiement, merger
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../level-1-contributor-basics/1-7-capstone-deliver-a-user-story-on-your-own/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Lab 1.7 - Épreuve finale : livrer une User Story tout seul
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+            </ul>
+          </nav>
+        
+      
+    </li>
+  
+
+      
+    
+      
+      
+      
+        
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_10" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_10" id="__nav_10_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Niveau 2 - Contributeur Salesforce DevOps avancé
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        
+          <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_10_label" aria-expanded="true">
+            <label class="md-nav__title" for="__nav_10">
+              <span class="md-nav__icon md-icon"></span>
+              
+  
+  Niveau 2 - Contributeur Salesforce DevOps avancé
+
+            </label>
+            <ul class="md-nav__list" data-md-scrollfix>
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Commencer ici
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Lab 2.1 - Backpromote : remettre votre org de dev au niveau de l'équipe
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="././" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Lab 2.1 - Backpromote : remettre votre org de dev au niveau de l'équipe
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+
+<nav class="md-nav md-nav--secondary" aria-label="Table des matières">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table des matières
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#la-situation" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        La situation
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#avant-de-commencer" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Avant de commencer
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#les-etapes" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Les étapes
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Les étapes">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-rapatrier-le-travail-de-votre-collegue" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        1. Rapatrier le travail de votre collègue
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="1. Rapatrier le travail de votre collègue">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1a-lancer-simulate-my-teammates" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        1a. Lancer Simulate my teammates
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#1b-ou-la-relire-et-la-merger-vous-meme-sur-github" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        1b. Ou la relire et la merger vous-même sur GitHub
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#1c-ou-vous-en-etes" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        1c. Où vous en êtes
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-ouvrir-backpromote" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        2. Ouvrir Backpromote
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-voir-a-quel-point-vous-etes-en-retard" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        3. Voir à quel point vous êtes en retard
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#4-choisir-ce-quon-rapatrie" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        4. Choisir ce qu'on rapatrie
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#5-le-lancer-et-lire-le-resultat" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        5. Le lancer et lire le résultat
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#ce-que-vous-devez-voir" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Ce que vous devez voir
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#verifiez-votre-travail" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Vérifiez votre travail
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#pour-aller-plus-loin" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Pour aller plus loin
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../2-2-fix-a-missing-dependency-deployment-error/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Lab 2.2 - Corriger une erreur de déploiement due à une dépendance manquante
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../2-3-fix-broken-records-with-an-apex-deployment-action/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Lab 2.3 - Réparer des enregistrements cassés avec une deployment action Apex
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../2-4-ship-reference-data-and-a-batch-with-deployment-actions/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Lab 2.4 - Livrer des données de référence et un batch avec des deployment actions
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../2-5-pass-code-quality-and-apex-test-coverage/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Lab 2.5 - Passer la barrière de qualité de code et la couverture de tests Apex
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../2-6-permission-sets-and-profiles/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Lab 2.6 - Permission sets, profils, et pourquoi une autorisation disparaît
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../2-7-resolve-a-git-merge-conflict/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Lab 2.7 - Résoudre un conflit de merge Git avec un collègue
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../2-8-recover-from-committing-the-wrong-metadata/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Lab 2.8 - Se remettre d'avoir commité la mauvaise métadonnée
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../2-9-capstone-deliver-a-user-story-that-has-it-all/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Lab 2.9 - Épreuve finale : livrer une User Story qui a tout
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+            </ul>
+          </nav>
+        
+      
+    </li>
+  
+
+      
+    
+      
+      
+      
+        
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_11" >
+        
+          
+          <label class="md-nav__link" for="__nav_11" id="__nav_11_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Niveau 3 - Release manager Salesforce DevOps
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        
+          <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_11_label" aria-expanded="false">
+            <label class="md-nav__title" for="__nav_11">
+              <span class="md-nav__icon md-icon"></span>
+              
+  
+  Niveau 3 - Release manager Salesforce DevOps
+
+            </label>
+            <ul class="md-nav__list" data-md-scrollfix>
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../level-3-release-manager/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Commencer ici
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../level-3-release-manager/3-1-configure-the-pipeline-up-to-production/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Lab 3.1 - Configurer la pipeline CI/CD jusqu'à la production
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../level-3-release-manager/3-2-review-a-contributor-pull-request/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Lab 3.2 - Relire et merger la Pull Request d'un contributeur
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../level-3-release-manager/3-3-deploy-to-integration-and-read-the-log/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Lab 3.3 - Lire le log de déploiement, et ce que .forceignore lui cache
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../level-3-release-manager/3-4-merge-colliding-pull-requests/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Lab 3.4 - Trois Pull Requests se percutent : choisir l'ordre de merge
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../level-3-release-manager/3-5-promote-to-uat-and-write-release-notes/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Lab 3.5 - Promouvoir en UAT et écrire les notes de version
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../level-3-release-manager/3-6-release-to-production-and-read-dora-metrics/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Lab 3.6 - Livrer en production et lire vos métriques DORA
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../level-3-release-manager/3-7-hotfix-and-retrofit/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Lab 3.7 - La production est cassée : hotfix et retrofit
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../level-3-release-manager/3-8-monitor-your-production-org/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Lab 3.8 - Monitorer votre org de production
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../level-3-release-manager/3-9-generate-the-project-documentation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Lab 3.9 - Générer la documentation du projet Salesforce
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../level-3-release-manager/3-10-promote-a-subset-with-promotion-branches/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Lab 3.10 - Promouvoir un sous-ensemble avec les promotion branches (Beta)
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../level-3-release-manager/3-11-capstone-run-a-weekly-release-cycle/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Lab 3.11 - Épreuve finale : mener un cycle de release hebdomadaire
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+            </ul>
+          </nav>
+        
+      
+    </li>
+  
+
+      
+    
+      
+      
+      
+        
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../help/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Aide
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+      
+    
+      
+      
+      
+        
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../BACKLOG/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Backlog
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+      
+    
+      
+      
+      
+        
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../badges/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Badges
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+      
+    
+      
+      
+      
+        
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="https://sfdx-hardis.cloudity.com/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  sfdx-hardis documentation
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+      
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  
+                    
+                    
+                    
+                      
+                    
+                    
+                      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+                      <div class="md-sidebar-button__wrapper">
+                        <label class="md-sidebar-button" for="__toc"></label>
+                      </div>
+                    
+                  
+                  <div class="md-sidebar__inner">
+                    
+
+
+<nav class="md-nav md-nav--secondary" aria-label="Table des matières">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table des matières
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#la-situation" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        La situation
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#avant-de-commencer" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Avant de commencer
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#les-etapes" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Les étapes
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Les étapes">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-rapatrier-le-travail-de-votre-collegue" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        1. Rapatrier le travail de votre collègue
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="1. Rapatrier le travail de votre collègue">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1a-lancer-simulate-my-teammates" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        1a. Lancer Simulate my teammates
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#1b-ou-la-relire-et-la-merger-vous-meme-sur-github" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        1b. Ou la relire et la merger vous-même sur GitHub
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#1c-ou-vous-en-etes" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        1c. Où vous en êtes
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-ouvrir-backpromote" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        2. Ouvrir Backpromote
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-voir-a-quel-point-vous-etes-en-retard" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        3. Voir à quel point vous êtes en retard
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#4-choisir-ce-quon-rapatrie" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        4. Choisir ce qu'on rapatrie
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#5-le-lancer-et-lire-le-resultat" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        5. Le lancer et lire le résultat
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#ce-que-vous-devez-voir" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Ce que vous devez voir
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#verifiez-votre-travail" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Vérifiez votre travail
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#pour-aller-plus-loin" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Pour aller plus loin
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+  
+    <a href="https://github.com/hardisgroupcom/sfdx-hardis-training/edit/main/labs/fr/level-2-contributor-advanced/2-1-backpromote-your-teammates-work.md" title="Editer cette page" class="md-content__button md-icon" rel="edit">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-file-pen" viewBox="0 0 24 24"><path d="M12.659 22H18a2 2 0 0 0 2-2V8a2.4 2.4 0 0 0-.706-1.706l-3.588-3.588A2.4 2.4 0 0 0 14 2H6a2 2 0 0 0-2 2v9.34"/><path d="M14 2v5a1 1 0 0 0 1 1h5M10.378 12.622a1 1 0 0 1 3 3.003L8.36 20.637a2 2 0 0 1-.854.506l-2.867.837a.5.5 0 0 1-.62-.62l.836-2.869a2 2 0 0 1 .506-.853z"/></svg>
+    </a>
+  
+  
+
+
+<h1 id="lab-21-backpromote-remettre-votre-org-de-dev-au-niveau-de-lequipe">Lab 2.1 - Backpromote : remettre votre org de dev au niveau de l'équipe<a class="headerlink" href="#lab-21-backpromote-remettre-votre-org-de-dev-au-niveau-de-lequipe" title="Permanent link">&para;</a></h1>
+<p><strong>Niveau</strong> : 2 Contributeur avancé</p>
+<p><strong>Durée</strong> : ~15 min</p>
+<p><strong>Vous allez</strong> : rapatrier dans votre propre org de dev les stories mergées par trois collègues,
+décider quoi garder quand l'outil vous le demande, et apprendre ce qu'un backpromote ne fera jamais
+pour vous.</p>
+<h2 id="la-situation">La situation<a class="headerlink" href="#la-situation" title="Permanent link">&para;</a></h2>
+<p>Vous étiez absent deux semaines. Pendant ce temps, trois stories ont été mergées dans <code>integration</code>
+et déployées. Votre org <code>helios-dev</code> ressemble encore au jour de votre départ.</p>
+<p>Construisez votre story suivante là-dessus et vous produirez un diff plein de choses qui ressemblent
+à des suppressions, parce que votre org n'a pas ce que celle de tout le monde a. C'est la façon la
+plus courante pour un contributeur de défaire par accident le travail d'un collègue.</p>
+<h2 id="avant-de-commencer">Avant de commencer<a class="headerlink" href="#avant-de-commencer" title="Permanent link">&para;</a></h2>
+<ul class="task-list">
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> Niveau 1 terminé, ou <strong>Training: Level 2 &gt; Reset this level</strong> sur le niveau 2</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>helios-dev</code> connectée dans <strong>Orgs Manager</strong></li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> Aucune modification non commitée à laquelle vous tenez</li>
+</ul>
+<h2 id="les-etapes">Les étapes<a class="headerlink" href="#les-etapes" title="Permanent link">&para;</a></h2>
+<h3 id="1-rapatrier-le-travail-de-votre-collegue">1. Rapatrier le travail de votre collègue<a class="headerlink" href="#1-rapatrier-le-travail-de-votre-collegue" title="Permanent link">&para;</a></h3>
+<p>Les deux semaines d'absence doivent exister avant que vous puissiez les rattraper. Romain n'existe
+pas, mais son travail si : la formation le rejoue dans <strong>votre propre</strong> fork, sous la forme d'une
+Pull Request que vous mergez.</p>
+<h4 id="1a-lancer-simulate-my-teammates">1a. Lancer Simulate my teammates<a class="headerlink" href="#1a-lancer-simulate-my-teammates" title="Permanent link">&para;</a></h4>
+<p>Dans la liste des commandes sfdx-hardis, dépliez <strong>Training: Level 2</strong> <span class="pill-ref pill-ref-1">(1)</span> et cliquez sur
+<strong>Simulate my teammates</strong> <span class="pill-ref pill-ref-2">(2)</span>. La même entrée se trouve sur la page Welcome, sous
+<strong>Training: Level 2</strong>.</p>
+<p><a class="glightbox" data-type="image" href="../../../_assets/annotated/vscode/sidebar-commands-custom-menu-2--training-menu.png"><img alt="Le menu Training du Niveau 2 dans la liste des commandes sfdx-hardis" src="../../../_assets/annotated/vscode/sidebar-commands-custom-menu-2--training-menu.png" /></a></p>
+<p>Un panneau de commande s'ouvre et pose trois questions. Répondez ainsi :</p>
+<table>
+<thead>
+<tr>
+<th>Question</th>
+<th>Réponse</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Which teammate work do you need?</td>
+<td><strong>US-017 Record who signed an installation off</strong></td>
+</tr>
+<tr>
+<td>Create it?</td>
+<td><strong>Yes</strong></td>
+</tr>
+<tr>
+<td>Merge it for you once its checks pass?</td>
+<td><strong>Yes</strong>, sauf si vous voulez la merger vous-même (étape 1b)</td>
+</tr>
+</tbody>
+</table>
+<p>Si VS Code demande d'abord comment autoriser la commande Training, choisissez <strong>Always allow</strong>,
+comme dans <a href="../../level-1-contributor-basics/1-2-create-your-dev-hub-scratch-orgs-and-pipeline/">Lab 1.2</a>.</p>
+<p>La commande crée la branche <code>training/mate-us-017-sign-off</code> à partir de votre <code>integration</code> actuelle,
+commite la modification de Romain sous son nom, la pousse sur votre fork GitHub et ouvre la Pull
+Request. Le panneau affiche son adresse : gardez-la, elle sert à l'étape 1b.</p>
+<p>Avec <strong>Yes</strong> à la dernière question, le panneau attend ensuite les deux checks de la Pull Request,
+deux à quatre minutes environ, et la merge dès qu'ils sont verts tous les deux. Il écrit
+<strong>Pull Request merged into its base branch</strong>, puis <strong>Done</strong>. Vous pouvez sauter l'étape 1b et passer
+directement à l'étape 2. Si vous la mergez vous-même sur GitHub pendant que le panneau attend, il
+s'en aperçoit et s'arrête là aussi.</p>
+<p>S'il dit qu'un check a échoué, ou qu'il n'a pas pu merger, rien n'est perdu : la Pull Request est
+toujours ouverte, et l'étape 1b permet de terminer.</p>
+<details>
+<summary>Sous le capot : ce que Simulate my teammates a fait</summary>
+<p>L'entrée Training a lancé :</p>
+<div class="highlight"><pre><span></span><code>node scripts/training.mjs simulate --level 2
+</code></pre></div>
+<p>Elle a appliqué le jeu de patches de <code>scripts/simulate/us-017-sign-off/</code> à votre copie de travail,
+l'a commité avec le nom et l'email de Romain, a poussé la branche et ouvert la Pull Request avec
+<code>gh pr create</code>. Vos propres modifications non commitées, s'il y en avait, ont été mises de côté
+d'abord et remises en place à la fin.</p>
+<p>Avec <strong>Yes</strong> au merge, elle vous a d'abord rendu votre propre branche, puis a demandé à GitHub
+l'état des checks de la Pull Request toutes les vingt secondes (<code>gh pr checks</code>), et lancé
+<code>gh pr merge --squash</code> dès qu'ils étaient tous verts, <strong>Simulate Deployment to Major Org</strong> et
+<strong>Mega-Linter</strong> compris. La même règle que le bouton : la branche <code>integration</code> de votre fork est
+protégée, et GitHub refuserait le merge tant qu'un check est rouge ou en cours.</p>
+</details>
+<h4 id="1b-ou-la-relire-et-la-merger-vous-meme-sur-github">1b. Ou la relire et la merger vous-même sur GitHub<a class="headerlink" href="#1b-ou-la-relire-et-la-merger-vous-meme-sur-github" title="Permanent link">&para;</a></h4>
+<p>Seulement si vous avez répondu <strong>No</strong>, ou si le panneau n'a pas pu merger.</p>
+<ol>
+<li>Ouvrez la Pull Request : cliquez sur l'adresse affichée par le panneau, ou ouvrez votre fork sur
+   GitHub (<code>github.com/my-username/sfdx-hardis-training</code>), cliquez sur l'onglet <strong>Pull requests</strong>,
+   puis sur <strong>US-017 Record who signed an installation off</strong></li>
+<li>
+<p>Cliquez sur <strong>Files changed</strong> <span class="pill-ref pill-ref-1">(1)</span>. La liste des fichiers à gauche <span class="pill-ref pill-ref-2">(2)</span> en contient deux,
+   le permission set <code>Helios_Delivery_Manager</code> et le layout <code>Installation</code>. Chaque ligne du diff
+   <span class="pill-ref pill-ref-3">(3)</span> est une modification, verte quand elle est ajoutée et rouge quand elle est supprimée.
+   Romain ne fait qu'ajouter : l'accès en lecture et en modification sur <code>Signed_Off_By__c</code>, et le
+   champ sur le layout. C'est cela, la relecture : vérifier que la Pull Request fait ce que dit son
+   titre, et rien d'autre</p>
+<p><a class="glightbox" data-type="image" href="../../../_assets/annotated/web/github-pr-files.png"><img alt="L'onglet Files changed d'une Pull Request d'un collègue" src="../../../_assets/annotated/web/github-pr-files.png" /></a></p>
+<p>L'image montre une Pull Request d'un collègue plus tardive, US-052 : la vôtre montre les deux
+ fichiers de Romain, et les onglets et les boutons sont les mêmes.</p>
+</li>
+<li>
+<p>Revenez sur l'onglet <strong>Conversation</strong> et descendez en bas de la page. Tant qu'un check tourne
+   encore, la boîte indique <strong>Merging is blocked</strong> : attendez, la page se met à jour toute seule.
+   Quand elle indique <strong>All checks have passed</strong>, le bouton <strong>Merge pull request</strong> <span class="pill-ref pill-ref-1">(1)</span> est actif</p>
+<p><a class="glightbox" data-type="image" href="../../../_assets/annotated/web/github-pr-merge.png"><img alt="La boîte de merge d'une Pull Request, avec tous les checks passés" src="../../../_assets/annotated/web/github-pr-merge.png" /></a></p>
+</li>
+<li>
+<p>Cliquez sur la petite flèche <span class="pill-ref pill-ref-1">(1)</span> à droite du bouton vert, choisissez <strong>Squash and merge</strong>
+   <span class="pill-ref pill-ref-2">(2)</span>, puis cliquez sur <strong>Squash and merge</strong> et <strong>Confirm squash and merge</strong>. Le badge en haut
+   de la page devient violet et indique <strong>Merged</strong></p>
+<p><a class="glightbox" data-type="image" href="../../../_assets/annotated/web/github-pr-merge-squash.png"><img alt="Le menu de méthode de merge d'une Pull Request, avec Squash and merge" src="../../../_assets/annotated/web/github-pr-merge-squash.png" /></a></p>
+</li>
+</ol>
+<p>C'est le même merge qu'au <a href="../../level-1-contributor-basics/1-6-pull-request-deployment-check-and-merge/">Lab 1.6</a>, étape 4. Un
+check qui échoue ici n'est pas de votre faute et n'est pas à corriger : relancez <strong>Simulate my
+teammates</strong>, elle recrée la branche et la Pull Request.</p>
+<h4 id="1c-ou-vous-en-etes">1c. Où vous en êtes<a class="headerlink" href="#1c-ou-vous-en-etes" title="Permanent link">&para;</a></h4>
+<p><code>integration</code> porte maintenant trois Pull Requests mergées que votre org n'a jamais vues sous forme
+de déploiement : vos deux stories du Niveau 1, qui ne sont dans <code>helios-dev</code> que parce que vous les y
+avez construites, et celle de Romain, qui en est très loin.</p>
+<h3 id="2-ouvrir-backpromote">2. Ouvrir Backpromote<a class="headerlink" href="#2-ouvrir-backpromote" title="Permanent link">&para;</a></h3>
+<p>Dans le panneau <strong>DevOps Pipeline</strong>, sous <strong>Project Contribution Workflow</strong>, cliquez sur la carte
+<strong>Backpromote (Beta)</strong> <span class="pill-ref pill-ref-1">(1)</span>.</p>
+<p><a class="glightbox" data-type="image" href="../../../_assets/annotated/vscode/pipeline-cards--backpromote.png"><img alt="La carte Backpromote du panneau DevOps Pipeline" src="../../../_assets/annotated/vscode/pipeline-cards--backpromote.png" /></a></p>
+<p>Il calcule son plan avant de vous montrer quoi que ce soit :</p>
+<ol>
+<li><strong>Target sandbox</strong> <span class="pill-ref pill-ref-1">(1)</span> est l'org dans laquelle le travail est rapatrié, <code>helios-dev</code></li>
+<li><strong>Parent branch</strong> <span class="pill-ref pill-ref-2">(2)</span> est l'endroit d'où il vient, <code>integration</code></li>
+<li>Les trois lignes <span class="pill-ref pill-ref-3">(3)</span> lisent votre org, listent les Pull Requests mergées dans <code>integration</code>,
+   et calculent la différence entre les deux</li>
+</ol>
+<p><a class="glightbox" data-type="image" href="../../../_assets/annotated/vscode/backpromote-loading.png"><img alt="Le panneau Backpromote calculant son plan" src="../../../_assets/annotated/vscode/backpromote-loading.png" /></a></p>
+<p>"Backpromote" désigne la direction, et c'est elle qui compte : le travail remonte normalement
+<strong>vers le haut</strong>, de votre branche vers integration, puis uat, puis production. Un backpromote le
+fait <strong>redescendre</strong>, d'une branche majeure vers votre propre environnement, pour que vous
+construisiez sur ce que l'équipe a et non sur ce dont vous vous souvenez.</p>
+<h3 id="3-voir-a-quel-point-vous-etes-en-retard">3. Voir à quel point vous êtes en retard<a class="headerlink" href="#3-voir-a-quel-point-vous-etes-en-retard" title="Permanent link">&para;</a></h3>
+<p>Le bloc <strong>WHERE</strong> en haut du panneau y répond, et c'est le seul endroit qui le fasse.
+<strong>3 Pull Requests in the window</strong> : trois stories ont été mergées dans <code>integration</code> depuis la
+dernière fois que quelque chose a été rapatrié dans votre org.</p>
+<p>C'est ce compteur, pas votre mémoire, qui vous dit si un rafraîchissement est nécessaire. Un lundi
+après une semaine d'absence, il mérite d'être lu avant toute chose.</p>
+<h3 id="4-choisir-ce-quon-rapatrie">4. Choisir ce qu'on rapatrie<a class="headerlink" href="#4-choisir-ce-quon-rapatrie" title="Permanent link">&para;</a></h3>
+<p>Quand le plan est prêt, le panneau se remplit. Les Pull Requests mergées sont listées de la plus
+récente à la plus ancienne <span class="pill-ref pill-ref-1">(1)</span> : choisissez la plus ancienne, et tout ce qui va de là jusqu'à
+la tête d'<code>integration</code> <span class="pill-ref pill-ref-2">(2)</span> sera rapatrié. En dessous, ce qui diffère entre <code>integration</code>
+et votre org est listé par type de métadonnée, chaque élément avec sa propre case <span class="pill-ref pill-ref-3">(3)</span>.</p>
+<p><a class="glightbox" data-type="image" href="../../../_assets/annotated/vscode/backpromote.png"><img alt="Le panneau Backpromote, avec les Pull Requests mergées et ce qu'elles rapatrient" src="../../../_assets/annotated/vscode/backpromote.png" /></a></p>
+<p>Parcourez la liste plutôt que de cliquer sur "tout" :</p>
+<table>
+<thead>
+<tr>
+<th>Ce que vous voyez</th>
+<th>Ce qu'il faut faire</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>De la métadonnée des trois stories mergées</td>
+<td><strong>Prenez-la.</strong> C'est tout l'objet de la manœuvre</td>
+</tr>
+<tr>
+<td>Quelque chose que vous êtes en train de construire</td>
+<td><strong>Laissez-le.</strong> Un backpromote écraserait votre travail en cours</td>
+</tr>
+<tr>
+<td>Quelque chose que vous ne reconnaissez pas du tout</td>
+<td><strong>Prenez-le.</strong> Si c'est sur <code>integration</code>, c'est la vérité de l'équipe</td>
+</tr>
+</tbody>
+</table>
+<p>Pour un fichier que les deux côtés ont modifié, le panneau propose une troisième réponse à côté de
+<strong>Overwrite</strong> et <strong>Keep org version</strong> : <strong>Merge</strong>. Il écrit le fichier avec les deux versions
+dedans, balisées, et vous choisissez entre elles dans l'éditeur de merge de VS Code, exactement
+comme le <a href="../2-7-resolve-a-git-merge-conflict/">Lab 2.7</a> vous fait résoudre un conflit de Pull Request. Servez-vous-en quand les deux
+modifications sont réelles et qu'il vous faut les deux.</p>
+<p>La règle en cas d'hésitation : <code>integration</code> gagne. C'est la réalité partagée, et votre org en est
+une copie que vous avez le droit de modifier temporairement.</p>
+<h3 id="5-le-lancer-et-lire-le-resultat">5. Le lancer et lire le résultat<a class="headerlink" href="#5-le-lancer-et-lire-le-resultat" title="Permanent link">&para;</a></h3>
+<p>Cliquez sur <strong>Backpromote to helios-dev</strong> <span class="pill-ref pill-ref-1">(1)</span>. Le panneau déroule l'exécution étape par étape
+<span class="pill-ref pill-ref-2">(2)</span>, et quand il a fini il vous dit ce qui s'est passé <span class="pill-ref pill-ref-3">(3)</span>.</p>
+<p><a class="glightbox" data-type="image" href="../../../_assets/annotated/vscode/backpromote-result--what-it-did.png"><img alt="Le panneau Backpromote, terminé, avec son résumé" src="../../../_assets/annotated/vscode/backpromote-result--what-it-did.png" /></a></p>
+<p>Lisez le résumé plutôt que la couleur :</p>
+<ul>
+<li>combien d'éléments ont atteint votre org, et combien en ont été supprimés</li>
+<li>sur quelles Pull Requests il a écrit son historique, pour que le backpromote suivant sache où
+  commencer</li>
+</ul>
+<p>Les trois stories ne portent aucune deployment action. Quand celles que vous ramenez en portent, le
+résumé dit aussi combien ont tourné, ont été sautées ou ont échoué, et <strong>combien d'actions manuelles
+vous attendent dans la sandbox</strong>, ce que rien ne peut faire à votre place.</p>
+<p>Cliquez ensuite sur <strong>Back to <code>&lt;votre branche&gt;</code></strong> <span class="pill-ref pill-ref-4">(4)</span>. C'est le dernier bouton du panneau et
+celui que les gens ratent, et la note suivante explique pourquoi il compte.</p>
+<details>
+<summary>Sous le capot : ce que Backpromote vient de faire</summary>
+<p>Le panneau a lancé :</p>
+<div class="highlight"><pre><span></span><code>sf hardis:work:backpromote
+</code></pre></div>
+<p>qui a :</p>
+<ol>
+<li>Récupéré <code>integration</code> et l'a comparée à votre branche</li>
+<li>Construit un plan : les composants qui diffèrent, et pour chacun s'il est ajouté, modifié ou
+   supprimé</li>
+<li>Déployé ceux que vous avez sélectionnés dans votre org de dev, avec le même moteur de déploiement
+   que la CI</li>
+<li>Noté ce qu'il a fait, pour qu'une deuxième exécution ne refasse pas le même travail</li>
+</ol>
+<p>Trois choses qu'il ne fait délibérément <strong>pas</strong>, et les connaître économise un après-midi :</p>
+<ul>
+<li><strong>Il n'apporte pas d'enregistrements tout seul.</strong> Il déploie de la métadonnée, et il lance les
+  deployment actions que les Pull Requests mergées ont déclarées, ce qui est l'endroit où vivrait un
+  chargement de données. Si la story d'un collègue avait besoin de données de référence et que
+  personne n'a déclaré d'action pour cela, ces données ne sont pas dans votre org, et aucun
+  déploiement ne les y mettra jamais. Le <a href="../2-4-ship-reference-data-and-a-batch-with-deployment-actions/">Lab 2.4</a> traite exactement de ce problème</li>
+<li><strong>Il n'annule pas ce que vous avez fait à la main.</strong> Si vous avez modifié dans votre org quelque
+  chose qu'<code>integration</code> a aussi modifié, le déploiement l'écrase. C'est pour cela que vous lisez la
+  liste</li>
+<li><strong>Il ne touche pas aux orgs partagées.</strong> Un backpromote refuse une org de production, et toute org
+  dans laquelle déploie une branche majeure. Il n'écrit jamais que dans une sandbox de développeur,
+  une scratch org ou une org Developer Edition</li>
+</ul>
+<p>Et une chose qu'il fait et que personne n'attend la première fois :</p>
+<div class="admonition warning">
+<p class="admonition-title">Il vous laisse sur la branche de backpromote</p>
+<p>Le déploiement tourne depuis une branche appelée <code>backpromote/integration/&lt;votre org&gt;</code>, et <strong>le
+checkout y reste quand la commande se termine</strong>. Le panneau le dit, et propose le bouton
+<strong>Back to <code>&lt;votre branche&gt;</code></strong> <span class="pill-ref pill-ref-4">(4)</span> pour le défaire : il restaure les modifications qu'il avait
+mises de côté avant l'exécution, puis propose un merge de la branche parente.</p>
+<p>Prenez ce bouton. Si vous ne le faites pas, <strong>New User Story</strong> repart quand même de la cible que
+vous choisissez, rien ne casse donc, mais ce que vous aviez en cours reste rangé derrière une
+branche que vous avez oubliée. La branche sur laquelle vous êtes est toujours dans le coin en bas
+à gauche de VS Code.</p>
+</div>
+<p>L'historique n'est pas sur votre ordinateur non plus. sfdx-hardis note ce qui a atteint votre sandbox
+dans un <strong>commentaire Backpromotes</strong> sur chaque Pull Request qu'il a rapatriée, pour que le
+backpromote suivant sache où commencer, depuis n'importe quelle machine et n'importe quel collègue.
+C'est aussi pourquoi la commande a besoin d'un token de fournisseur git : sans lui, elle ne peut pas
+lire son propre historique, et elle s'arrête.</p>
+<!-- command-links:start -->
+<p>Documentation de la commande : <a href="https://sfdx-hardis.cloudity.com/hardis/work/backpromote/">hardis:work:backpromote</a></p>
+<!-- command-links:end -->
+</details>
+<h2 id="ce-que-vous-devez-voir">Ce que vous devez voir<a class="headerlink" href="#ce-que-vous-devez-voir" title="Permanent link">&para;</a></h2>
+<p>Ouvrez <code>helios-dev</code> et vérifiez que la métadonnée des trois stories mergées y est. Le champ
+<strong>Signed Off By</strong> de Romain est celui à chercher : ouvrez une installation, il est en bas de la
+colonne des champs. <code>Panels_Required__c</code> et <code>Crew_Notes__c</code> du Niveau 1 y étaient déjà, sauf si
+vous avez fait le Niveau 1 dans une autre org.</p>
+<details class="troubleshoot">
+<summary>En cas de problème</summary>
+<p><strong>Simulate my teammates dit qu'aucun check n'a tourné sur la Pull Request.</strong>
+L'onglet Checks de la Pull Request est vide : GitHub Actions est désactivé sur votre fork.
+Le <a href="../../level-1-contributor-basics/1-6-pull-request-deployment-check-and-merge/">Lab 1.6</a>, étape 2, explique comment l'activer.
+Mergez-la ensuite vous-même, étape 1b.</p>
+<p><strong>Le panneau dit "Nothing to commit".</strong>
+La modification de Romain est déjà dans votre <code>integration</code> : vous l'avez mergée plus tôt, et le
+panneau affiche l'adresse de cette Pull Request mergée. Passez à l'étape 2.</p>
+<p><strong>Le panneau dit qu'il n'y a rien à backpromoter.</strong>
+Votre org est déjà au niveau d'<code>integration</code>, ce qui arrive si vous venez de terminer le Niveau 1
+dans la même org. Rien à faire : passez à la suite.</p>
+<p><strong>Le déploiement échoue sur un composant qui dépend d'autre chose.</strong>
+Prenez l'ensemble complet plutôt qu'un sous-ensemble. La métadonnée a des dépendances, et une demi-
+story ne se déploie souvent pas.</p>
+<p><strong>Votre propre travail en cours a été écrasé.</strong>
+Il était dans la liste et vous l'avez pris. Reconstruisez-le dans l'org : il est toujours dans votre
+branche si vous l'aviez commité, et le déploiement n'a changé que l'org.</p>
+</details>
+<h2 id="verifiez-votre-travail">Vérifiez votre travail<a class="headerlink" href="#verifiez-votre-travail" title="Permanent link">&para;</a></h2>
+<p>Welcome page &gt; <strong>Training: Level 2</strong> &gt; <strong>Check my work</strong>, puis choisissez le <strong>Lab 2.1</strong>.</p>
+<h2 id="pour-aller-plus-loin">Pour aller plus loin<a class="headerlink" href="#pour-aller-plus-loin" title="Permanent link">&para;</a></h2>
+<ul>
+<li><a href="https://sfdx-hardis.cloudity.com/salesforce-devops-backpromote/">Backpromote</a></li>
+</ul>
+<p><a class="md-button md-button--primary" href="../2-2-fix-a-missing-dependency-deployment-error/">Suite : Lab 2.2 - Corriger une erreur de déploiement due à une dépendance manquante</a></p>
+
+
+
+
+
+
+
+
+
+  
+  
+
+
+
+  
+
+
+
+
+  <h2 id="__comments">Questions and comments</h2>
+  <script src="https://giscus.app/client.js"
+          data-repo="hardisgroupcom/sfdx-hardis-training"
+          data-repo-id="R_kgDOUcjgQw"
+          data-category="Q&amp;A"
+          data-category-id="DIC_kwDOUcjgQ84DF-lC"
+          data-mapping="pathname"
+          data-strict="1"
+          data-reactions-enabled="1"
+          data-emit-metadata="0"
+          data-input-position="top"
+          data-theme="preferred_color_scheme"
+          data-lang="en"
+          data-loading="lazy"
+          crossorigin="anonymous"
+          async>
+  </script>
+
+  <script>
+    // Keep the Giscus iframe in sync with the palette toggle. It is a
+    // cross-origin frame, so its theme can only be changed by postMessage.
+    (function () {
+      if (window.__giscusThemeSync) {
+        return;
+      }
+      window.__giscusThemeSync = true;
+      var giscusTheme = function () {
+        var scheme = document.body.getAttribute("data-md-color-scheme");
+        return scheme === "slate" ? "dark" : "light";
+      };
+      var apply = function () {
+        var frame = document.querySelector("iframe.giscus-frame");
+        if (frame && frame.contentWindow) {
+          frame.contentWindow.postMessage(
+            { giscus: { setConfig: { theme: giscusTheme() } } },
+            "https://giscus.app"
+          );
+        }
+      };
+      new MutationObserver(apply).observe(document.body, {
+        attributes: true,
+        attributeFilter: ["data-md-color-scheme"]
+      });
+      window.addEventListener("message", function (event) {
+        if (event.origin === "https://giscus.app") {
+          apply();
+        }
+      });
+    })();
+  </script>
+
+                
+              </article>
+            </div>
+          
+          
+  <script>var tabs=__md_get("__tabs");if(Array.isArray(tabs))e:for(var set of document.querySelectorAll(".tabbed-set")){var labels=set.querySelector(".tabbed-labels");for(var tab of tabs)for(var label of labels.getElementsByTagName("label"))if(label.innerText.trim()===tab){var input=document.getElementById(label.htmlFor);input.checked=!0;continue e}}</script>
+
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-circle-arrow-up" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="m16 12-4-4-4 4M12 16V8"/></svg>
+  Retour en haut de la page
+</button>
+        
+      </main>
+      
+        
+
+
+
+
+<footer class="md-footer">
+  
+    
+      
+      <nav class="md-footer__inner md-grid" aria-label="Pied de page" >
+        
+          
+          <a href="../" class="md-footer__link md-footer__link--prev" aria-label="Précédent: Commencer ici">
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-arrow-left" viewBox="0 0 24 24"><path d="m12 19-7-7 7-7M19 12H5"/></svg>
+            </div>
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Précédent
+              </span>
+              <div class="md-ellipsis">
+                Commencer ici
+              </div>
+            </div>
+          </a>
+        
+        
+          
+          <a href="../2-2-fix-a-missing-dependency-deployment-error/" class="md-footer__link md-footer__link--next" aria-label="Suivant: Lab 2.2 - Corriger une erreur de déploiement due à une dépendance manquante">
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Suivant
+              </span>
+              <div class="md-ellipsis">
+                Lab 2.2 - Corriger une erreur de déploiement due à une dépendance manquante
+              </div>
+            </div>
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-arrow-right" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+            </div>
+          </a>
+        
+      </nav>
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      Cloudity and friends
+    </div>
+  
+  
+</div>
+      
+        
+<div class="md-social">
+  
+    
+    
+    
+    
+    <a href="https://github.com/hardisgroupcom/sfdx-hardis" target="_blank" rel="noopener" title="sfdx-hardis on GitHub" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.3.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2026 Fonticons, Inc.--><path fill="currentColor" d="M216.5 362.5c-66-8-112.5-55.5-112.5-117 0-25 9-52 24-70-6.5-16.5-5.5-51.5 2-66 20-2.5 47 8 63 22.5 19-6 39-9 63.5-9s44.5 3 62.5 8.5c15.5-14 43-24.5 63-22 7 13.5 8 48.5 1.5 65.5 16 19 24.5 44.5 24.5 70.5 0 61.5-46.5 108-113.5 116.5 17 11 28.5 35 28.5 62.5v52c0 15 12.5 23.5 27.5 17.5C441 459.5 512 369 512 257 512 115.5 397 0 255.5 0S0 115.5 0 257c0 111 70.5 203 165.5 237.5 13.5 5 26.5-4 26.5-17.5v-40c-7 3-16 5-24 5-33 0-52.5-18-66.5-51.5-5.5-13.5-11.5-21.5-23-23-6-.5-8-3-8-6 0-6 10-10.5 20-10.5 14.5 0 27 9 40 27.5 10 14.5 20.5 21 33 21s20.5-4.5 32-16c8.5-8.5 15-16 21-21"/></svg>
+    </a>
+  
+    
+    
+    
+    
+    <a href="https://sfdx-hardis.cloudity.com/" target="_blank" rel="noopener" title="sfdx-hardis documentation" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.3.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2026 Fonticons, Inc.--><path fill="currentColor" d="M384 512H96c-53 0-96-43-96-96V96C0 43 43 0 96 0h304c26.5 0 48 21.5 48 48v288c0 20.9-13.4 38.7-32 45.3V448c17.7 0 32 14.3 32 32s-14.3 32-32 32zM96 384c-17.7 0-32 14.3-32 32s14.3 32 32 32h256v-64zm32-232c0 13.3 10.7 24 24 24h176c13.3 0 24-10.7 24-24s-10.7-24-24-24H152c-13.3 0-24 10.7-24 24m24 72c-13.3 0-24 10.7-24 24s10.7 24 24 24h176c13.3 0 24-10.7 24-24s-10.7-24-24-24z"/></svg>
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog" role="status" aria-atomic="true">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      
+      
+        
+        
+      <script id="__config" type="application/json">{"annotate":null,"base":"../../..","features":["content.action.edit","content.code.copy","content.tabs.link","navigation.instant","navigation.tracking","navigation.top","navigation.footer","search.suggest","search.highlight","toc.follow"],"redirect":null,"search":"../../../assets/javascripts/workers/search.7d14d953.min.js","tags":null,"translations":{"clipboard.copied":"Copié dans le presse-papier","clipboard.copy":"Copier dans le presse-papier","clipboard.error":"Could not copy to clipboard","search.result.more.one":"1 de plus sur cette page","search.result.more.other":"# de plus sur cette page","search.result.none":"Aucun document trouvé","search.result.one":"1 document trouvé","search.result.other":"# documents trouvés","search.result.placeholder":"Taper pour démarrer la recherche","search.result.term.missing":"Non trouvé","select.version":"Sélectionner la version"},"version":null}</script>
+    
+    
+      <script src="../../../assets/javascripts/bundle.67a597eb.min.js"></script>
+      
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/tablesort/5.2.1/tablesort.min.js"></script>
+      
+        <script src="../../../theme/javascripts/tables.js"></script>
+      
+        <script src="../../../theme/javascripts/lightbox.js"></script>
+      
+        <script src="../../../theme/javascripts/after-footer.js"></script>
+      
+        <script src="../../../theme/javascripts/language-switch.js"></script>
+      
+    
+  </body>
+</html>

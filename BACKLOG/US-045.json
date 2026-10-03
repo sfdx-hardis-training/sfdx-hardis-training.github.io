@@ -1,0 +1,8 @@
+{
+  "id": "US-045",
+  "subject": "Cancelled installations can no longer be back-dated",
+  "url": "https://sfdx-hardis-training.github.io/BACKLOG/US-045/",
+  "owner": "Romain Panda",
+  "branch": "fix/US-045-installation-date-hotfix",
+  "lab": "3.7"
+}
