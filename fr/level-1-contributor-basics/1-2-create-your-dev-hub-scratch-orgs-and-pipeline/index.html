@@ -1,0 +1,2701 @@
+
+<!doctype html>
+<html lang="fr" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Inscrivez-vous à une org Salesforce Developer Edition gratuite, puis laissez un clic créer un Dev Hub, trois scratch orgs, votre fork GitHub et sa pipeline CI/CD.">
+      
+      
+      
+        <link rel="canonical" href="https://sfdx-hardis-training.github.io/fr/level-1-contributor-basics/1-2-create-your-dev-hub-scratch-orgs-and-pipeline/">
+      
+      
+        <link rel="prev" href="../1-1-install-vs-code-and-sfdx-hardis/">
+      
+      
+        <link rel="next" href="../1-3-start-a-user-story-on-a-git-branch/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../../theme/images/badge-mark.svg">
+      <meta name="generator" content="zensical-0.0.69">
+    
+    
+      
+        <title>Lab 1.2 - Créer votre Dev Hub, vos scratch orgs et votre pipeline CI/CD - Salesforce DevOps with sfdx-hardis</title>
+      
+    
+    
+      
+        
+      
+      <link rel="stylesheet" href="../../../assets/stylesheets/modern/main.e15858d4.min.css">
+      
+        
+          
+        
+        <link rel="stylesheet" href="../../../assets/stylesheets/modern/palette.b27955a4.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+    
+    
+      <link rel="stylesheet" href="../../../theme/stylesheets/extra.css">
+    
+    <script>__md_scope=new URL("../../..",location),__md_scope.pathname.endsWith("/")||(__md_scope=new URL(__md_scope.pathname+"/",location)),__md_hash=e=>[...e].reduce(((e,t)=>(e<<5)-e+t.charCodeAt(0)),0),__md_get=(e,t=localStorage,_=__md_scope)=>JSON.parse(t.getItem(_.pathname+"."+e)),__md_set=(e,t,_=localStorage,a=__md_scope)=>{try{_.setItem(a.pathname+"."+e,JSON.stringify(t))}catch(e){}},document.documentElement.setAttribute("data-platform",navigator.platform)</script>
+    
+      
+  
+
+
+  
+  
+
+<script id="__analytics">function __md_analytics(){function e(){dataLayer.push(arguments)}window.dataLayer=window.dataLayer||[],e("js",new Date),e("config","G-SE20CZ58E1"),document.addEventListener("DOMContentLoaded",(function(){document.forms.search&&document.forms.search.query.addEventListener("blur",(function(){this.value&&e("event","search",{search_term:this.value})}));document$.subscribe((function(){var t=document.forms.feedback;if(void 0!==t)for(var a of t.querySelectorAll("[type=submit]"))a.addEventListener("click",(function(a){a.preventDefault();var n=document.location.pathname,d=this.getAttribute("data-md-value");e("event","feedback",{page:n,data:d}),t.firstElementChild.disabled=!0;var r=t.querySelector(".md-feedback__note [data-md-value='"+d+"']");r&&(r.hidden=!1)})),t.hidden=!1})),location$.subscribe((function(t){e("config","G-SE20CZ58E1",{page_path:t.pathname})}))}));var t=document.createElement("script");t.async=!0,t.src="https://www.googletagmanager.com/gtag/js?id=G-SE20CZ58E1",document.getElementById("__analytics").insertAdjacentElement("afterEnd",t)}</script>
+  
+    <script>"undefined"!=typeof __md_analytics&&__md_analytics()</script>
+  
+
+    
+    
+  
+  
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Salesforce DevOps with sfdx-hardis">
+  <meta property="og:locale" content="fr">
+  <meta property="og:title" content="Lab 1.2 - Créer votre Dev Hub, vos scratch orgs et votre pipeline CI/CD">
+  <meta property="og:description" content="Inscrivez-vous à une org Salesforce Developer Edition gratuite, puis laissez un clic créer un Dev Hub, trois scratch orgs, votre fork GitHub et sa pipeline CI/CD.">
+  <meta property="og:url" content="https://sfdx-hardis-training.github.io/fr/level-1-contributor-basics/1-2-create-your-dev-hub-scratch-orgs-and-pipeline/">
+  <meta property="og:image" content="https://sfdx-hardis-training.github.io/_assets/social/course.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="Lab 1.2 - Créer votre Dev Hub, vos scratch orgs et votre pipeline CI/CD">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Lab 1.2 - Créer votre Dev Hub, vos scratch orgs et votre pipeline CI/CD">
+  <meta name="twitter:description" content="Inscrivez-vous à une org Salesforce Developer Edition gratuite, puis laissez un clic créer un Dev Hub, trois scratch orgs, votre fork GitHub et sa pipeline CI/CD.">
+  <meta name="twitter:image" content="https://sfdx-hardis-training.github.io/_assets/social/course.png">
+
+  <script>
+    (function () {
+      var here = "fr";
+      var alternates = {"en":"en/level-1-contributor-basics/1-2-create-your-dev-hub-scratch-orgs-and-pipeline/","fr":"fr/level-1-contributor-basics/1-2-create-your-dev-hub-scratch-orgs-and-pipeline/"};
+      var base = new URL("../../.." || ".", window.location.href).pathname;
+      try {
+        var asked = new URLSearchParams(window.location.search).get("lang");
+        if (asked) {
+          document.cookie =
+            "course-language=" + encodeURIComponent(asked) + "; path=" + base + "; max-age=31536000; samesite=lax";
+        }
+        var cookie = document.cookie.split("; ").filter(function (one) {
+          return one.indexOf("course-language=") === 0;
+        })[0];
+        if (!cookie) {
+          return;
+        }
+        var preferred = asked || decodeURIComponent(cookie.slice("course-language=".length));
+        if (!preferred || preferred === here) {
+          return;
+        }
+        var target = alternates[preferred];
+        if (typeof target !== "string") {
+          return;
+        }
+        var url = new URL(target, new URL(base, window.location.href)).pathname;
+        if (url !== window.location.pathname) {
+          window.location.replace(url + window.location.search + window.location.hash);
+        }
+      } catch (error) {
+        // A browser with no cookies stays where it is, which is the page asked for
+      }
+    })();
+  </script>
+
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="custom" data-md-color-accent="custom">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer" aria-hidden="true"></label>
+    <div data-md-component="skip">
+      <a href="#__skip" class="md-skip">
+        Aller au contenu
+      </a>
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="En-tête">
+    <a href="/fr/" title="Salesforce DevOps with sfdx-hardis" class="md-header__button md-logo" aria-label="Salesforce DevOps with sfdx-hardis" data-md-component="logo">
+      
+  <img src="../../../theme/images/cloudity-text-logo-white.svg" alt="Salesforce DevOps with sfdx-hardis">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer" aria-label="Navigation">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-menu" viewBox="0 0 24 24"><path d="M4 5h16M4 12h16M4 19h16"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Salesforce DevOps with sfdx-hardis
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Lab 1.2 - Créer votre Dev Hub, vos scratch orgs et votre pipeline CI/CD
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="none" data-md-color-scheme="default" data-md-color-primary="custom" data-md-color-accent="custom"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="none" data-md-color-scheme="slate" data-md-color-primary="custom" data-md-color-accent="custom"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+      
+
+
+
+  
+
+  
+    
+    
+  
+
+<div class="md-header__option">
+  <div class="md-select md-select--language">
+    <button class="md-header__button md-header__button--flag" aria-label="Sélectionner la langue">
+      
+        <img src="../../../theme/images/flags/fr.svg" alt="Français" class="md-select__flag md-select__flag--current">
+      
+    </button>
+    <div class="md-select__inner">
+      <ul class="md-select__list">
+        
+          
+          <li class="md-select__item"><a href="../../../en/level-1-contributor-basics/1-2-create-your-dev-hub-scratch-orgs-and-pipeline/" hreflang="en" data-course-home="/" class="md-select__link">
+              
+                <img src="../../../theme/images/flags/gb.svg" alt="" class="md-select__flag">
+              
+              English
+            </a>
+          </li>
+        
+          
+          <li class="md-select__item"><a href="././" hreflang="fr" data-course-home="/fr/" class="md-select__link">
+              
+                <img src="../../../theme/images/flags/fr.svg" alt="" class="md-select__flag">
+              
+              Français
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</div>
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search" aria-label="Recherche">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-search" viewBox="0 0 24 24"><path d="m21 21-4.34-4.34"/><circle cx="11" cy="11" r="8"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog" aria-label="Recherche">
+  <button type="button" class="md-search__button">
+    Recherche
+  </button>
+</div>
+      
+    
+    <div class="md-header__source">
+      
+        <a href="https://github.com/hardisgroupcom/sfdx-hardis-training" title="Aller au dépôt" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.3.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2026 Fonticons, Inc.--><path fill="currentColor" d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    hardisgroupcom/sfdx-hardis-training
+  </div>
+</a>
+      
+    </div>
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0" data-course-lang="fr" data-course-base="../../.." data-course-alt-en="en/level-1-contributor-basics/1-2-create-your-dev-hub-scratch-orgs-and-pipeline/" data-course-alt-fr="fr/level-1-contributor-basics/1-2-create-your-dev-hub-scratch-orgs-and-pipeline/">
+  <label class="md-nav__title" for="__drawer">
+    <a href="/fr/" title="Salesforce DevOps with sfdx-hardis" class="md-nav__button md-logo" aria-label="Salesforce DevOps with sfdx-hardis" data-md-component="logo">
+      
+  <img src="../../../theme/images/cloudity-text-logo-white.svg" alt="Salesforce DevOps with sfdx-hardis">
+
+    </a>
+    Salesforce DevOps with sfdx-hardis
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/hardisgroupcom/sfdx-hardis-training" title="Aller au dépôt" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.3.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2026 Fonticons, Inc.--><path fill="currentColor" d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    hardisgroupcom/sfdx-hardis-training
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+      
+    
+      
+      
+      
+    
+      
+      
+      
+    
+      
+      
+      
+    
+      
+      
+      
+    
+      
+      
+      
+    
+      
+      
+      
+    
+      
+      
+      
+        
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Accueil
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+      
+    
+      
+      
+      
+        
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_9" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_9" id="__nav_9_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Niveau 1 - Contributeur Salesforce DevOps, les bases
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        
+          <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_9_label" aria-expanded="true">
+            <label class="md-nav__title" for="__nav_9">
+              <span class="md-nav__icon md-icon"></span>
+              
+  
+  Niveau 1 - Contributeur Salesforce DevOps, les bases
+
+            </label>
+            <ul class="md-nav__list" data-md-scrollfix>
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Commencer ici
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../1-1-install-vs-code-and-sfdx-hardis/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Lab 1.1 - Installer VS Code, Git et sfdx-hardis
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Lab 1.2 - Créer votre Dev Hub, vos scratch orgs et votre pipeline CI/CD
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="././" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Lab 1.2 - Créer votre Dev Hub, vos scratch orgs et votre pipeline CI/CD
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+
+<nav class="md-nav md-nav--secondary" aria-label="Table des matières">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table des matières
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#la-situation" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        La situation
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#avant-de-commencer" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Avant de commencer
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#les-etapes" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Les étapes
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Les étapes">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-creer-votre-org-developer-edition" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        1. Créer votre org Developer Edition
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-la-connecter-dans-orgs-manager" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        2. La connecter dans Orgs Manager
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-recuperer-le-repository" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        3. Récupérer le repository
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#4-installer-la-cli-github" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        4. Installer la CLI GitHub
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#5-mettre-en-place-votre-environnement-de-formation" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        5. Mettre en place votre environnement de formation
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#6-ce-quelle-vient-de-faire" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        6. Ce qu'elle vient de faire
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#7-laisser-lextension-parler-a-github" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        7. Laisser l'extension parler à GitHub
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#8-regarder-la-pipeline-avant-de-toucher-a-quoi-que-ce-soit" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        8. Regarder la pipeline avant de toucher à quoi que ce soit
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#ce-que-vous-devez-voir" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Ce que vous devez voir
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#verifiez-votre-travail" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Vérifiez votre travail
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#pour-aller-plus-loin" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Pour aller plus loin
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../1-3-start-a-user-story-on-a-git-branch/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Lab 1.3 - Démarrer une User Story sur sa propre branche Git
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../1-4-build-a-custom-field-in-your-org/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Lab 1.4 - Construire un champ personnalisé dans votre org Salesforce
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../1-5-retrieve-commit-and-publish-your-changes/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Lab 1.5 - Récupérer, commiter et publier vos modifications Salesforce
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../1-6-pull-request-deployment-check-and-merge/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Lab 1.6 - Ouvrir une Pull Request, passer le contrôle de déploiement, merger
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../1-7-capstone-deliver-a-user-story-on-your-own/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Lab 1.7 - Épreuve finale : livrer une User Story tout seul
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+            </ul>
+          </nav>
+        
+      
+    </li>
+  
+
+      
+    
+      
+      
+      
+        
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_10" >
+        
+          
+          <label class="md-nav__link" for="__nav_10" id="__nav_10_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Niveau 2 - Contributeur Salesforce DevOps avancé
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        
+          <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_10_label" aria-expanded="false">
+            <label class="md-nav__title" for="__nav_10">
+              <span class="md-nav__icon md-icon"></span>
+              
+  
+  Niveau 2 - Contributeur Salesforce DevOps avancé
+
+            </label>
+            <ul class="md-nav__list" data-md-scrollfix>
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../level-2-contributor-advanced/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Commencer ici
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../level-2-contributor-advanced/2-1-backpromote-your-teammates-work/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Lab 2.1 - Backpromote : remettre votre org de dev au niveau de l'équipe
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../level-2-contributor-advanced/2-2-fix-a-missing-dependency-deployment-error/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Lab 2.2 - Corriger une erreur de déploiement due à une dépendance manquante
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../level-2-contributor-advanced/2-3-fix-broken-records-with-an-apex-deployment-action/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Lab 2.3 - Réparer des enregistrements cassés avec une deployment action Apex
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../level-2-contributor-advanced/2-4-ship-reference-data-and-a-batch-with-deployment-actions/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Lab 2.4 - Livrer des données de référence et un batch avec des deployment actions
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../level-2-contributor-advanced/2-5-pass-code-quality-and-apex-test-coverage/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Lab 2.5 - Passer la barrière de qualité de code et la couverture de tests Apex
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../level-2-contributor-advanced/2-6-permission-sets-and-profiles/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Lab 2.6 - Permission sets, profils, et pourquoi une autorisation disparaît
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../level-2-contributor-advanced/2-7-resolve-a-git-merge-conflict/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Lab 2.7 - Résoudre un conflit de merge Git avec un collègue
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../level-2-contributor-advanced/2-8-recover-from-committing-the-wrong-metadata/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Lab 2.8 - Se remettre d'avoir commité la mauvaise métadonnée
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../level-2-contributor-advanced/2-9-capstone-deliver-a-user-story-that-has-it-all/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Lab 2.9 - Épreuve finale : livrer une User Story qui a tout
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+            </ul>
+          </nav>
+        
+      
+    </li>
+  
+
+      
+    
+      
+      
+      
+        
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_11" >
+        
+          
+          <label class="md-nav__link" for="__nav_11" id="__nav_11_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Niveau 3 - Release manager Salesforce DevOps
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        
+          <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_11_label" aria-expanded="false">
+            <label class="md-nav__title" for="__nav_11">
+              <span class="md-nav__icon md-icon"></span>
+              
+  
+  Niveau 3 - Release manager Salesforce DevOps
+
+            </label>
+            <ul class="md-nav__list" data-md-scrollfix>
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../level-3-release-manager/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Commencer ici
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../level-3-release-manager/3-1-configure-the-pipeline-up-to-production/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Lab 3.1 - Configurer la pipeline CI/CD jusqu'à la production
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../level-3-release-manager/3-2-review-a-contributor-pull-request/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Lab 3.2 - Relire et merger la Pull Request d'un contributeur
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../level-3-release-manager/3-3-deploy-to-integration-and-read-the-log/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Lab 3.3 - Lire le log de déploiement, et ce que .forceignore lui cache
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../level-3-release-manager/3-4-merge-colliding-pull-requests/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Lab 3.4 - Trois Pull Requests se percutent : choisir l'ordre de merge
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../level-3-release-manager/3-5-promote-to-uat-and-write-release-notes/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Lab 3.5 - Promouvoir en UAT et écrire les notes de version
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../level-3-release-manager/3-6-release-to-production-and-read-dora-metrics/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Lab 3.6 - Livrer en production et lire vos métriques DORA
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../level-3-release-manager/3-7-hotfix-and-retrofit/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Lab 3.7 - La production est cassée : hotfix et retrofit
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../level-3-release-manager/3-8-monitor-your-production-org/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Lab 3.8 - Monitorer votre org de production
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../level-3-release-manager/3-9-generate-the-project-documentation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Lab 3.9 - Générer la documentation du projet Salesforce
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../level-3-release-manager/3-10-promote-a-subset-with-promotion-branches/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Lab 3.10 - Promouvoir un sous-ensemble avec les promotion branches (Beta)
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../level-3-release-manager/3-11-capstone-run-a-weekly-release-cycle/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Lab 3.11 - Épreuve finale : mener un cycle de release hebdomadaire
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+            </ul>
+          </nav>
+        
+      
+    </li>
+  
+
+      
+    
+      
+      
+      
+        
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../help/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Aide
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+      
+    
+      
+      
+      
+        
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../BACKLOG/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Backlog
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+      
+    
+      
+      
+      
+        
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../badges/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Badges
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+      
+    
+      
+      
+      
+        
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="https://sfdx-hardis.cloudity.com/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  sfdx-hardis documentation
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+      
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  
+                    
+                    
+                    
+                      
+                    
+                    
+                      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+                      <div class="md-sidebar-button__wrapper">
+                        <label class="md-sidebar-button" for="__toc"></label>
+                      </div>
+                    
+                  
+                  <div class="md-sidebar__inner">
+                    
+
+
+<nav class="md-nav md-nav--secondary" aria-label="Table des matières">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table des matières
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#la-situation" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        La situation
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#avant-de-commencer" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Avant de commencer
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#les-etapes" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Les étapes
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Les étapes">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-creer-votre-org-developer-edition" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        1. Créer votre org Developer Edition
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-la-connecter-dans-orgs-manager" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        2. La connecter dans Orgs Manager
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-recuperer-le-repository" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        3. Récupérer le repository
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#4-installer-la-cli-github" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        4. Installer la CLI GitHub
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#5-mettre-en-place-votre-environnement-de-formation" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        5. Mettre en place votre environnement de formation
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#6-ce-quelle-vient-de-faire" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        6. Ce qu'elle vient de faire
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#7-laisser-lextension-parler-a-github" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        7. Laisser l'extension parler à GitHub
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#8-regarder-la-pipeline-avant-de-toucher-a-quoi-que-ce-soit" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        8. Regarder la pipeline avant de toucher à quoi que ce soit
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#ce-que-vous-devez-voir" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Ce que vous devez voir
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#verifiez-votre-travail" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Vérifiez votre travail
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#pour-aller-plus-loin" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Pour aller plus loin
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                <a id="__skip" tabindex="-1"></a>
+                
+                  
+
+  
+    <a href="https://github.com/hardisgroupcom/sfdx-hardis-training/edit/main/labs/fr/level-1-contributor-basics/1-2-create-your-dev-hub-scratch-orgs-and-pipeline.md" title="Editer cette page" class="md-content__button md-icon" rel="edit">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-file-pen" viewBox="0 0 24 24"><path d="M12.659 22H18a2 2 0 0 0 2-2V8a2.4 2.4 0 0 0-.706-1.706l-3.588-3.588A2.4 2.4 0 0 0 14 2H6a2 2 0 0 0-2 2v9.34"/><path d="M14 2v5a1 1 0 0 0 1 1h5M10.378 12.622a1 1 0 0 1 3 3.003L8.36 20.637a2 2 0 0 1-.854.506l-2.867.837a.5.5 0 0 1-.62-.62l.836-2.869a2 2 0 0 1 .506-.853z"/></svg>
+    </a>
+  
+  
+
+
+<h1 id="lab-12-creer-votre-dev-hub-vos-scratch-orgs-et-votre-pipeline-cicd">Lab 1.2 - Créer votre Dev Hub, vos scratch orgs et votre pipeline CI/CD<a class="headerlink" href="#lab-12-creer-votre-dev-hub-vos-scratch-orgs-et-votre-pipeline-cicd" title="Permanent link">&para;</a></h1>
+<p><strong>Niveau</strong> : 1 Contributeur, les bases</p>
+<p><strong>Durée</strong> : ~30 min, dont l'essentiel à attendre</p>
+<p><strong>Vous allez</strong> : créer une org Salesforce gratuite, et laisser une seule commande la
+transformer en tout ce dont le cours a besoin : trois orgs de plus, une copie du projet, et un
+pipeline câblé dessus.</p>
+<h2 id="la-situation">La situation<a class="headerlink" href="#la-situation" title="Permanent link">&para;</a></h2>
+<p><strong>Ce lab n'est pas le métier, et rien de tout cela n'arrive sur un vrai projet.</strong></p>
+<p>Là-bas, tout cela existe avant votre arrivée : les orgs ont été créées par celui ou celle qui a
+monté le projet, le repository est là depuis des années, et sa pipeline déploie depuis des mois.
+Vous arriveriez, vous ouvririez le projet, et vous commenceriez sur un ticket.</p>
+<p>Ce cours ne peut pas vous prêter l'environnement d'une équipe, il vous en fait donc construire un
+petit. Vous faites deux choses à la main, vous inscrire à une org et la connecter, et une commande
+fait le reste pendant que vous lisez. Le travail commence au <a href="../1-3-start-a-user-story-on-a-git-branch/">Lab 1.3</a>, et tout ce qui suit ressemble
+à une vraie journée.</p>
+<h2 id="avant-de-commencer">Avant de commencer<a class="headerlink" href="#avant-de-commencer" title="Permanent link">&para;</a></h2>
+<ul class="task-list">
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <a href="../1-1-install-vs-code-and-sfdx-hardis/">Lab 1.1</a> terminé : le panneau Setup tout vert</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> Un compte GitHub</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> Une adresse e-mail que vous pouvez consulter</li>
+</ul>
+<div class="admonition info">
+<p class="admonition-title">Si vous n'avez pas de compte GitHub</p>
+<p>En créer un prend deux minutes et ne coûte rien. Ouvrez
+<a href="https://github.com/signup">github.com/signup</a> et donnez une adresse e-mail, un mot de passe et
+un nom d'utilisateur. GitHub vous envoie un code par e-mail pour confirmer l'adresse, et c'est
+tout : le plan gratuit fait tout ce dont ce cours a besoin, et il ne demande jamais de carte.</p>
+<p>Choisissez le nom d'utilisateur avec un minimum de soin. Il devient une partie de l'adresse de
+tout ce que vous mettrez là-bas, <code>github.com/&lt;votre-nom-utilisateur&gt;/sfdx-hardis-training</code> dans
+quelques minutes, et les gens le lisent. Votre nom, ou le pseudo que vous utilisez déjà
+ailleurs, vaut mieux que tout ce que vous voudrez changer plus tard.</p>
+<p><strong>Si vous avez déjà un compte, servez-vous-en.</strong> Personnel ou professionnel, ancien ou nouveau,
+cela ne change rien ici. La seule chose à savoir sur un compte professionnel : certaines
+entreprises restreignent ce que leurs membres ont le droit de forker. Si le fork de l'étape 5
+est refusé, c'est pour cela, et un compte personnel vous débloque.</p>
+</div>
+<h2 id="les-etapes">Les étapes<a class="headerlink" href="#les-etapes" title="Permanent link">&para;</a></h2>
+<h3 id="1-creer-votre-org-developer-edition">1. Créer votre org Developer Edition<a class="headerlink" href="#1-creer-votre-org-developer-edition" title="Permanent link">&para;</a></h3>
+<p>Allez sur <a href="https://developer.salesforce.com/signup">developer.salesforce.com/signup</a> et
+inscrivez-vous. C'est gratuit, cela n'expire jamais tant que vous l'utilisez, et aucune carte
+bancaire n'est demandée.</p>
+<p>Le formulaire demande vos prénom, nom, intitulé de poste, entreprise et pays ou région, puis trois
+choses qui décident si l'inscription aboutit :</p>
+<ol>
+<li><strong>Work email</strong> <span class="pill-ref pill-ref-1">(1)</span>, une vraie adresse que vous pouvez consulter, parce que l'inscription est
+   confirmée par e-mail</li>
+<li>la case qui accepte le <strong>Main Services Agreement</strong> <span class="pill-ref pill-ref-2">(2)</span>. La case de pixel de suivi en dessous
+   est facultative, vous pouvez la laisser tranquille</li>
+<li><strong>Sign me up</strong> <span class="pill-ref pill-ref-3">(3)</span></li>
+</ol>
+<p><a class="glightbox" data-type="image" href="../../../_assets/annotated/web/sf-signup.png"><img alt="Le formulaire d'inscription Salesforce Developer Edition" src="../../../_assets/annotated/web/sf-signup.png" /></a></p>
+<p>Vous ne choisissez pas de nom d'utilisateur : il est généré et vous est envoyé. Ouvrez l'e-mail de
+confirmation et définissez un mot de passe. L'e-mail porte aussi ce nom d'utilisateur. Il ressemble
+à une adresse e-mail mais n'en est pas une, et c'est avec lui que vous vous connectez. Gardez-le
+quelque part.</p>
+<p>C'est la seule org à laquelle vous vous inscrivez, et elle a deux rôles dans ce cours :</p>
+<table>
+<thead>
+<tr>
+<th>Quand</th>
+<th>Ce qu'est cette org</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Niveaux 1 et 2</td>
+<td>Votre <strong>Dev Hub</strong> : l'org qui crée les trois autres, et rien de plus</td>
+</tr>
+<tr>
+<td>Niveau 3</td>
+<td>La <strong>production</strong>, dernier arrêt de la pipeline que vous aurez fini de monter d'ici là</td>
+</tr>
+</tbody>
+</table>
+<div class="admonition info">
+<p class="admonition-title">Les scratch orgs, en un paragraphe</p>
+<p>Une <strong>scratch org</strong> est une org Salesforce temporaire qu'une commande crée en deux minutes, à
+partir d'une org appelée <strong>Dev Hub</strong>. Elle démarre vide, vit jusqu'à 30 jours, et se jette quand
+vous avez fini. Les équipes s'en servent parce qu'une org neuve que personne n'a touchée est
+l'endroit le plus honnête où tester un déploiement. Une org Developer Edition gratuite peut
+jouer le rôle de Dev Hub et garder <strong>trois scratch orgs</strong> vivantes à la fois, ce qui est
+exactement le nombre qu'utilise ce cours.</p>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Une org Developer Edition est désactivée après une longue période d'inactivité. Terminez un niveau en quelques semaines et vous ne rencontrerez jamais ce cas.</p>
+</div>
+<h3 id="2-la-connecter-dans-orgs-manager">2. La connecter dans Orgs Manager<a class="headerlink" href="#2-la-connecter-dans-orgs-manager" title="Permanent link">&para;</a></h3>
+<p>De retour dans VS Code, sur la Welcome page, cliquez sur <strong>Orgs Manager</strong>.</p>
+<p><a class="glightbox" data-type="image" href="../../../_assets/annotated/vscode/orgs-manager.png"><img alt="Le tableau Orgs Manager, avec les orgs de formation et leur état de connexion" src="../../../_assets/annotated/vscode/orgs-manager.png" /></a></p>
+<p>L'image a été prise à la fin de ce lab. Pour l'instant votre tableau est vide.</p>
+<div class="admonition info">
+<p class="admonition-title">Org connectée, org par défaut</p>
+<p>Une org est <strong>connectée</strong> quand la CLI Salesforce de votre machine détient un token pour elle :
+VS Code peut l'ouvrir et y travailler sans vous demander de mot de passe. Vous pouvez avoir
+plusieurs orgs connectées en même temps, et ce tableau les liste toutes.</p>
+<p>L'<strong>org par défaut</strong> est celle d'entre elles sur laquelle une commande travaille quand personne
+ne lui dit quelle org utiliser. Il n'y en a qu'une à la fois, la section Status du panneau
+sfdx-hardis la nomme, et c'est dans ce panneau-ci que vous en changez.</p>
+</div>
+<ol>
+<li>Cliquez sur <strong>Add Org</strong> <span class="pill-ref pill-ref-1">(1)</span>. S'il vous demande <strong>Do you want to set the selected org as
+   your default org?</strong>, répondez <strong>Yes</strong> : c'est ce qui pointe la suite du cours sur cette org
+   sans redemander</li>
+<li>Choisissez <strong>🌍 Login to another org</strong>, la première entrée de la liste qui s'ouvre</li>
+<li>On vous demande à quelle adresse vous connecter, et la sandbox est proposée. <strong>Changez-la</strong> :
+   prenez <strong>☢️ Other: Dev org, Production org or DevHub org (login.salesforce.com)</strong>, parce qu'une
+   org Developer Edition n'est pas une sandbox. Choisissez la réponse sandbox ici et la page de
+   connexion refuse votre nom d'utilisateur</li>
+<li>Votre navigateur ouvre la page de connexion Salesforce. Si elle propose déjà des noms
+   d'utilisateur enregistrés, cliquez d'abord sur <strong>Log In with Different Username</strong>, puis
+   utilisez celui reçu par e-mail</li>
+<li>Salesforce affiche <strong>Allow Access?</strong> pour la CLI Salesforce. Cliquez sur <strong>Allow</strong>. C'est cet
+   écran qui remet à la CLI le token qu'elle range sur votre machine : le refuser laisse l'org
+   non connectée</li>
+</ol>
+<p>De retour dans VS Code, le panneau vous demande encore une chose :</p>
+<p><a class="glightbox" data-type="image" href="../../../_assets/annotated/vscode/org-select-alias.png"><img alt="Le panneau demandant quel nom donner à l'org qui vient d'être connectée" src="../../../_assets/annotated/vscode/org-select-alias.png" /></a></p>
+<p><strong>What name do you want to give this org?</strong> La zone <span class="pill-ref pill-ref-1">(1)</span> est déjà remplie avec une suggestion,
+tirée de l'adresse web de l'org elle-même. Sur une Developer Edition, cette adresse est une chaîne
+inventée par Salesforce, <code>orgfarm-9f2a1c7e4b</code> ou quelque chose d'approchant, qui ne vous dit rien de
+ce à quoi sert l'org.</p>
+<p><strong>Remplacez-la par <code>helios-prod</code></strong>, puis cliquez sur <strong>Validate</strong> <span class="pill-ref pill-ref-2">(2)</span>.</p>
+<p>Production peut sembler un bien grand nom pour une org vide. C'est le rôle qu'aura cette org à la fin
+du cours, et lui donner son nom définitif maintenant évite d'avoir à renommer quoi que ce soit plus
+tard.</p>
+<p>Ce nom s'appelle un <strong>alias</strong>, et c'est lui que vous verrez et cliquerez désormais : dans ce panneau,
+dans le diagramme de la pipeline, partout où le cours nomme une org. Les trois orgs créées à l'étape 5
+reçoivent le leur automatiquement, et elles apparaissent dans ce tableau sous ces noms <span class="pill-ref pill-ref-2">(2)</span>,
+chacune avec un <strong>Connected</strong> vert <span class="pill-ref pill-ref-3">(3)</span>. <strong>C'est par ce panneau que vous vous connectez à une org
+pour tout le reste du cours</strong>, et c'est aussi là que vous vérifiez sur quelle org vous êtes pointé,
+ce qui évite plus de confusions que n'importe quoi d'autre dans cette formation.</p>
+<details>
+<summary>Sous le capot : ce que connecter une org vient de faire</summary>
+<p>Le panneau a lancé :</p>
+<div class="highlight"><pre><span></span><code>sf hardis:org:select
+</code></pre></div>
+<p>qui a ouvert votre navigateur, laissé Salesforce vous authentifier, et rangé un refresh token OAuth
+dans votre profil utilisateur (<code>~/.sfdx</code>). Rien n'est stocké dans le projet, et rien n'est commité :
+l'identifiant est à vous et reste sur votre machine. Puis il a nommé l'org :</p>
+<div class="highlight"><pre><span></span><code>sf alias set helios-prod=you.helios@heliostraining.invalid
+</code></pre></div>
+<p>L'alias est le nom que tout le reste utilise. Toute commande sfdx-hardis qui veut une org accepte
+désormais <code>--target-org helios-prod</code>, et la CLI Salesforce elle-même aussi.</p>
+<!-- command-links:start -->
+<p>Documentation de la commande : <a href="https://sfdx-hardis.cloudity.com/hardis/org/select/">hardis:org:select</a></p>
+<!-- command-links:end -->
+</details>
+<h3 id="3-recuperer-le-repository">3. Récupérer le repository<a class="headerlink" href="#3-recuperer-le-repository" title="Permanent link">&para;</a></h3>
+<p>Il vous faut le projet de formation sur votre machine avant que la commande de l'étape 5 puisse en
+construire quoi que ce soit. Prenez la copie de l'équipe pour l'instant : elle est en lecture seule,
+et l'étape 5 la transforme en la vôtre.</p>
+<p>Dans VS Code, sans dossier ouvert, cliquez sur l'icône <strong>Source Control</strong> <span class="pill-ref pill-ref-1">(1)</span> dans la barre
+étroite de gauche. Elle propose deux boutons. Prenez <strong>Clone Repository</strong> <span class="pill-ref pill-ref-2">(2)</span>.</p>
+<p><a class="glightbox" data-type="image" href="../../../_assets/annotated/vscode/clone-repository.png"><img alt="Le panneau Source Control de VS Code avant l'ouverture d'un dossier" src="../../../_assets/annotated/vscode/clone-repository.png" /></a></p>
+<p>Puis :</p>
+<ol>
+<li>Collez <code>https://github.com/hardisgroupcom/sfdx-hardis-training.git</code> et appuyez sur Entrée</li>
+<li>Choisissez le dossier où le mettre. VS Code crée un dossier <code>sfdx-hardis-training</code> à l'intérieur
+   de celui que vous choisissez : choisissez donc l'endroit où vous voulez que vivent <strong>tous</strong> vos
+   repositories désormais. Si vous n'avez pas encore un tel endroit, créez-en un : <code>C:\git</code> sous Windows,
+   <code>~/git</code> sous macOS et Linux. Chemin court, pas d'espaces, et pas dans OneDrive ni dans un dossier
+   qui se synchronise, parce qu'un client de synchronisation et un repository git se disputent les mêmes
+   fichiers</li>
+<li>Quand on vous le demande, cliquez sur <strong>Open</strong> pour travailler dans le clone</li>
+</ol>
+<p>Si GitHub vous demande de vous connecter, laissez VS Code s'en charger : <strong>Sign in with your
+browser</strong> suffit.</p>
+<div class="admonition note">
+<p class="admonition-title">Vous n'avez pas besoin d'un dossier vide au préalable</p>
+<p><strong>Clone Repository</strong> demande où mettre le projet, il n'y a donc rien à préparer. Les deux boutons
+de l'image n'apparaissent que tant qu'aucun dossier n'est ouvert : dès qu'il y en a un, le
+panneau Source Control affiche les modifications de ce dossier à la place.</p>
+</div>
+<div class="admonition tip">
+<p class="admonition-title">Dans Agentforce Vibes, gardez le dossier proposé</p>
+<p>L'onglet ouvre son propre espace de travail, déjà court, déjà hors de tout client de
+synchronisation. Prenez le dossier que la boîte de dialogue propose plutôt que de saisir un
+chemin : il n'y a pas de <code>C:\git</code> à créer, et un chemin que vous inventez là est un endroit
+que l'onglet ne gardera pas forcément.</p>
+</div>
+<details>
+<summary>Sous le capot : ce que l'ouverture du dossier a appris à l'extension</summary>
+<p>L'extension a lu une poignée de fichiers, et elle les relit dès qu'ils changent, vous n'avez donc
+jamais à recharger la fenêtre :</p>
+<ul>
+<li><code>sfdx-project.json</code>, qui dit que les sources Salesforce vivent dans <code>force-app</code></li>
+<li><code>config/.sfdx-hardis.yml</code>, la configuration du projet : branches majeures, règles de nettoyage,
+  menu Training</li>
+<li><code>config/project-scratch-def.json</code>, la forme des scratch orgs que ce projet crée</li>
+<li><code>config/branches/</code>, un fichier par branche majeure, qui dit dans quelle org elle déploie</li>
+</ul>
+<p>Ces fichiers de branche ne contiennent rien de vos informations tant que l'étape 5 ne les a pas
+remplis.</p>
+</details>
+<h3 id="4-installer-la-cli-github">4. Installer la CLI GitHub<a class="headerlink" href="#4-installer-la-cli-github" title="Permanent link">&para;</a></h3>
+<div class="admonition tip">
+<p class="admonition-title">Dans Agentforce Vibes, sautez cette étape</p>
+<p><code>gh</code> est déjà installé dans l'onglet. Passez directement à l'étape 5 : la première commande qui
+en a besoin vous connecte, et il ne manque rien ici.</p>
+<p><code>gh</code> ne sert pas qu'à cette étape, et c'est pour cela qu'il vaut la peine de savoir qu'il est
+là. Les commandes derrière <strong>Publish my work</strong>, <strong>Simulate my teammates</strong>, <strong>Check my work</strong> et
+<strong>Claim my badge</strong> l'appellent toutes : il ouvre vos Pull Requests, joue les merges de vos
+collègues, lit les secrets de votre fork pour vérifier un niveau, et regarde votre étoile et la
+visibilité de votre repository au moment de la réclamation.</p>
+</div>
+<p>Un outil d'abord, et uniquement pour cela. La commande de l'étape 5 utilise la <a href="https://cli.github.com/">CLI
+GitHub</a>, appelée <code>gh</code>, pour faire votre copie du repository et mettre en
+place son automatisation. Sur sa page d'accueil, ouvrez la liste d'installation <span class="pill-ref pill-ref-1">(1)</span> et prenez le
+téléchargement de votre machine : <strong>Windows - Download MSI</strong> <span class="pill-ref pill-ref-2">(2)</span>, ou <strong>macOS - Download
+binary</strong>. Acceptez les valeurs par défaut de l'installeur.</p>
+<p><a class="glightbox" data-type="image" href="../../../_assets/annotated/web/gh-cli-download.png"><img alt="La page d'accueil de la CLI GitHub, avec la liste d'installation ouverte sur le MSI Windows" src="../../../_assets/annotated/web/gh-cli-download.png" /></a></p>
+<div class="admonition warning">
+<p class="admonition-title">Redémarrez VS Code après l'avoir installée</p>
+<p>L'installeur ajoute <code>gh</code> au <strong>PATH</strong>, et un VS Code déjà ouvert ne voit pas le changement avant
+de redémarrer. Fermez VS Code complètement, toutes fenêtres comprises, et rouvrez-le sur le
+projet. Sautez cette étape et l'étape 5 s'arrête aussitôt en disant que la CLI GitHub n'est pas
+installée.</p>
+</div>
+<p>Vous n'aurez jamais à lancer <code>gh</code> vous-même. La commande de l'étape 5 s'en sert et vous connecte via
+votre navigateur la première fois qu'elle en a besoin.</p>
+<div class="admonition note">
+<p class="admonition-title">Celle-ci est pour le cours, et pour GitHub</p>
+<p>Elle est là pour qu'un seul clic puisse vous remettre une pipeline qui marche au lieu d'une
+douzaine de formulaires. Rien d'autre dans le cours n'en a besoin, et rien dans sfdx-hardis non
+plus : ce projet vit sur GitHub, et les projets GitLab, Azure DevOps et Bitbucket fonctionnent
+exactement pareil sans elle. Sur un vrai projet vous rejoindriez un repository qui existe déjà, avec
+son automatisation déjà en marche, et vous n'installeriez jamais ceci.</p>
+</div>
+<h3 id="5-mettre-en-place-votre-environnement-de-formation">5. Mettre en place votre environnement de formation<a class="headerlink" href="#5-mettre-en-place-votre-environnement-de-formation" title="Permanent link">&para;</a></h3>
+<p>Rouvrez la Welcome page. Au-dessus des cartes intégrées se trouve un titre <strong>CUSTOM MENUS</strong> <span class="pill-ref pill-ref-1">(1)</span>,
+qui contient trois cartes <span class="pill-ref pill-ref-2">(2)</span>, une par niveau.</p>
+<p><a class="glightbox" data-type="image" href="../../../_assets/annotated/vscode/welcome--training-menu.png"><img alt="La Welcome page, avec le groupe CUSTOM MENUS et les trois cartes Training" src="../../../_assets/annotated/vscode/welcome--training-menu.png" /></a></p>
+<div class="admonition note">
+<p class="admonition-title">D'où viennent ces cartes</p>
+<p>Elles ne font pas partie du produit. N'importe quel projet peut déclarer ses propres menus dans
+son <code>config/.sfdx-hardis.yml</code>, et l'extension les affiche ici, marqués <code>(custom)</code>, pour que vous
+puissiez toujours distinguer les commandes d'un projet de celles que sfdx-hardis livre. Ce projet
+déclare un menu par niveau, et chacun ne contient que les commandes de ce niveau.</p>
+</div>
+<p>Cliquez sur <strong>Training: Level 1</strong>, puis sur <strong>Set up my training environment</strong> <span class="pill-ref pill-ref-1">(1)</span>.</p>
+<p>La première fois que vous cliquez sur une carte Training, VS Code ne la lance pas. Il demande comment
+vous voulez l'autoriser <span class="pill-ref pill-ref-2">(2)</span>, et affiche la commande qu'il s'apprête à lancer. Un menu
+personnalisé lance quelque chose que le projet a écrit, pas quelque chose que l'extension livre :
+l'extension refuse donc de le lancer dans votre dos. Lisez la ligne, vérifiez qu'elle dit
+<code>node scripts/training.mjs</code>, puis cliquez sur <strong>Always allow</strong> <span class="pill-ref pill-ref-3">(3)</span>.</p>
+<p><a class="glightbox" data-type="image" href="../../../_assets/annotated/vscode/training-menu-authorization.png"><img alt="VS Code demandant comment autoriser la commande Training, avec Always allow" src="../../../_assets/annotated/vscode/training-menu-authorization.png" /></a></p>
+<p><strong>Always allow</strong> répond pour tout le menu, pas seulement pour cette carte. Les entrées Training des
+trois niveaux cessent de demander, et rien d'autre ne cesse : l'extension reconnaît une commande
+Training à sa forme et au repository que vous avez cloné, donc une commande personnalisée de
+n'importe quel autre projet vous demandera toujours d'abord, dans ce dossier comme dans tous les
+autres.</p>
+<div class="admonition warning">
+<p class="admonition-title">Lisez la ligne avant d'autoriser</p>
+<p><strong>Allow once</strong> ne lance que cette fois-ci, <strong>Always allow</strong> s'en souvient. Les deux conviennent
+ici : vous voyez ce qui est lancé, et le repository est celui que vous avez cloné. Sur un projet monté
+par quelqu'un d'autre, lisez d'abord cette ligne. C'est le seul moment où quoi que ce soit vous
+montre ce que fait vraiment un menu personnalisé.</p>
+</div>
+<div class="admonition tip">
+<p class="admonition-title">La première chose qu'elle fait, c'est vous connecter à GitHub</p>
+<p>L'étape 1 des huit ci-dessous fait votre copie du repository, et cela demande votre compte
+GitHub. La commande s'arrête sur une ligne du genre <code>Your one-time code is 5989-F9D9</code> et ouvre
+<a href="https://github.com/login/device">github.com/login/device</a> dans votre navigateur. Saisissez le
+code là-bas, puis <strong>acceptez tout ce que github.com demande</strong> : l'écran d'autorisation et
+chacune des permissions listées. Il demande à créer un repository dans votre compte et à écrire
+les secrets que lisent les jobs CI, c'est-à-dire exactement ce que fait cette étape. Revenez
+dans VS Code, la commande repart toute seule et ne redemandera plus rien.</p>
+<p>Si le navigateur ne s'est pas ouvert, l'adresse est affichée juste sous le code. Dans
+Agentforce Vibes il ne s'ouvre pas tout seul : cliquez sur le lien affiché.</p>
+</div>
+<div class="admonition tip">
+<p class="admonition-title">Puis il vous demande un clic sur GitHub</p>
+<p>GitHub désactive les workflows de chaque nouveau fork, derrière une bannière qu'aucune commande
+ne peut presser. L'étape 2 des huit ouvre l'onglet <strong>Actions</strong> de votre fork dans votre
+navigateur, et attend. Cliquez sur <strong>I understand my workflows, go ahead and enable them</strong>,
+revenez dans VS Code, et la commande continue toute seule. Sans ce clic, rien ne vérifierait ni
+ne déploierait jamais votre travail.</p>
+</div>
+<p>La commande ne demande pas quelle org utiliser : vous en avez connecté une, nommée <code>helios-prod</code>,
+elle prend donc celle-là, le dit, et ne demande qu'un oui avant de changer quoi que ce soit. Puis
+elle déroule huit étapes et vous tient au courant au fur et à mesure :</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>Developer Edition org: helios-prod
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>1 of 8  Your own copy of the repository
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>OK  origin is now your-handle/sfdx-hardis-training, and the shared repository is upstream.
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>2 of 8  Actions turned on
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>OK  Actions are on.
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>3 of 8  Your Dev Hub
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>OK  helios-prod is a Dev Hub now.
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>4 of 8  Your three scratch orgs
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>OK  helios-dev is created, for 30 days.
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>OK  helios-integration is created, for 30 days.
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>OK  helios-uat is created, for 30 days.
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>5 of 8  The Helios app in each of them
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>OK  helios-dev holds the app, your permission set and the sample data.
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>...
+<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>
+<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>6 of 8  The credentials the CI jobs use
+<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>OK  SFDX_AUTH_URL_INTEGRATION is set on your-handle/sfdx-hardis-training.
+<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>OK  SFDX_AUTH_URL_UAT is set on your-handle/sfdx-hardis-training.
+<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>
+<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a>7 of 8  Which org each branch deploys to
+<a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a>OK  integration now names the org of every branch, and is pushed.
+<a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a>
+<a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a>8 of 8  Changes through a Pull Request, merged once green
+<a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a>OK  integration now takes changes through a Pull Request only, merged once its checks are green.
+<a id="__codelineno-0-30" name="__codelineno-0-30" href="#__codelineno-0-30"></a>OK  uat now takes changes through a Pull Request only, merged once its checks are green.
+</code></pre></div>
+<p>Comptez quinze à vingt minutes, presque entièrement sur les étapes 4 et 5, quand Salesforce crée les
+orgs et que l'application est déployée dans les trois à la fois. Rien ne s'affiche pendant ce
+temps-là. Ce n'est pas bloqué.</p>
+<div class="admonition tip">
+<p class="admonition-title">Dans Agentforce Vibes, c'est beaucoup plus rapide</p>
+<p>Les mêmes huit étapes ont pris environ trois minutes dans l'onglet, parce que la machine qui
+les exécute est à côté de Salesforce et non au bout de votre connexion. Quinze à vingt minutes,
+c'est le chiffre à prévoir sur un portable ; plus rapide est une bonne surprise.</p>
+</div>
+<p>La lancer deux fois est sans danger : chaque étape vérifie avant d'agir, et une org qui existe déjà
+est conservée. Si l'une des étapes ne peut pas être faite depuis ici, elle le dit et vous indique sur
+quel bouton cliquer à la place.</p>
+<details>
+<summary>Sous le capot : ce que "Set up my training environment" vient de faire</summary>
+<p>La carte lance une seule commande, déclarée par ce projet dans <code>config/.sfdx-hardis.yml</code> sous
+<code>customCommands</code> :</p>
+<div class="highlight"><pre><span></span><code>node scripts/training.mjs init
+</code></pre></div>
+<p>qui à son tour lance de vraies commandes que vous retrouverez sur de vrais projets. Le Dev Hub est un
+paramètre, déployé comme de la métadonnée. Chaque scratch org, c'est :</p>
+<div class="highlight"><pre><span></span><code>sf org create scratch --definition-file config/project-scratch-def.json \
+  --alias helios-dev --target-dev-hub helios-prod --duration-days 30
+</code></pre></div>
+<p>et chacune est ensuite alimentée :</p>
+<div class="highlight"><pre><span></span><code>sf project deploy start --source-dir force-app --target-org helios-dev
+sf org assign permset --name Helios_Delivery_Manager --target-org helios-dev
+sf hardis:org:data:import --path scripts/data/HeliosBaseline --target-org helios-dev
+</code></pre></div>
+<p>L'ordre de ces trois-là compte, et pas de la façon dont vous l'imagineriez. Un déploiement de
+métadonnées n'accorde <strong>aucune sécurité au niveau des champs à qui que ce soit</strong>, pas même à un
+administrateur système. Chargez les données avant d'affecter le permission set et le chargement
+échoue sur des champs que l'utilisateur courant ne peut pas voir, avec un message d'erreur qui ne
+dit rien des permissions.</p>
+<p>Le chargement de données est un <strong>upsert sur un identifiant externe</strong>, le lancer deux fois met donc à
+jour les mêmes 235 enregistrements au lieu d'en créer 470. Tout ce qui, dans ce cours, peut être
+lancé deux fois, peut être lancé deux fois.</p>
+<p>Il a fait pointer ce dossier vers vos orgs, dans le répertoire <code>.sf</code> ignoré par git :</p>
+<div class="highlight"><pre><span></span><code>sf config set target-dev-hub=helios-prod target-org=helios-dev
+</code></pre></div>
+<p>Et il a protégé <code>integration</code> et <code>uat</code> avec un appel à l'API GitHub par branche : modifications
+uniquement par Pull Request, mergée seulement une fois ses contrôles verts, pour tout le monde. Vous
+poserez la même règle sur <code>preprod</code> et <code>main</code> au <a href="../../level-3-release-manager/3-1-configure-the-pipeline-up-to-production/">Lab 3.1</a> :</p>
+<div class="highlight"><pre><span></span><code>gh api -X PUT repos/&lt;your-handle&gt;/sfdx-hardis-training/branches/integration/protection \
+  -F "required_pull_request_reviews[required_approving_review_count]=0" \
+  -f "required_status_checks[contexts][]=Simulate Deployment to Major Org" \
+  -f "required_status_checks[contexts][]=Mega-Linter" \
+  -F enforce_admins=true ...
+</code></pre></div>
+<p><code>enforce_admins</code> est la partie qui compte : sans elle, le propriétaire du fork, c'est-à-dire vous,
+pourrait encore merger sur du rouge. La mise en place de l'environnement et la réinitialisation d'un
+niveau lèvent cette protection le temps du seul push qu'elles font elles-mêmes sur ces branches, et
+la remettent juste après.</p>
+<!-- command-links:start -->
+<p>Documentation de la commande : <a href="https://sfdx-hardis.cloudity.com/hardis/org/data/import/">hardis:org:data:import</a></p>
+<!-- command-links:end -->
+</details>
+<h3 id="6-ce-quelle-vient-de-faire">6. Ce qu'elle vient de faire<a class="headerlink" href="#6-ce-quelle-vient-de-faire" title="Permanent link">&para;</a></h3>
+<p>Sept choses, chacune du vrai travail sur un vrai projet, et aucune à refaire vous-même :</p>
+<ul>
+<li><strong>Votre propre copie du repository</strong>, son <em>fork</em>, sous votre compte GitHub. Votre clone pousse là-bas
+  désormais, et continue de tirer depuis le repository de l'équipe. Le fork porte les deux branches
+  qu'utilise la pipeline aujourd'hui, <code>integration</code> et <code>uat</code>, plus <code>main</code>. Vous ajouterez <code>preprod</code>
+  vous-même au <a href="../../level-3-release-manager/3-1-configure-the-pipeline-up-to-production/">Lab 3.1</a></li>
+<li><strong>Actions activées.</strong> GitHub désactive les workflows sur chaque nouveau fork jusqu'à ce que le
+  propriétaire dise le contraire, et un fork où ils sont éteints ressemble exactement à une formation
+  cassée</li>
+<li><strong><code>helios-prod</code> est devenue un Dev Hub</strong>, ce qui est un seul interrupteur dans Setup, et ne se
+  rebascule pas</li>
+<li><strong>Trois scratch orgs</strong>, chacune contenant l'application Helios, votre permission set et les données
+  d'exemple :</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>Org</th>
+<th>À quoi elle sert</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>helios-dev</code></td>
+<td>Votre org de développement, celle où vous construisez. Personne d'autre n'y travaille</td>
+</tr>
+<tr>
+<td><code>helios-integration</code></td>
+<td>L'org d'intégration partagée, où le travail de l'équipe est mergé et déployé</td>
+</tr>
+<tr>
+<td><code>helios-uat</code></td>
+<td>La recette utilisateur, où le métier teste ce que l'intégration a rassemblé</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li><strong>Dans quelle org déploie chaque branche</strong>, écrit dans l'unique fichier de configuration par
+  branche du projet, dans <code>config/branches/</code>, commité sur <code>integration</code> et poussé sur votre fork. Le repository ne pouvait pas le savoir : vos orgs
+  n'existaient pas quand il a été écrit. C'est poussé parce que le contrôle du badge clone votre fork et lit
+  ce qui s'y trouve réellement. <code>uat</code> reçoit
+  les mêmes fichiers avec sa première promotion, au <a href="../../level-3-release-manager/3-5-promote-to-uat-and-write-release-notes/">Lab 3.5</a>, comme tout changement qui l'atteint</li>
+<li><strong><code>integration</code> et <code>uat</code> protégées.</strong> Une Pull Request vers l'une ou l'autre ne peut être mergée
+  qu'une fois que tous les contrôles que GitHub lance dessus sont terminés et verts, et cette règle
+  vaut aussi pour vous, propriétaire du fork. Sur un vrai projet, quelqu'un a mis cela en place dès
+  le premier jour : un merge sur un contrôle rouge ne déploie rien, ou la moitié de quelque chose, et
+  c'est la personne suivante qui s'en aperçoit</li>
+<li><strong>Un identifiant par job de CI.</strong> Les jobs de CI sont les jobs automatisés que GitHub lance pour
+  vous, sur ses machines plutôt que sur les vôtres, et ces machines ne peuvent pas atteindre une org
+  Salesforce sans identifiant. Ils sont gardés comme secrets du repository, nommés
+  <code>SFDX_AUTH_URL_INTEGRATION</code> et <code>SFDX_AUTH_URL_UAT</code></li>
+</ul>
+<div class="admonition warning">
+<p class="admonition-title">Les scratch orgs expirent au bout de 30 jours</p>
+<p>C'est le principe des scratch orgs, et cela convient très bien à une formation. Si vous revenez
+au bout d'un mois et qu'une org a disparu, recliquez sur <strong>Set up my training environment</strong>,
+depuis le menu Training du niveau où vous en êtes. Il ne reconstruit que ce qui a expiré, pointe
+la pipeline vers la nouvelle org et met le secret à jour.</p>
+<p>Ne les supprimez pas pour le plaisir : un Dev Hub Developer Edition ne peut créer que quelques
+nouvelles scratch orgs par jour.</p>
+</div>
+<div class="admonition danger">
+<p class="admonition-title">À propos de ces identifiants, et pourquoi ils sont une exception assumée</p>
+<p>Une auth URL SFDX embarque un <strong>refresh token OAuth de longue durée</strong>. Quiconque le lit a votre
+org jusqu'à sa révocation, et il ne peut pas être renouvelé sans se réauthentifier. La
+documentation sfdx-hardis le dit clairement : <a href="https://sfdx-hardis.cloudity.com/salesforce-devops-setup-auth/">ne l'utilisez jamais pour une org
+majeure</a>.</p>
+<p>Ce conseil est juste, et il parle de vraies orgs majeures. Ici les orgs sont des scratch orgs
+jetables contenant des installations solaires fictives, dans un repository qui vous appartient, pour
+une formation. Le marché est le suivant : un débutant atteint une pipeline qui marche dès sa
+première heure au lieu de son deuxième jour.</p>
+<p><strong>Le Lab 3.1 met JWT en place proprement pour <code>preprod</code> et la production</strong>, et explique pourquoi
+chaque org d'un vrai projet en a besoin. Ces deux secrets restent jusqu'à la fin du cours :
+supprimez-les quand vous en avez terminé, quel que soit le niveau où vous vous arrêtez. Les
+scratch orgs, elles, se suppriment toutes seules.</p>
+</div>
+<h3 id="7-laisser-lextension-parler-a-github">7. Laisser l'extension parler à GitHub<a class="headerlink" href="#7-laisser-lextension-parler-a-github" title="Permanent link">&para;</a></h3>
+<p>La commande que vous venez de lancer a utilisé la CLI GitHub. L'<strong>extension</strong> a sa propre connexion à
+GitHub, et il lui en faut une aussi : sans elle, le diagramme de la pipeline sait dessiner vos branches
+mais ne sait rien de vos Pull Requests.</p>
+<p>Sur la Welcome page, cliquez sur <strong>DevOps Pipeline</strong>. En haut du panneau se trouve une <strong>icône
+GitHub</strong> <span class="pill-ref pill-ref-1">(1)</span>. Elle est <strong>grise</strong> tant que l'extension n'est pas connectée, et son infobulle dit
+<strong>Connect to GitHub</strong>.</p>
+<p><a class="glightbox" data-type="image" href="../../../_assets/annotated/vscode/devops-pipeline-disconnected--github-auth.png"><img alt="Le panneau DevOps Pipeline, avec l'icône GitHub dans son en-tête" src="../../../_assets/annotated/vscode/devops-pipeline-disconnected--github-auth.png" /></a></p>
+<p>Cliquez dessus. VS Code demande <strong>How would you like to authenticate to GitHub?</strong> et propose deux
+réponses :</p>
+<ul>
+<li><strong>Sign in with VS Code</strong>, qui ouvre votre navigateur et qui est ce qu'il vous faut ici</li>
+<li><strong>Use Personal Access Token (PAT)</strong>, pour un hébergeur auquel VS Code ne sait pas se connecter, ou
+  un compte que vous gardez à part</li>
+</ul>
+<p>Prenez <strong>Sign in with VS Code</strong> et approuvez la demande dans le navigateur. L'icône passe du gris à
+la couleur, son infobulle devient <strong>Connected to GitHub</strong>, et le panneau gagne ce qu'il ne pouvait
+pas montrer avant : les Pull Requests sur vos branches, et le commutateur <strong>Show feature branches</strong>.</p>
+<h3 id="8-regarder-la-pipeline-avant-de-toucher-a-quoi-que-ce-soit">8. Regarder la pipeline avant de toucher à quoi que ce soit<a class="headerlink" href="#8-regarder-la-pipeline-avant-de-toucher-a-quoi-que-ce-soit" title="Permanent link">&para;</a></h3>
+<p><a class="glightbox" data-type="image" href="../../../_assets/annotated/vscode/devops-pipeline-fresh--read-it.png"><img alt="Le panneau DevOps Pipeline après la mise en place : deux branches, chacune avec son org" src="../../../_assets/annotated/vscode/devops-pipeline-fresh--read-it.png" /></a></p>
+<p>Deux branches, deux orgs, et des flèches. C'est tout votre pipeline aujourd'hui, et il mérite une
+minute parce que tous les diagrammes que vous rencontrerez plus tard sont celui-ci avec plus de
+choses dedans.</p>
+<ol>
+<li><strong><code>integration</code></strong> et <strong><code>uat</code></strong> <span class="pill-ref pill-ref-1">(1)</span> sont des branches git, les deux branches <em>majeures</em> que ce
+   projet a pour l'instant. Majeure veut dire que l'équipe les partage : le travail de chacun finit
+   là, et personne ne construit directement dessus</li>
+<li>Les deux boîtes de droite <span class="pill-ref pill-ref-2">(2)</span> sont les orgs Salesforce que ces branches possèdent, celles que
+   la mise en place a nommées <code>helios-integration</code> et <code>helios-uat</code>. Le diagramme les étiquette
+   d'après leur branche, on lit donc <strong>Integration</strong> et <strong>Uat</strong>. Une branche, une org, et cet
+   appariement est ce que la mise en place que vous venez de lancer a écrit</li>
+<li>Les <strong>flèches</strong> <span class="pill-ref pill-ref-3">(3)</span> sont les déploiements, et le chemin que prend le travail. Tout ce qui
+   atteint <code>integration</code> est déployé dans son org par un robot, sans que personne ne clique sur quoi
+   que ce soit. Faire avancer le travail d'<code>integration</code> vers <code>uat</code> est une <strong>promotion</strong>, et c'est
+   le travail du release manager, ce que le Niveau 3 fait de vous</li>
+</ol>
+<p>Rien d'autre n'est dessiné, parce que rien d'autre n'existe encore. Vous n'avez aucune branche à vous
+en cours et aucune Pull Request ouverte, le diagramme n'a donc rien à ajouter. Le <a href="../1-3-start-a-user-story-on-a-git-branch/">Lab 1.3</a> pose la
+première boîte à gauche de cette image, et à partir de là elle se remplit.</p>
+<p>Votre <code>helios-dev</code> n'est pas dans le diagramme non plus, et c'est correct : le diagramme montre où le
+travail est déployé, et rien n'est jamais déployé dans l'org où vous construisez.</p>
+<div class="admonition note">
+<p class="admonition-title"><code>preprod</code> et <code>main</code> manquent exprès</p>
+<p>Votre fork a une branche <code>main</code>, et pas encore de
+<code>preprod</code>, et le diagramme ne montre ni l'une ni l'autre : une branche ne fait partie de la pipeline
+qu'à partir du moment où quelqu'un dit dans quelle org elle déploie, et personne ne l'a fait.</p>
+<p>C'est la forme de ce cours. Les niveaux 1 et 2 sont le travail d'un contributeur, qui se passe
+entre une branche de feature et <code>integration</code>. Le niveau 3 est le travail d'un release manager,
+et son premier lab câble <code>preprod</code> et <code>main</code> dans ce même diagramme, avec <code>helios-prod</code> en
+production.</p>
+</div>
+<h2 id="ce-que-vous-devez-voir">Ce que vous devez voir<a class="headerlink" href="#ce-que-vous-devez-voir" title="Permanent link">&para;</a></h2>
+<p>De retour dans le panneau DevOps Pipeline, cliquez sur <strong>Refresh</strong>. <code>integration</code> et <code>uat</code>, chacune
+avec son org, et l'icône GitHub en haut en couleur plutôt qu'en gris. Dans <strong>Orgs Manager</strong>, quatre
+orgs : <code>helios-prod</code>, <code>helios-dev</code>, <code>helios-integration</code> et <code>helios-uat</code>, toutes <strong>Connected</strong>.</p>
+<p>C'est toute la plomberie, et la dernière que vous verrez. À partir du <a href="../1-3-start-a-user-story-on-a-git-branch/">Lab 1.3</a> vous faites le métier
+au lieu de vous préparer à le faire : un ticket, une branche, une modification, une Pull Request, un
+déploiement.</p>
+<details class="troubleshoot">
+<summary>En cas de problème</summary>
+<p><strong>Il dit que la CLI GitHub n'est pas installée, alors que vous venez de l'installer.</strong>
+VS Code était ouvert pendant l'installation et ne la voit pas encore. Fermez VS Code complètement,
+rouvrez-le, et recliquez sur la carte. Si le message persiste, installez-la depuis
+<a href="https://cli.github.com/">cli.github.com</a>, comme le montre l'étape 4. Dans Agentforce Vibes elle
+est déjà là : rechargez l'onglet du navigateur au lieu de redémarrer VS Code.</p>
+<p><strong>Il dit que le fork n'a pas pu être créé.</strong>
+Lisez ce que la GitHub CLI a dit, juste au-dessus : elle donne la raison. Quand GitHub a refusé le
+fork, les raisons habituelles sont un repository de ce nom déjà présent dans votre compte, un compte
+d'organisation qui n'autorise pas les forks, ou une connexion à qui la permission de créer des
+repositories n'a pas été donnée. Quelle que soit la raison, faites le fork vous-même, c'est un seul
+écran :</p>
+<ol>
+<li>Ouvrez <a href="https://github.com/hardisgroupcom/sfdx-hardis-training/fork">github.com/hardisgroupcom/sfdx-hardis-training/fork</a></li>
+<li>Laissez le propriétaire sur votre propre compte et le nom sur <code>sfdx-hardis-training</code></li>
+<li><strong>Décochez "Copy the <code>main</code> branch only"</strong>. Le cours a besoin de toutes les branches, et c'est
+   de loin la façon la plus courante de se retrouver avec un fork incapable de fonctionner</li>
+<li>Cliquez sur <strong>Create fork</strong>, et attendez que la page arrive sur votre copie</li>
+</ol>
+<p>Recliquez ensuite sur <strong>Set up my training environment</strong> : il voit le fork, le dit, et enchaîne sur
+tout le reste. Si GitHub dit que le nom est déjà pris, ouvrez le repository qui le porte déjà : si
+c'est un ancien fork de ce cours, servez-vous-en ; sinon, renommez-le et forkez à nouveau.</p>
+<p><strong>Il dit qu'aucune org connectée n'a été trouvée.</strong>
+L'étape 2 n'est pas finie : connectez votre org Developer Edition dans <strong>Orgs Manager</strong> et nommez-la
+<code>helios-prod</code>.</p>
+<p><strong>Il dit que le Dev Hub n'a pas pu être activé.</strong>
+Ouvrez <code>helios-prod</code> depuis <strong>Orgs Manager</strong>, allez dans <strong>Setup</strong>, tapez <code>Dev Hub</code> dans la zone
+Quick Find, activez <strong>Enable Dev Hub</strong>, puis recliquez sur la carte.</p>
+<p><strong>Il dit que le Dev Hub a déjà ses scratch orgs actives.</strong>
+Un Dev Hub Developer Edition en garde trois vivantes à la fois, et quelque chose d'autre consomme le
+quota. Ouvrez <code>helios-prod</code>, puis <strong>App Launcher &gt; Active Scratch Orgs</strong>, supprimez celles que ce
+cours n'a pas créées, et recliquez sur la carte.</p>
+<p><strong>Il dit que le quota quotidien est épuisé.</strong>
+Vous avez créé et supprimé des scratch orgs plusieurs fois aujourd'hui. Le quota revient sous 24
+heures : recliquez sur la carte demain, et tout ce qui est déjà fait est conservé. Supprimer une
+scratch org ne rend pas son quota, résistez donc à l'envie de supprimer et recréer :
+<strong>Reset this level</strong> remet les branches en place et ne supprime jamais une org, et <strong>Clean up a training
+org</strong> en vide une sans la supprimer.</p>
+<p><strong>Une commande échoue avec <code>TotalRequests Limit exceeded</code>.</strong>
+Une org Developer Edition répond à un nombre fixe d'appels API par jour, et une longue session de
+déploiements, d'alimentation et de monitoring peut les épuiser. Rien n'est cassé et rien n'est
+perdu : votre travail est sur votre fork. Le quota revient au fil des heures qui suivent, c'est donc
+le moment de lire les blocs Sous le capot des labs que vous avez faits, et de revenir cliquer plus
+tard.</p>
+<p><strong>Il dit qu'Actions n'a pas pu être activé depuis ici, ou que des workflows sont encore en attente.</strong>
+GitHub cache cet interrupteur derrière une bannière sans API, et la commande a cessé d'attendre
+votre clic. Ouvrez l'onglet <strong>Actions</strong> de votre fork (<code>github.com/my-username/sfdx-hardis-training</code>)
+et cliquez sur <strong>I understand my workflows, go ahead and enable them</strong>. Puis recliquez sur <strong>Set up
+my training environment</strong>, qui vérifie qu'ils tournent. Son push précédent sur <code>integration</code> n'a
+rien lancé, et rien au Niveau 1 n'en dépend : votre premier merge déploie de toute façon dans
+<code>integration</code>. Une Pull Request que vous avez déjà ouverte ne reçoit pas de contrôles toute
+seule, en revanche : lancez une fois <strong>Training: Level 1 &gt; Trigger my workflows</strong> pour elle.</p>
+<p><strong>L'onglet Actions n'affiche aucun workflow.</strong>
+Vous avez forké à la main à un moment donné en laissant "Copy the <code>main</code> branch only" coché.
+Supprimez le fork sur GitHub et recliquez sur <strong>Set up my training environment</strong> : il ne copie jamais
+la branche par défaut toute seule.</p>
+<p><strong>Le diagramme de la pipeline est vide.</strong>
+L'extension n'a pas trouvé <code>config/.sfdx-hardis.yml</code>. Vous avez ouvert le mauvais dossier : ce doit
+être la racine du clone, le dossier qui contient directement <code>sfdx-project.json</code>.</p>
+<p><strong>La pipeline affiche des branches mais aucune Pull Request.</strong>
+L'extension n'est pas connectée à GitHub. C'est l'étape 7, et l'icône en haut du panneau est grise.</p>
+<p><strong>VS Code n'arrive pas à pousser et redemande des identifiants en boucle.</strong>
+Déconnectez-vous de GitHub dans VS Code (icône <strong>Accounts</strong>, en bas à gauche) et reconnectez-vous
+avec votre navigateur.</p>
+</details>
+<h2 id="verifiez-votre-travail">Vérifiez votre travail<a class="headerlink" href="#verifiez-votre-travail" title="Permanent link">&para;</a></h2>
+<p>Welcome page &gt; <strong>Training: Level 1</strong> &gt; <strong>Check my work</strong>, puis choisissez le <strong>Lab 1.2</strong>.</p>
+<h2 id="pour-aller-plus-loin">Pour aller plus loin<a class="headerlink" href="#pour-aller-plus-loin" title="Permanent link">&para;</a></h2>
+<ul>
+<li><a href="https://sfdx-hardis.cloudity.com/salesforce-devops-clone-repository/">Cloner le repository</a></li>
+<li><a href="https://sfdx-hardis.cloudity.com/salesforce-devops-git-tokens/">Créer un token d'accès Git</a></li>
+<li><a href="https://sfdx-hardis.cloudity.com/salesforce-devops-setup-auth-github/">Authentification GitHub Actions</a></li>
+</ul>
+<p><a class="md-button md-button--primary" href="../1-3-start-a-user-story-on-a-git-branch/">Suite : Lab 1.3 - Démarrer une User Story sur sa propre branche Git</a></p>
+
+
+
+
+
+
+
+
+
+  
+  
+
+
+
+  
+
+
+
+
+  <h2 id="__comments">Questions and comments</h2>
+  <script src="https://giscus.app/client.js"
+          data-repo="hardisgroupcom/sfdx-hardis-training"
+          data-repo-id="R_kgDOUcjgQw"
+          data-category="Q&amp;A"
+          data-category-id="DIC_kwDOUcjgQ84DF-lC"
+          data-mapping="pathname"
+          data-strict="1"
+          data-reactions-enabled="1"
+          data-emit-metadata="0"
+          data-input-position="top"
+          data-theme="preferred_color_scheme"
+          data-lang="en"
+          data-loading="lazy"
+          crossorigin="anonymous"
+          async>
+  </script>
+
+  <script>
+    // Keep the Giscus iframe in sync with the palette toggle. It is a
+    // cross-origin frame, so its theme can only be changed by postMessage.
+    (function () {
+      if (window.__giscusThemeSync) {
+        return;
+      }
+      window.__giscusThemeSync = true;
+      var giscusTheme = function () {
+        var scheme = document.body.getAttribute("data-md-color-scheme");
+        return scheme === "slate" ? "dark" : "light";
+      };
+      var apply = function () {
+        var frame = document.querySelector("iframe.giscus-frame");
+        if (frame && frame.contentWindow) {
+          frame.contentWindow.postMessage(
+            { giscus: { setConfig: { theme: giscusTheme() } } },
+            "https://giscus.app"
+          );
+        }
+      };
+      new MutationObserver(apply).observe(document.body, {
+        attributes: true,
+        attributeFilter: ["data-md-color-scheme"]
+      });
+      window.addEventListener("message", function (event) {
+        if (event.origin === "https://giscus.app") {
+          apply();
+        }
+      });
+    })();
+  </script>
+
+                
+              </article>
+            </div>
+          
+          
+  <script>var tabs=__md_get("__tabs");if(Array.isArray(tabs))e:for(var set of document.querySelectorAll(".tabbed-set")){var labels=set.querySelector(".tabbed-labels");for(var tab of tabs)for(var label of labels.getElementsByTagName("label"))if(label.innerText.trim()===tab){var input=document.getElementById(label.htmlFor);input.checked=!0;continue e}}</script>
+
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-circle-arrow-up" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="m16 12-4-4-4 4M12 16V8"/></svg>
+  Retour en haut de la page
+</button>
+        
+      </main>
+      
+        
+
+
+
+
+<footer class="md-footer">
+  
+    
+      
+      <nav class="md-footer__inner md-grid" aria-label="Pied de page" >
+        
+          
+          <a href="../1-1-install-vs-code-and-sfdx-hardis/" class="md-footer__link md-footer__link--prev" aria-label="Précédent: Lab 1.1 - Installer VS Code, Git et sfdx-hardis">
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-arrow-left" viewBox="0 0 24 24"><path d="m12 19-7-7 7-7M19 12H5"/></svg>
+            </div>
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Précédent
+              </span>
+              <div class="md-ellipsis">
+                Lab 1.1 - Installer VS Code, Git et sfdx-hardis
+              </div>
+            </div>
+          </a>
+        
+        
+          
+          <a href="../1-3-start-a-user-story-on-a-git-branch/" class="md-footer__link md-footer__link--next" aria-label="Suivant: Lab 1.3 - Démarrer une User Story sur sa propre branche Git">
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Suivant
+              </span>
+              <div class="md-ellipsis">
+                Lab 1.3 - Démarrer une User Story sur sa propre branche Git
+              </div>
+            </div>
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-arrow-right" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+            </div>
+          </a>
+        
+      </nav>
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      Cloudity and friends
+    </div>
+  
+  
+</div>
+      
+        
+<div class="md-social">
+  
+    
+    
+    
+    
+    <a href="https://github.com/hardisgroupcom/sfdx-hardis" target="_blank" rel="noopener" title="sfdx-hardis on GitHub" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.3.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2026 Fonticons, Inc.--><path fill="currentColor" d="M216.5 362.5c-66-8-112.5-55.5-112.5-117 0-25 9-52 24-70-6.5-16.5-5.5-51.5 2-66 20-2.5 47 8 63 22.5 19-6 39-9 63.5-9s44.5 3 62.5 8.5c15.5-14 43-24.5 63-22 7 13.5 8 48.5 1.5 65.5 16 19 24.5 44.5 24.5 70.5 0 61.5-46.5 108-113.5 116.5 17 11 28.5 35 28.5 62.5v52c0 15 12.5 23.5 27.5 17.5C441 459.5 512 369 512 257 512 115.5 397 0 255.5 0S0 115.5 0 257c0 111 70.5 203 165.5 237.5 13.5 5 26.5-4 26.5-17.5v-40c-7 3-16 5-24 5-33 0-52.5-18-66.5-51.5-5.5-13.5-11.5-21.5-23-23-6-.5-8-3-8-6 0-6 10-10.5 20-10.5 14.5 0 27 9 40 27.5 10 14.5 20.5 21 33 21s20.5-4.5 32-16c8.5-8.5 15-16 21-21"/></svg>
+    </a>
+  
+    
+    
+    
+    
+    <a href="https://sfdx-hardis.cloudity.com/" target="_blank" rel="noopener" title="sfdx-hardis documentation" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.3.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2026 Fonticons, Inc.--><path fill="currentColor" d="M384 512H96c-53 0-96-43-96-96V96C0 43 43 0 96 0h304c26.5 0 48 21.5 48 48v288c0 20.9-13.4 38.7-32 45.3V448c17.7 0 32 14.3 32 32s-14.3 32-32 32zM96 384c-17.7 0-32 14.3-32 32s14.3 32 32 32h256v-64zm32-232c0 13.3 10.7 24 24 24h176c13.3 0 24-10.7 24-24s-10.7-24-24-24H152c-13.3 0-24 10.7-24 24m24 72c-13.3 0-24 10.7-24 24s10.7 24 24 24h176c13.3 0 24-10.7 24-24s-10.7-24-24-24z"/></svg>
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog" role="status" aria-atomic="true">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      
+      
+        
+        
+      <script id="__config" type="application/json">{"annotate":null,"base":"../../..","features":["content.action.edit","content.code.copy","content.tabs.link","navigation.instant","navigation.tracking","navigation.top","navigation.footer","search.suggest","search.highlight","toc.follow"],"redirect":null,"search":"../../../assets/javascripts/workers/search.7d14d953.min.js","tags":null,"translations":{"clipboard.copied":"Copié dans le presse-papier","clipboard.copy":"Copier dans le presse-papier","clipboard.error":"Could not copy to clipboard","search.result.more.one":"1 de plus sur cette page","search.result.more.other":"# de plus sur cette page","search.result.none":"Aucun document trouvé","search.result.one":"1 document trouvé","search.result.other":"# documents trouvés","search.result.placeholder":"Taper pour démarrer la recherche","search.result.term.missing":"Non trouvé","select.version":"Sélectionner la version"},"version":null}</script>
+    
+    
+      <script src="../../../assets/javascripts/bundle.8b1c90bd.min.js"></script>
+      
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/tablesort/5.2.1/tablesort.min.js"></script>
+      
+        <script src="../../../theme/javascripts/tables.js"></script>
+      
+        <script src="../../../theme/javascripts/lightbox.js"></script>
+      
+        <script src="../../../theme/javascripts/after-footer.js"></script>
+      
+        <script src="../../../theme/javascripts/language-switch.js"></script>
+      
+    
+  </body>
+</html>

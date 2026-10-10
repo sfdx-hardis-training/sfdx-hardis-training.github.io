@@ -1,0 +1,2340 @@
+
+<!doctype html>
+<html lang="fr" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Modifiez un flow Salesforce existant, puis lisez correctement un contrôle de déploiement de Pull Request en échec et ajoutez le champ que le package avait oublié.">
+      
+      
+      
+        <link rel="canonical" href="https://sfdx-hardis-training.github.io/fr/level-2-contributor-advanced/2-2-fix-a-missing-dependency-deployment-error/">
+      
+      
+        <link rel="prev" href="../2-1-backpromote-your-teammates-work/">
+      
+      
+        <link rel="next" href="../2-3-fix-broken-records-with-an-apex-deployment-action/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../../theme/images/badge-mark.svg">
+      <meta name="generator" content="zensical-0.0.69">
+    
+    
+      
+        <title>Lab 2.2 - Corriger une erreur de déploiement due à une dépendance manquante - Salesforce DevOps with sfdx-hardis</title>
+      
+    
+    
+      
+        
+      
+      <link rel="stylesheet" href="../../../assets/stylesheets/modern/main.e15858d4.min.css">
+      
+        
+          
+        
+        <link rel="stylesheet" href="../../../assets/stylesheets/modern/palette.b27955a4.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+    
+    
+      <link rel="stylesheet" href="../../../theme/stylesheets/extra.css">
+    
+    <script>__md_scope=new URL("../../..",location),__md_scope.pathname.endsWith("/")||(__md_scope=new URL(__md_scope.pathname+"/",location)),__md_hash=e=>[...e].reduce(((e,t)=>(e<<5)-e+t.charCodeAt(0)),0),__md_get=(e,t=localStorage,_=__md_scope)=>JSON.parse(t.getItem(_.pathname+"."+e)),__md_set=(e,t,_=localStorage,a=__md_scope)=>{try{_.setItem(a.pathname+"."+e,JSON.stringify(t))}catch(e){}},document.documentElement.setAttribute("data-platform",navigator.platform)</script>
+    
+      
+  
+
+
+  
+  
+
+<script id="__analytics">function __md_analytics(){function e(){dataLayer.push(arguments)}window.dataLayer=window.dataLayer||[],e("js",new Date),e("config","G-SE20CZ58E1"),document.addEventListener("DOMContentLoaded",(function(){document.forms.search&&document.forms.search.query.addEventListener("blur",(function(){this.value&&e("event","search",{search_term:this.value})}));document$.subscribe((function(){var t=document.forms.feedback;if(void 0!==t)for(var a of t.querySelectorAll("[type=submit]"))a.addEventListener("click",(function(a){a.preventDefault();var n=document.location.pathname,d=this.getAttribute("data-md-value");e("event","feedback",{page:n,data:d}),t.firstElementChild.disabled=!0;var r=t.querySelector(".md-feedback__note [data-md-value='"+d+"']");r&&(r.hidden=!1)})),t.hidden=!1})),location$.subscribe((function(t){e("config","G-SE20CZ58E1",{page_path:t.pathname})}))}));var t=document.createElement("script");t.async=!0,t.src="https://www.googletagmanager.com/gtag/js?id=G-SE20CZ58E1",document.getElementById("__analytics").insertAdjacentElement("afterEnd",t)}</script>
+  
+    <script>"undefined"!=typeof __md_analytics&&__md_analytics()</script>
+  
+
+    
+    
+  
+  
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Salesforce DevOps with sfdx-hardis">
+  <meta property="og:locale" content="fr">
+  <meta property="og:title" content="Lab 2.2 - Corriger une erreur de déploiement due à une dépendance manquante">
+  <meta property="og:description" content="Modifiez un flow Salesforce existant, puis lisez correctement un contrôle de déploiement de Pull Request en échec et ajoutez le champ que le package avait oublié.">
+  <meta property="og:url" content="https://sfdx-hardis-training.github.io/fr/level-2-contributor-advanced/2-2-fix-a-missing-dependency-deployment-error/">
+  <meta property="og:image" content="https://sfdx-hardis-training.github.io/_assets/social/course.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="Lab 2.2 - Corriger une erreur de déploiement due à une dépendance manquante">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Lab 2.2 - Corriger une erreur de déploiement due à une dépendance manquante">
+  <meta name="twitter:description" content="Modifiez un flow Salesforce existant, puis lisez correctement un contrôle de déploiement de Pull Request en échec et ajoutez le champ que le package avait oublié.">
+  <meta name="twitter:image" content="https://sfdx-hardis-training.github.io/_assets/social/course.png">
+
+  <script>
+    (function () {
+      var here = "fr";
+      var alternates = {"en":"en/level-2-contributor-advanced/2-2-fix-a-missing-dependency-deployment-error/","fr":"fr/level-2-contributor-advanced/2-2-fix-a-missing-dependency-deployment-error/"};
+      var base = new URL("../../.." || ".", window.location.href).pathname;
+      try {
+        var asked = new URLSearchParams(window.location.search).get("lang");
+        if (asked) {
+          document.cookie =
+            "course-language=" + encodeURIComponent(asked) + "; path=" + base + "; max-age=31536000; samesite=lax";
+        }
+        var cookie = document.cookie.split("; ").filter(function (one) {
+          return one.indexOf("course-language=") === 0;
+        })[0];
+        if (!cookie) {
+          return;
+        }
+        var preferred = asked || decodeURIComponent(cookie.slice("course-language=".length));
+        if (!preferred || preferred === here) {
+          return;
+        }
+        var target = alternates[preferred];
+        if (typeof target !== "string") {
+          return;
+        }
+        var url = new URL(target, new URL(base, window.location.href)).pathname;
+        if (url !== window.location.pathname) {
+          window.location.replace(url + window.location.search + window.location.hash);
+        }
+      } catch (error) {
+        // A browser with no cookies stays where it is, which is the page asked for
+      }
+    })();
+  </script>
+
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="custom" data-md-color-accent="custom">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer" aria-hidden="true"></label>
+    <div data-md-component="skip">
+      <a href="#__skip" class="md-skip">
+        Aller au contenu
+      </a>
+    </div>
+    <div data-md-component="announce">
+      
+        <aside class="md-banner">
+          <div class="md-banner__inner md-grid md-typeset">
+            
+            
+      <strong>Ce niveau est en phase de relecture.</strong> Il est complet et a été déroulé de bout
+      en bout, et maintenant il a besoin de vous. Si une étape ne fonctionne pas, ou si l'écran ne
+      correspond pas à ce que dit la page, merci de
+      <a href="#__comments">laisser un commentaire en bas de cette page</a>. C'est le moyen le plus
+      rapide de faire corriger le problème, et cela aide la personne suivante.
+    
+          </div>
+          
+        </aside>
+      
+    </div>
+    
+    
+      
+
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="En-tête">
+    <a href="/fr/" title="Salesforce DevOps with sfdx-hardis" class="md-header__button md-logo" aria-label="Salesforce DevOps with sfdx-hardis" data-md-component="logo">
+      
+  <img src="../../../theme/images/cloudity-text-logo-white.svg" alt="Salesforce DevOps with sfdx-hardis">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer" aria-label="Navigation">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-menu" viewBox="0 0 24 24"><path d="M4 5h16M4 12h16M4 19h16"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Salesforce DevOps with sfdx-hardis
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Lab 2.2 - Corriger une erreur de déploiement due à une dépendance manquante
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="none" data-md-color-scheme="default" data-md-color-primary="custom" data-md-color-accent="custom"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="none" data-md-color-scheme="slate" data-md-color-primary="custom" data-md-color-accent="custom"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+      
+
+
+
+  
+
+  
+    
+    
+  
+
+<div class="md-header__option">
+  <div class="md-select md-select--language">
+    <button class="md-header__button md-header__button--flag" aria-label="Sélectionner la langue">
+      
+        <img src="../../../theme/images/flags/fr.svg" alt="Français" class="md-select__flag md-select__flag--current">
+      
+    </button>
+    <div class="md-select__inner">
+      <ul class="md-select__list">
+        
+          
+          <li class="md-select__item"><a href="../../../en/level-2-contributor-advanced/2-2-fix-a-missing-dependency-deployment-error/" hreflang="en" data-course-home="/" class="md-select__link">
+              
+                <img src="../../../theme/images/flags/gb.svg" alt="" class="md-select__flag">
+              
+              English
+            </a>
+          </li>
+        
+          
+          <li class="md-select__item"><a href="././" hreflang="fr" data-course-home="/fr/" class="md-select__link">
+              
+                <img src="../../../theme/images/flags/fr.svg" alt="" class="md-select__flag">
+              
+              Français
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</div>
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search" aria-label="Recherche">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-search" viewBox="0 0 24 24"><path d="m21 21-4.34-4.34"/><circle cx="11" cy="11" r="8"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog" aria-label="Recherche">
+  <button type="button" class="md-search__button">
+    Recherche
+  </button>
+</div>
+      
+    
+    <div class="md-header__source">
+      
+        <a href="https://github.com/hardisgroupcom/sfdx-hardis-training" title="Aller au dépôt" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.3.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2026 Fonticons, Inc.--><path fill="currentColor" d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    hardisgroupcom/sfdx-hardis-training
+  </div>
+</a>
+      
+    </div>
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0" data-course-lang="fr" data-course-base="../../.." data-course-alt-en="en/level-2-contributor-advanced/2-2-fix-a-missing-dependency-deployment-error/" data-course-alt-fr="fr/level-2-contributor-advanced/2-2-fix-a-missing-dependency-deployment-error/">
+  <label class="md-nav__title" for="__drawer">
+    <a href="/fr/" title="Salesforce DevOps with sfdx-hardis" class="md-nav__button md-logo" aria-label="Salesforce DevOps with sfdx-hardis" data-md-component="logo">
+      
+  <img src="../../../theme/images/cloudity-text-logo-white.svg" alt="Salesforce DevOps with sfdx-hardis">
+
+    </a>
+    Salesforce DevOps with sfdx-hardis
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/hardisgroupcom/sfdx-hardis-training" title="Aller au dépôt" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.3.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2026 Fonticons, Inc.--><path fill="currentColor" d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    hardisgroupcom/sfdx-hardis-training
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+      
+    
+      
+      
+      
+    
+      
+      
+      
+    
+      
+      
+      
+    
+      
+      
+      
+    
+      
+      
+      
+    
+      
+      
+      
+    
+      
+      
+      
+        
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Accueil
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+      
+    
+      
+      
+      
+        
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_9" >
+        
+          
+          <label class="md-nav__link" for="__nav_9" id="__nav_9_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Niveau 1 - Contributeur Salesforce DevOps, les bases
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        
+          <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_9_label" aria-expanded="false">
+            <label class="md-nav__title" for="__nav_9">
+              <span class="md-nav__icon md-icon"></span>
+              
+  
+  Niveau 1 - Contributeur Salesforce DevOps, les bases
+
+            </label>
+            <ul class="md-nav__list" data-md-scrollfix>
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../level-1-contributor-basics/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Commencer ici
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../level-1-contributor-basics/1-1-install-vs-code-and-sfdx-hardis/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Lab 1.1 - Installer VS Code, Git et sfdx-hardis
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../level-1-contributor-basics/1-2-create-your-dev-hub-scratch-orgs-and-pipeline/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Lab 1.2 - Créer votre Dev Hub, vos scratch orgs et votre pipeline CI/CD
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../level-1-contributor-basics/1-3-start-a-user-story-on-a-git-branch/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Lab 1.3 - Démarrer une User Story sur sa propre branche Git
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../level-1-contributor-basics/1-4-build-a-custom-field-in-your-org/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Lab 1.4 - Construire un champ personnalisé dans votre org Salesforce
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../level-1-contributor-basics/1-5-retrieve-commit-and-publish-your-changes/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Lab 1.5 - Récupérer, commiter et publier vos modifications Salesforce
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../level-1-contributor-basics/1-6-pull-request-deployment-check-and-merge/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Lab 1.6 - Ouvrir une Pull Request, passer le contrôle de déploiement, merger
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../level-1-contributor-basics/1-7-capstone-deliver-a-user-story-on-your-own/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Lab 1.7 - Épreuve finale : livrer une User Story tout seul
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+            </ul>
+          </nav>
+        
+      
+    </li>
+  
+
+      
+    
+      
+      
+      
+        
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_10" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_10" id="__nav_10_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Niveau 2 - Contributeur Salesforce DevOps avancé
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        
+          <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_10_label" aria-expanded="true">
+            <label class="md-nav__title" for="__nav_10">
+              <span class="md-nav__icon md-icon"></span>
+              
+  
+  Niveau 2 - Contributeur Salesforce DevOps avancé
+
+            </label>
+            <ul class="md-nav__list" data-md-scrollfix>
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Commencer ici
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../2-1-backpromote-your-teammates-work/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Lab 2.1 - Backpromote : remettre votre org de dev au niveau de l'équipe
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Lab 2.2 - Corriger une erreur de déploiement due à une dépendance manquante
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="././" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Lab 2.2 - Corriger une erreur de déploiement due à une dépendance manquante
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+
+<nav class="md-nav md-nav--secondary" aria-label="Table des matières">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table des matières
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#la-situation" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        La situation
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#avant-de-commencer" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Avant de commencer
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#les-etapes" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Les étapes
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Les étapes">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-prendre-la-story" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        1. Prendre la story
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-modifier-le-flow-davertissement" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        2. Modifier le flow d'avertissement
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-publier-le-flow-et-regarder-le-controle-echouer" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        3. Publier le flow, et regarder le contrôle échouer
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#4-lire-le-package-avant-de-lire-quoi-que-ce-soit-dautre" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        4. Lire le package avant de lire quoi que ce soit d'autre
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#5-recuperer-ce-dont-le-flow-depend" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        5. Récupérer ce dont le flow dépend
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#6-publier-a-nouveau" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        6. Publier à nouveau
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#ce-que-vous-devez-voir" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Ce que vous devez voir
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#verifiez-votre-travail" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Vérifiez votre travail
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#pour-aller-plus-loin" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Pour aller plus loin
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../2-3-fix-broken-records-with-an-apex-deployment-action/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Lab 2.3 - Réparer des enregistrements cassés avec une deployment action Apex
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../2-4-ship-reference-data-and-a-batch-with-deployment-actions/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Lab 2.4 - Livrer des données de référence et un batch avec des deployment actions
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../2-5-pass-code-quality-and-apex-test-coverage/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Lab 2.5 - Passer la barrière de qualité de code et la couverture de tests Apex
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../2-6-permission-sets-and-profiles/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Lab 2.6 - Permission sets, profils, et pourquoi une autorisation disparaît
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../2-7-resolve-a-git-merge-conflict/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Lab 2.7 - Résoudre un conflit de merge Git avec un collègue
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../2-8-recover-from-committing-the-wrong-metadata/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Lab 2.8 - Se remettre d'avoir commité la mauvaise métadonnée
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../2-9-capstone-deliver-a-user-story-that-has-it-all/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Lab 2.9 - Épreuve finale : livrer une User Story qui a tout
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+            </ul>
+          </nav>
+        
+      
+    </li>
+  
+
+      
+    
+      
+      
+      
+        
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_11" >
+        
+          
+          <label class="md-nav__link" for="__nav_11" id="__nav_11_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Niveau 3 - Release manager Salesforce DevOps
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        
+          <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_11_label" aria-expanded="false">
+            <label class="md-nav__title" for="__nav_11">
+              <span class="md-nav__icon md-icon"></span>
+              
+  
+  Niveau 3 - Release manager Salesforce DevOps
+
+            </label>
+            <ul class="md-nav__list" data-md-scrollfix>
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../level-3-release-manager/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Commencer ici
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../level-3-release-manager/3-1-configure-the-pipeline-up-to-production/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Lab 3.1 - Configurer la pipeline CI/CD jusqu'à la production
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../level-3-release-manager/3-2-review-a-contributor-pull-request/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Lab 3.2 - Relire et merger la Pull Request d'un contributeur
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../level-3-release-manager/3-3-deploy-to-integration-and-read-the-log/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Lab 3.3 - Lire le log de déploiement, et ce que .forceignore lui cache
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../level-3-release-manager/3-4-merge-colliding-pull-requests/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Lab 3.4 - Trois Pull Requests se percutent : choisir l'ordre de merge
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../level-3-release-manager/3-5-promote-to-uat-and-write-release-notes/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Lab 3.5 - Promouvoir en UAT et écrire les notes de version
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../level-3-release-manager/3-6-release-to-production-and-read-dora-metrics/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Lab 3.6 - Livrer en production et lire vos métriques DORA
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../level-3-release-manager/3-7-hotfix-and-retrofit/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Lab 3.7 - La production est cassée : hotfix et retrofit
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../level-3-release-manager/3-8-monitor-your-production-org/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Lab 3.8 - Monitorer votre org de production
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../level-3-release-manager/3-9-generate-the-project-documentation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Lab 3.9 - Générer la documentation du projet Salesforce
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../level-3-release-manager/3-10-promote-a-subset-with-promotion-branches/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Lab 3.10 - Promouvoir un sous-ensemble avec les promotion branches (Beta)
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../level-3-release-manager/3-11-capstone-run-a-weekly-release-cycle/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Lab 3.11 - Épreuve finale : mener un cycle de release hebdomadaire
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+            </ul>
+          </nav>
+        
+      
+    </li>
+  
+
+      
+    
+      
+      
+      
+        
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../help/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Aide
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+      
+    
+      
+      
+      
+        
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../BACKLOG/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Backlog
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+      
+    
+      
+      
+      
+        
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../badges/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Badges
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+      
+    
+      
+      
+      
+        
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="https://sfdx-hardis.cloudity.com/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  sfdx-hardis documentation
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+      
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  
+                    
+                    
+                    
+                      
+                    
+                    
+                      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+                      <div class="md-sidebar-button__wrapper">
+                        <label class="md-sidebar-button" for="__toc"></label>
+                      </div>
+                    
+                  
+                  <div class="md-sidebar__inner">
+                    
+
+
+<nav class="md-nav md-nav--secondary" aria-label="Table des matières">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table des matières
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#la-situation" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        La situation
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#avant-de-commencer" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Avant de commencer
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#les-etapes" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Les étapes
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Les étapes">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-prendre-la-story" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        1. Prendre la story
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-modifier-le-flow-davertissement" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        2. Modifier le flow d'avertissement
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-publier-le-flow-et-regarder-le-controle-echouer" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        3. Publier le flow, et regarder le contrôle échouer
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#4-lire-le-package-avant-de-lire-quoi-que-ce-soit-dautre" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        4. Lire le package avant de lire quoi que ce soit d'autre
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#5-recuperer-ce-dont-le-flow-depend" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        5. Récupérer ce dont le flow dépend
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#6-publier-a-nouveau" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        6. Publier à nouveau
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#ce-que-vous-devez-voir" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Ce que vous devez voir
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#verifiez-votre-travail" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Vérifiez votre travail
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#pour-aller-plus-loin" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Pour aller plus loin
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                <a id="__skip" tabindex="-1"></a>
+                
+                  
+
+  
+    <a href="https://github.com/hardisgroupcom/sfdx-hardis-training/edit/main/labs/fr/level-2-contributor-advanced/2-2-fix-a-missing-dependency-deployment-error.md" title="Editer cette page" class="md-content__button md-icon" rel="edit">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-file-pen" viewBox="0 0 24 24"><path d="M12.659 22H18a2 2 0 0 0 2-2V8a2.4 2.4 0 0 0-.706-1.706l-3.588-3.588A2.4 2.4 0 0 0 14 2H6a2 2 0 0 0-2 2v9.34"/><path d="M14 2v5a1 1 0 0 0 1 1h5M10.378 12.622a1 1 0 0 1 3 3.003L8.36 20.637a2 2 0 0 1-.854.506l-2.867.837a.5.5 0 0 1-.62-.62l.836-2.869a2 2 0 0 1 .506-.853z"/></svg>
+    </a>
+  
+  
+
+
+<h1 id="lab-22-corriger-une-erreur-de-deploiement-due-a-une-dependance-manquante">Lab 2.2 - Corriger une erreur de déploiement due à une dépendance manquante<a class="headerlink" href="#lab-22-corriger-une-erreur-de-deploiement-due-a-une-dependance-manquante" title="Permanent link">&para;</a></h1>
+<p><strong>Niveau</strong> : 2 Contributeur avancé</p>
+<p><strong>Durée</strong> : ~25 min</p>
+<p><strong>Vous allez</strong> : modifier un flow qui tourne déjà en production, rencontrer votre premier contrôle de
+déploiement en échec, lire l'erreur correctement, et trouver ce que votre package a oublié.</p>
+<h2 id="la-situation">La situation<a class="headerlink" href="#la-situation" title="Permanent link">&para;</a></h2>
+<blockquote>
+<p><strong>US-021 - Warn the planner when a crew is too small</strong></p>
+<p>As a planner, I want one warning on the installation when the assigned crew is smaller than the
+panels need, so that I fix it before the van leaves, and not a new task every time I save.</p>
+</blockquote>
+<p>Le flow existe déjà. <code>Installation Crew Warning</code> est arrivé avec l'application Helios quand vous avez
+monté vos orgs au Niveau 1 : il crée une tâche pour le planificateur dès que moins de deux personnes
+sont affectées, et il le fait à <strong>chaque</strong> enregistrement, ce dont les planificateurs se plaignent.
+Vous le modifiez, vous le publiez, et le contrôle échoue avec une erreur à propos d'un champ que vous
+avez pourtant sous les yeux dans l'org.</p>
+<p>Ce lab parle de l'écart entre "ça existe dans mon org" et "c'est dans le package".</p>
+<h2 id="avant-de-commencer">Avant de commencer<a class="headerlink" href="#avant-de-commencer" title="Permanent link">&para;</a></h2>
+<ul class="task-list">
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <a href="../2-1-backpromote-your-teammates-work/">Lab 2.1</a> terminé</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>helios-dev</code> au niveau d'<code>integration</code></li>
+</ul>
+<h2 id="les-etapes">Les étapes<a class="headerlink" href="#les-etapes" title="Permanent link">&para;</a></h2>
+<h3 id="1-prendre-la-story">1. Prendre la story<a class="headerlink" href="#1-prendre-la-story" title="Permanent link">&para;</a></h3>
+<p>Dans le panneau <strong>DevOps Pipeline</strong>, sous <strong>Project Contribution Workflow</strong> <span class="pill-ref pill-ref-1">(1)</span>, cliquez sur
+<strong>New User Story</strong> <span class="pill-ref pill-ref-2">(2)</span>, la même carte qu'au <a href="../../level-1-contributor-basics/1-3-start-a-user-story-on-a-git-branch/">Lab 1.3</a>.</p>
+<p><a class="glightbox" data-type="image" href="../../../_assets/annotated/vscode/pipeline-cards--new-user-story.png"><img alt="Les cartes de contribution du panneau DevOps Pipeline" src="../../../_assets/annotated/vscode/pipeline-cards--new-user-story.png" /></a></p>
+<p>Répondez : type <strong>Feature</strong>, nom <code>US-021-crew-size-warning</code>, org <code>helios-dev</code>. La cible est
+<code>integration</code> sans qu'on vous le demande, comme au Niveau 1.</p>
+<h3 id="2-modifier-le-flow-davertissement">2. Modifier le flow d'avertissement<a class="headerlink" href="#2-modifier-le-flow-davertissement" title="Permanent link">&para;</a></h3>
+<p>D'abord le champ dont le flow a besoin pour ne pas avertir deux fois. Dans <code>helios-dev</code>,
+<strong>Setup &gt; Object Manager &gt; Installation &gt; Fields &amp; Relationships &gt; New</strong> :</p>
+<table>
+<thead>
+<tr>
+<th>Paramètre</th>
+<th>Valeur</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Data Type</td>
+<td><strong>Checkbox</strong></td>
+</tr>
+<tr>
+<td>Field Label</td>
+<td><code>Crew Warning Sent</code></td>
+</tr>
+<tr>
+<td>Field Name</td>
+<td><code>Crew_Warning_Sent__c</code></td>
+</tr>
+<tr>
+<td>Default Value</td>
+<td>Décoché</td>
+</tr>
+</tbody>
+</table>
+<p>Sur l'écran de sécurité au niveau du champ, cochez <strong>Visible</strong> pour <strong>System Administrator</strong>
+seulement (<em>Administrateur système</em> dans une org en français), et sur le dernier écran décochez <strong>Installation Layout</strong> : personne d'autre que le flow n'a
+besoin de cette case, elle ne va donc sur aucune page. Cette seule coche est pour vous, pas pour le
+flow : Flow Builder ne propose que les champs que la personne qui édite le flow peut lire, et sans
+elle <strong>Crew Warning Sent</strong> manque dans la liste de l'étape 2. Le flow lui-même tourne en mode système
+et n'a besoin d'aucun droit.</p>
+<p>Puis le flow. <strong>Setup &gt; Flows</strong>, ouvrez <strong>Installation Crew Warning</strong>. Il est actif, Flow Builder
+ouvre donc la version qui tourne : chaque modification que vous faites est enregistrée comme une
+<strong>nouvelle version</strong>, et l'ancienne continue de tourner jusqu'à ce que vous activiez la vôtre.</p>
+<p><a class="glightbox" data-type="image" href="../../../_assets/annotated/salesforce/flow-builder-crew-warning.png"><img alt="Le flow Installation Crew Warning dans Flow Builder" src="../../../_assets/annotated/salesforce/flow-builder-crew-warning.png" /></a></p>
+<p>Trois modifications, et l'image ci-dessus montre où chacune commence :</p>
+<ol>
+<li>
+<p>Élément <strong>Start</strong> : cliquez sur <strong>Edit</strong> <span class="pill-ref pill-ref-1">(1)</span> dessus. Sous <strong>Set Entry Conditions</strong>, le flow
+   tourne déjà quand <code>Crew Size</code> n'est pas nul <span class="pill-ref pill-ref-1">(1)</span>. Cliquez sur <strong>Add Condition</strong> <span class="pill-ref pill-ref-2">(2)</span> et
+   ajoutez la seconde, <code>Panels Required</code>, <strong>Is Null</strong>, <code>False</code>. Ce panneau n'a pas de bouton
+   <strong>Done</strong> : la condition est gardée au fil de la saisie, et le <strong>X</strong> <span class="pill-ref pill-ref-3">(3)</span> en haut à droite
+   ferme le panneau</p>
+<p><a class="glightbox" data-type="image" href="../../../_assets/annotated/salesforce/flow-builder-start-conditions.png"><img alt="Les conditions d'entrée de l'élément Start" src="../../../_assets/annotated/salesforce/flow-builder-start-conditions.png" /></a></p>
+</li>
+<li>
+<p>La décision <strong>Crew Too Small</strong> lit une ressource de type formule, <code>crewTooSmall</code>. Ouvrez la
+   <strong>Toolbox</strong> <span class="pill-ref pill-ref-2">(2)</span> en haut à gauche du canevas, et cliquez sur <code>crewTooSmall</code> sous <strong>Formulas</strong>.
+   Mettez à jour sa <strong>Description</strong> <span class="pill-ref pill-ref-1">(1)</span>, <code>True when eight panels a person do not cover the job,
+   and no warning was sent yet</code>, et remplacez sa <strong>Formula</strong> <span class="pill-ref pill-ref-2">(2)</span> par celle ci-dessous, puis
+   <strong>Done</strong> <span class="pill-ref pill-ref-3">(3)</span> :</p>
+<p><a class="glightbox" data-type="image" href="../../../_assets/annotated/salesforce/flow-builder-formula.png"><img alt="La fenêtre Edit Formula de la ressource crewTooSmall" src="../../../_assets/annotated/salesforce/flow-builder-formula.png" /></a></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>AND(
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>  {!$Record.Crew_Size__c} * 8 &lt; {!$Record.Panels_Required__c},
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>  NOT({!$Record.Crew_Warning_Sent__c})
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>)
+</code></pre></div>
+<p>Une personne pose environ huit panneaux par jour : l'équipe est trop petite quand huit panneaux
+  par personne ne couvrent pas le chantier, et l'avertissement ne part que s'il n'a pas déjà été
+  envoyé. Copiez-la plutôt que de la taper
+3. Après <strong>Create Warning Task</strong>, cliquez sur le <strong>+</strong> <span class="pill-ref pill-ref-3">(3)</span> sur la ligne en dessous, et choisissez
+ <strong>Update Triggering Record</strong> <span class="pill-ref pill-ref-1">(1)</span> sous <strong>Shortcuts</strong>. Appelez l'élément <code>Mark Warning Sent</code>,
+ donnez-lui une description, et mettez <code>Crew Warning Sent</code> à <code>True</code>. Reliez ensuite son chemin
+ <strong>fault</strong> à l'élément <code>Log Fault</code> existant, comme l'élément de tâche</p>
+<p><a class="glightbox" data-type="image" href="../../../_assets/annotated/salesforce/flow-builder-add-element.png"><img alt="Le menu Add Element, avec Update Triggering Record" src="../../../_assets/annotated/salesforce/flow-builder-add-element.png" /></a></p>
+</li>
+</ol>
+<p><strong>Save As New Version</strong> <span class="pill-ref pill-ref-4">(4)</span>. La fenêtre qui s'ouvre contient la description du flow : remplacez-la
+par <code>Warns the planner when the crew assigned to an installation is too small for the panels it
+needs.</code>, puisque le flow ne prévient plus à chaque enregistrement. Puis <strong>Activate</strong>, le bouton qui remplace <strong>Deactivate</strong> sur la
+nouvelle version.</p>
+<div class="admonition info">
+<p class="admonition-title">Pourquoi le flow a un fault path</p>
+<p>Un élément d'enregistrement qui n'en a pas échoue en silence : le flow s'arrête, l'utilisateur ne
+voit rien, et la Task censée avertir le planificateur n'apparaît jamais. Sur un vrai projet, le
+fault path envoie le message quelque part où quelqu'un le lit. Ici il se contente de le
+garder, parce que ce que la pipeline contrôle est qu'un fault path existe. Le flow d'origine
+en avait déjà un, et votre nouvel élément le suit.</p>
+</div>
+<p>Testez : ouvrez une installation, mettez <code>Panels Required</code> à 40 et <code>Crew Size</code> à 2, enregistrez. Une
+tâche apparaît dans son <strong>Activity</strong>. Enregistrez à nouveau : pas de deuxième tâche. C'est la story
+qui fonctionne, dans votre org. La case à cocher elle-même reste invisible : aucun permission set ne
+l'accorde, parce que personne d'autre que le flow n'en a besoin, et la seule personne qui peut la lire
+est l'administrateur qui a construit le flow.</p>
+<h3 id="3-publier-le-flow-et-regarder-le-controle-echouer">3. Publier le flow, et regarder le contrôle échouer<a class="headerlink" href="#3-publier-le-flow-et-regarder-le-controle-echouer" title="Permanent link">&para;</a></h3>
+<p>Faites-en un retrieve comme le Niveau 1 vous l'a appris : <strong>DevOps Pipeline &gt; Commit changes</strong>,
+<strong>Recent Changes</strong>, <strong>Search Metadata</strong>. La story porte sur le flow, cochez donc le flow
+<code>Installation_Crew_Warning</code>, récupérez-le, et commitez-le depuis <strong>Source Control</strong>.</p>
+<div class="admonition warning">
+<p class="admonition-title">Regardez ce que vous n'avez pas récupéré</p>
+<p>Le retriever a aussi listé <code>Installation__c.Crew_Warning_Sent__c</code>, le champ que vous avez créé en
+premier. Vous l'avez laissé décoché, et rien n'a rien dit. Continuez et publiez quand même : tout
+l'intérêt de ce lab est de rencontrer l'échec qui suit, et d'apprendre à le lire.</p>
+</div>
+<p>Puis <strong>Save / Publish</strong> <span class="pill-ref pill-ref-1">(1)</span>.</p>
+<p><a class="glightbox" data-type="image" href="../../../_assets/annotated/vscode/pipeline-cards--save-publish.png"><img alt="La carte Save / Publish du panneau DevOps Pipeline" src="../../../_assets/annotated/vscode/pipeline-cards--save-publish.png" /></a></p>
+<p>Poussez, ouvrez la Pull Request vers <code>integration</code> dans votre fork (votre copie personnelle du
+repository du cours sur GitHub, par exemple <code>github.com/my-username/sfdx-hardis-training</code>), et
+attendez.</p>
+<p>Le contrôle échoue. Le commentaire sfdx-hardis sur la Pull Request s'ouvre sur <strong>❌ Cannot merge
+into <code>integration</code>: 1 deployment error</strong>, et nomme le composant sous <strong>❌ Deployment errors</strong>
+<span class="pill-ref pill-ref-1">(1)</span> :</p>
+<p><a class="glightbox" data-type="image" href="../../../_assets/annotated/web/github-pr-check-failed.png"><img alt="Le commentaire sfdx-hardis d'un contrôle de déploiement en échec" src="../../../_assets/annotated/web/github-pr-check-failed.png" /></a></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>Installation_Crew_Warning field integrity exception: unknown (The field "Crew_Warning_Sent__c"
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>for the object "Installation__c" doesn't exist.)
+</code></pre></div>
+<p>Plus bas, la ligne repliée <strong>📋 1 component failed, ... would change in the org</strong> <span class="pill-ref pill-ref-2">(2)</span> ouvre un
+tableau des composants, par type, avec votre flow dans son groupe <strong>❌ Failed</strong>. Un flow est une
+métadonnée comme les autres dans ce commentaire. Ce qu'il a en plus, c'est un deuxième commentaire à
+lui, publié juste en dessous : <strong>🔀 Flow Installation Crew Warning</strong>, le diff visuel du flow. Il
+dessine le flow, et colore ce que votre story a modifié. Le nouvel élément <strong>Mark Warning Sent</strong> est
+en vert <span class="pill-ref pill-ref-1">(1)</span>. Au-dessus du schéma, un tableau <strong>properties changed</strong> donne chaque propriété
+modifiée avec sa valeur avant et après : la description <span class="pill-ref pill-ref-2">(2)</span>, la formule <span class="pill-ref pill-ref-3">(3)</span>. Les tableaux
+complets du flow sont repliés sous <strong>All properties and elements</strong>. Un relecteur lit votre
+modification de flow là, sans ouvrir Flow Builder ni son XML.</p>
+<p><a class="glightbox" data-type="image" href="../../../_assets/annotated/web/github-pr-flow-diff.png"><img alt="Le diff visuel du flow Installation Crew Warning, publié sur la Pull Request" src="../../../_assets/annotated/web/github-pr-flow-diff.png" /></a></p>
+<p>Votre Pull Request ne peut pas être mergée tant que ce contrôle est rouge : <code>integration</code> la refuse,
+pour vous comme pour n'importe qui.</p>
+<p>Lisez cela deux fois. Le champ <strong>existe</strong>. Vous le voyez dans l'org. Vous l'avez créé il y a dix
+minutes et le flow que vous venez de tester le lit.</p>
+<h3 id="4-lire-le-package-avant-de-lire-quoi-que-ce-soit-dautre">4. Lire le package avant de lire quoi que ce soit d'autre<a class="headerlink" href="#4-lire-le-package-avant-de-lire-quoi-que-ce-soit-dautre" title="Permanent link">&para;</a></h3>
+<p>Quand un déploiement dit que quelque chose n'existe pas, la première question n'est jamais "est-ce
+dans l'org". C'est <strong>"est-ce dans le package"</strong>.</p>
+<p>Ouvrez le package : dans le panneau <strong>DevOps Pipeline</strong>, le menu <strong>Deployment packages</strong> <span class="pill-ref pill-ref-1">(1)</span>,
+puis <strong>Package XML</strong> <span class="pill-ref pill-ref-2">(2)</span>, comme au <a href="../../level-1-contributor-basics/1-5-retrieve-commit-and-publish-your-changes/">Lab 1.5</a>.</p>
+<p><a class="glightbox" data-type="image" href="../../../_assets/annotated/vscode/pipeline-packages-menu--package-xml.png"><img alt="Le menu Deployment packages du panneau DevOps Pipeline, avec Package XML" src="../../../_assets/annotated/vscode/pipeline-packages-menu--package-xml.png" /></a></p>
+<p>Tapez <code>Crew_Warning</code> dans sa zone de filtre <span class="pill-ref pill-ref-1">(1)</span>. Il reste une ligne, <strong>Flow</strong> <span class="pill-ref pill-ref-2">(2)</span> : le
+package porte votre flow. Il n'y a aucune ligne <strong>CustomField</strong> : le package ne porte pas
+<code>Installation__c.Crew_Warning_Sent__c</code>.</p>
+<p><a class="glightbox" data-type="image" href="../../../_assets/annotated/vscode/package-xml-filtered.png"><img alt="Le visualiseur de package filtré sur Crew_Warning, avec la seule ligne Flow" src="../../../_assets/annotated/vscode/package-xml-filtered.png" /></a></p>
+<p>On envoie à l'org d'intégration un flow qui lit un champ que le package ne porte pas, et l'org
+d'intégration n'a pas ce champ non plus. Du point de vue de Salesforce, l'erreur est exactement
+juste.</p>
+<p>Le package est construit à partir de ce que vos commits ont changé, et le champ n'a jamais été
+commité : regardez là où vivent les champs,
+<code>force-app/main/default/objects/Installation__c/fields/</code>, il n'y est pas. Il n'existe qu'à un seul
+endroit, <code>helios-dev</code>, et une pipeline ne lit jamais l'org d'un développeur.</p>
+<h3 id="5-recuperer-ce-dont-le-flow-depend">5. Récupérer ce dont le flow dépend<a class="headerlink" href="#5-recuperer-ce-dont-le-flow-depend" title="Permanent link">&para;</a></h3>
+<p>Ouvrez le panneau <strong>Metadata Retriever</strong> :</p>
+<ol>
+<li>Vérifiez que l'org en haut à droite <span class="pill-ref pill-ref-1">(1)</span> est <code>helios-dev</code></li>
+<li>Tapez <code>Crew_Warning_Sent__c</code> dans <strong>Metadata Name</strong> <span class="pill-ref pill-ref-2">(2)</span></li>
+<li>Cliquez sur <strong>Search Metadata</strong> <span class="pill-ref pill-ref-3">(3)</span>, puis cochez le champ dans les résultats et récupérez-le</li>
+</ol>
+<p><a class="glightbox" data-type="image" href="../../../_assets/annotated/vscode/metadata-retriever.png"><img alt="Le panneau Metadata Retriever, avec son sélecteur d'org, ses filtres et le bouton Search Metadata" src="../../../_assets/annotated/vscode/metadata-retriever.png" /></a></p>
+<p>Le champ apparaît sous <code>force-app/main/default/objects/Installation__c/fields/</code> <span class="pill-ref pill-ref-1">(1)</span>, dans la
+vue <strong>Explorer</strong> de VS Code.</p>
+<p><a class="glightbox" data-type="image" href="../../../_assets/annotated/vscode/editor-field-file.png"><img alt="Le fichier du champ rapatrié dans l'Explorer, ouvert dans l'éditeur" src="../../../_assets/annotated/vscode/editor-field-file.png" /></a></p>
+<p>L'habitude à retenir : quand vous modifiez quelque chose qui <strong>lit</strong> un autre composant, récupérez
+aussi ce composant. Un flow lit des champs, une présentation de page les affiche, un permission set
+les accorde. Tout ce qui est nouveau parmi eux voyage avec la story, ou la story ne se déploie pas.</p>
+<h3 id="6-publier-a-nouveau">6. Publier à nouveau<a class="headerlink" href="#6-publier-a-nouveau" title="Permanent link">&para;</a></h3>
+<p>Le champ est maintenant dans <code>force-app/</code>. Commitez-le depuis <strong>Source Control</strong>, puis <strong>Save /
+Publish</strong> à nouveau. <code>manifest/package.xml</code> liste à la fois le champ et le flow. Poussez, et le
+contrôle passe au vert. Mergez.</p>
+<details>
+<summary>Sous le capot : pourquoi l'erreur disait ce qu'elle disait</summary>
+<p>Le job de contrôle a lancé :</p>
+<div class="highlight"><pre><span></span><code>sf hardis:project:deploy:smart --check
+</code></pre></div>
+<p>qui a remis <code>manifest/package.xml</code> à Salesforce comme déploiement de validation : la liste que Save /
+Publish tient à jour à partir du diff git entre votre branche et <code>integration</code>. Salesforce a compilé
+le flow, cherché <code>Installation__c.Crew_Warning_Sent__c</code> dans le package <strong>et</strong> dans l'org cible, ne
+l'a trouvé ni dans l'un ni dans l'autre, et a refusé.</p>
+<p>Le point important est l'ordre des deux questions :</p>
+<ol>
+<li><strong>Est-ce dans le package ?</strong> <code>manifest/package.xml</code>, et derrière lui le diff git : ce que vous
+   avez récupéré et commité</li>
+<li><strong>Est-ce dans l'org cible ?</strong> Ne posez celle-ci qu'une fois que la réponse à la première est oui</li>
+</ol>
+<p>La plupart des erreurs de déploiement qui disent "does not exist" relèvent de la question 1, et la
+plupart des gens passent vingt minutes sur la question 2 d'abord.</p>
+<p><strong>Le flow est parti comme une nouvelle version.</strong> Un flow est versionné dans l'org : Flow Builder a
+enregistré le vôtre en version 2, et le déploiement envoie sa définition. L'org d'intégration garde
+sa version 1 en historique, inactive, exactement comme <code>helios-dev</code> le fait.</p>
+<!-- command-links:start -->
+<p>Documentation de la commande : <a href="https://sfdx-hardis.cloudity.com/hardis/project/deploy/smart/">hardis:project:deploy:smart</a></p>
+<!-- command-links:end -->
+</details>
+<h2 id="ce-que-vous-devez-voir">Ce que vous devez voir<a class="headerlink" href="#ce-que-vous-devez-voir" title="Permanent link">&para;</a></h2>
+<ul>
+<li><code>manifest/package.xml</code> listant <code>Installation__c.Crew_Warning_Sent__c</code> et
+  <code>Installation_Crew_Warning</code></li>
+<li>Le contrôle de la Pull Request vert</li>
+<li>Après le merge, le flow présent et actif dans <code>helios-integration</code></li>
+</ul>
+<details class="troubleshoot">
+<summary>En cas de problème</summary>
+<p><strong>Flow Builder ne propose pas Crew Warning Sent.</strong>
+Vous avez créé le champ avec <strong>Visible</strong> décoché pour tous les profils : vous ne pouvez pas le lire, et
+Flow Builder ne liste que les champs que vous pouvez lire. <strong>Setup &gt; Object Manager &gt; Installation &gt;
+Fields &amp; Relationships &gt; Crew Warning Sent &gt; Set Field-Level Security</strong>, cochez <strong>Visible</strong> pour
+<strong>System Administrator</strong> (<em>Administrateur système</em> dans une org en français), <strong>Save</strong>. Rechargez ensuite Flow Builder :
+le champ apparaît dans la liste de <strong>Update Triggering Record</strong>, et la formule <code>crewTooSmall</code>
+l'accepte.</p>
+<p><strong>La récupération ne ramène rien.</strong>
+Le sélecteur d'org du Metadata Retriever pointe vers une autre org. Il doit indiquer <code>helios-dev</code>, là
+où vous avez créé le champ.</p>
+<p><strong>Le contrôle échoue maintenant parce que le flow est inactif.</strong>
+Salesforce refuse, dans certaines configurations, de déployer un flow actif par-dessus un flow actif
+de même version. Désactivez l'ancienne version dans l'org cible, ou incrémentez la version du flow
+dans votre org et récupérez à nouveau.</p>
+<p><strong>Le contrôle échoue sur un champ de Task.</strong>
+Votre élément Create Records renseigne un champ que l'org d'intégration n'a pas, parce que vous en
+avez choisi un propre à votre org. Simplifiez : le sujet et le WhatId suffisent.</p>
+</details>
+<h2 id="verifiez-votre-travail">Vérifiez votre travail<a class="headerlink" href="#verifiez-votre-travail" title="Permanent link">&para;</a></h2>
+<p>Welcome page &gt; <strong>Training: Level 2</strong> &gt; <strong>Check my work</strong>, puis choisissez le <strong>Lab 2.2</strong>.</p>
+<h2 id="pour-aller-plus-loin">Pour aller plus loin<a class="headerlink" href="#pour-aller-plus-loin" title="Permanent link">&para;</a></h2>
+<ul>
+<li><a href="https://sfdx-hardis.cloudity.com/salesforce-devops-solve-deployment-errors/">Résoudre les erreurs de déploiement</a></li>
+<li><a href="https://sfdx-hardis.cloudity.com/salesforce-devops-retrieve/">Problèmes de récupération de sources</a></li>
+</ul>
+<p><a class="md-button md-button--primary" href="../2-3-fix-broken-records-with-an-apex-deployment-action/">Suite : Lab 2.3 - Réparer des enregistrements cassés avec une deployment action Apex</a></p>
+
+
+
+
+
+
+
+
+
+  
+  
+
+
+
+  
+
+
+
+
+  <h2 id="__comments">Questions and comments</h2>
+  <script src="https://giscus.app/client.js"
+          data-repo="hardisgroupcom/sfdx-hardis-training"
+          data-repo-id="R_kgDOUcjgQw"
+          data-category="Q&amp;A"
+          data-category-id="DIC_kwDOUcjgQ84DF-lC"
+          data-mapping="pathname"
+          data-strict="1"
+          data-reactions-enabled="1"
+          data-emit-metadata="0"
+          data-input-position="top"
+          data-theme="preferred_color_scheme"
+          data-lang="en"
+          data-loading="lazy"
+          crossorigin="anonymous"
+          async>
+  </script>
+
+  <script>
+    // Keep the Giscus iframe in sync with the palette toggle. It is a
+    // cross-origin frame, so its theme can only be changed by postMessage.
+    (function () {
+      if (window.__giscusThemeSync) {
+        return;
+      }
+      window.__giscusThemeSync = true;
+      var giscusTheme = function () {
+        var scheme = document.body.getAttribute("data-md-color-scheme");
+        return scheme === "slate" ? "dark" : "light";
+      };
+      var apply = function () {
+        var frame = document.querySelector("iframe.giscus-frame");
+        if (frame && frame.contentWindow) {
+          frame.contentWindow.postMessage(
+            { giscus: { setConfig: { theme: giscusTheme() } } },
+            "https://giscus.app"
+          );
+        }
+      };
+      new MutationObserver(apply).observe(document.body, {
+        attributes: true,
+        attributeFilter: ["data-md-color-scheme"]
+      });
+      window.addEventListener("message", function (event) {
+        if (event.origin === "https://giscus.app") {
+          apply();
+        }
+      });
+    })();
+  </script>
+
+                
+              </article>
+            </div>
+          
+          
+  <script>var tabs=__md_get("__tabs");if(Array.isArray(tabs))e:for(var set of document.querySelectorAll(".tabbed-set")){var labels=set.querySelector(".tabbed-labels");for(var tab of tabs)for(var label of labels.getElementsByTagName("label"))if(label.innerText.trim()===tab){var input=document.getElementById(label.htmlFor);input.checked=!0;continue e}}</script>
+
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-circle-arrow-up" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="m16 12-4-4-4 4M12 16V8"/></svg>
+  Retour en haut de la page
+</button>
+        
+      </main>
+      
+        
+
+
+
+
+<footer class="md-footer">
+  
+    
+      
+      <nav class="md-footer__inner md-grid" aria-label="Pied de page" >
+        
+          
+          <a href="../2-1-backpromote-your-teammates-work/" class="md-footer__link md-footer__link--prev" aria-label="Précédent: Lab 2.1 - Backpromote : remettre votre org de dev au niveau de l&#x27;équipe">
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-arrow-left" viewBox="0 0 24 24"><path d="m12 19-7-7 7-7M19 12H5"/></svg>
+            </div>
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Précédent
+              </span>
+              <div class="md-ellipsis">
+                Lab 2.1 - Backpromote : remettre votre org de dev au niveau de l'équipe
+              </div>
+            </div>
+          </a>
+        
+        
+          
+          <a href="../2-3-fix-broken-records-with-an-apex-deployment-action/" class="md-footer__link md-footer__link--next" aria-label="Suivant: Lab 2.3 - Réparer des enregistrements cassés avec une deployment action Apex">
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Suivant
+              </span>
+              <div class="md-ellipsis">
+                Lab 2.3 - Réparer des enregistrements cassés avec une deployment action Apex
+              </div>
+            </div>
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-arrow-right" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+            </div>
+          </a>
+        
+      </nav>
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      Cloudity and friends
+    </div>
+  
+  
+</div>
+      
+        
+<div class="md-social">
+  
+    
+    
+    
+    
+    <a href="https://github.com/hardisgroupcom/sfdx-hardis" target="_blank" rel="noopener" title="sfdx-hardis on GitHub" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.3.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2026 Fonticons, Inc.--><path fill="currentColor" d="M216.5 362.5c-66-8-112.5-55.5-112.5-117 0-25 9-52 24-70-6.5-16.5-5.5-51.5 2-66 20-2.5 47 8 63 22.5 19-6 39-9 63.5-9s44.5 3 62.5 8.5c15.5-14 43-24.5 63-22 7 13.5 8 48.5 1.5 65.5 16 19 24.5 44.5 24.5 70.5 0 61.5-46.5 108-113.5 116.5 17 11 28.5 35 28.5 62.5v52c0 15 12.5 23.5 27.5 17.5C441 459.5 512 369 512 257 512 115.5 397 0 255.5 0S0 115.5 0 257c0 111 70.5 203 165.5 237.5 13.5 5 26.5-4 26.5-17.5v-40c-7 3-16 5-24 5-33 0-52.5-18-66.5-51.5-5.5-13.5-11.5-21.5-23-23-6-.5-8-3-8-6 0-6 10-10.5 20-10.5 14.5 0 27 9 40 27.5 10 14.5 20.5 21 33 21s20.5-4.5 32-16c8.5-8.5 15-16 21-21"/></svg>
+    </a>
+  
+    
+    
+    
+    
+    <a href="https://sfdx-hardis.cloudity.com/" target="_blank" rel="noopener" title="sfdx-hardis documentation" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.3.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2026 Fonticons, Inc.--><path fill="currentColor" d="M384 512H96c-53 0-96-43-96-96V96C0 43 43 0 96 0h304c26.5 0 48 21.5 48 48v288c0 20.9-13.4 38.7-32 45.3V448c17.7 0 32 14.3 32 32s-14.3 32-32 32zM96 384c-17.7 0-32 14.3-32 32s14.3 32 32 32h256v-64zm32-232c0 13.3 10.7 24 24 24h176c13.3 0 24-10.7 24-24s-10.7-24-24-24H152c-13.3 0-24 10.7-24 24m24 72c-13.3 0-24 10.7-24 24s10.7 24 24 24h176c13.3 0 24-10.7 24-24s-10.7-24-24-24z"/></svg>
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog" role="status" aria-atomic="true">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      
+      
+        
+        
+      <script id="__config" type="application/json">{"annotate":null,"base":"../../..","features":["content.action.edit","content.code.copy","content.tabs.link","navigation.instant","navigation.tracking","navigation.top","navigation.footer","search.suggest","search.highlight","toc.follow"],"redirect":null,"search":"../../../assets/javascripts/workers/search.7d14d953.min.js","tags":null,"translations":{"clipboard.copied":"Copié dans le presse-papier","clipboard.copy":"Copier dans le presse-papier","clipboard.error":"Could not copy to clipboard","search.result.more.one":"1 de plus sur cette page","search.result.more.other":"# de plus sur cette page","search.result.none":"Aucun document trouvé","search.result.one":"1 document trouvé","search.result.other":"# documents trouvés","search.result.placeholder":"Taper pour démarrer la recherche","search.result.term.missing":"Non trouvé","select.version":"Sélectionner la version"},"version":null}</script>
+    
+    
+      <script src="../../../assets/javascripts/bundle.8b1c90bd.min.js"></script>
+      
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/tablesort/5.2.1/tablesort.min.js"></script>
+      
+        <script src="../../../theme/javascripts/tables.js"></script>
+      
+        <script src="../../../theme/javascripts/lightbox.js"></script>
+      
+        <script src="../../../theme/javascripts/after-footer.js"></script>
+      
+        <script src="../../../theme/javascripts/language-switch.js"></script>
+      
+    
+  </body>
+</html>

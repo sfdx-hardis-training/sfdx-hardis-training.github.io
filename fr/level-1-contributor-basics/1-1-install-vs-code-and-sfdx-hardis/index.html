@@ -1,0 +1,2212 @@
+
+<!doctype html>
+<html lang="fr" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Installez Git, Node.js, VS Code et l'extension sfdx-hardis, puis laissez son panneau Setup installer la CLI Salesforce et les plugins sans taper une commande.">
+      
+      
+      
+        <link rel="canonical" href="https://sfdx-hardis-training.github.io/fr/level-1-contributor-basics/1-1-install-vs-code-and-sfdx-hardis/">
+      
+      
+        <link rel="prev" href="../">
+      
+      
+        <link rel="next" href="../1-2-create-your-dev-hub-scratch-orgs-and-pipeline/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../../theme/images/badge-mark.svg">
+      <meta name="generator" content="zensical-0.0.69">
+    
+    
+      
+        <title>Lab 1.1 - Installer VS Code, Git et sfdx-hardis - Salesforce DevOps with sfdx-hardis</title>
+      
+    
+    
+      
+        
+      
+      <link rel="stylesheet" href="../../../assets/stylesheets/modern/main.e15858d4.min.css">
+      
+        
+          
+        
+        <link rel="stylesheet" href="../../../assets/stylesheets/modern/palette.b27955a4.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+    
+    
+      <link rel="stylesheet" href="../../../theme/stylesheets/extra.css">
+    
+    <script>__md_scope=new URL("../../..",location),__md_scope.pathname.endsWith("/")||(__md_scope=new URL(__md_scope.pathname+"/",location)),__md_hash=e=>[...e].reduce(((e,t)=>(e<<5)-e+t.charCodeAt(0)),0),__md_get=(e,t=localStorage,_=__md_scope)=>JSON.parse(t.getItem(_.pathname+"."+e)),__md_set=(e,t,_=localStorage,a=__md_scope)=>{try{_.setItem(a.pathname+"."+e,JSON.stringify(t))}catch(e){}},document.documentElement.setAttribute("data-platform",navigator.platform)</script>
+    
+      
+  
+
+
+  
+  
+
+<script id="__analytics">function __md_analytics(){function e(){dataLayer.push(arguments)}window.dataLayer=window.dataLayer||[],e("js",new Date),e("config","G-SE20CZ58E1"),document.addEventListener("DOMContentLoaded",(function(){document.forms.search&&document.forms.search.query.addEventListener("blur",(function(){this.value&&e("event","search",{search_term:this.value})}));document$.subscribe((function(){var t=document.forms.feedback;if(void 0!==t)for(var a of t.querySelectorAll("[type=submit]"))a.addEventListener("click",(function(a){a.preventDefault();var n=document.location.pathname,d=this.getAttribute("data-md-value");e("event","feedback",{page:n,data:d}),t.firstElementChild.disabled=!0;var r=t.querySelector(".md-feedback__note [data-md-value='"+d+"']");r&&(r.hidden=!1)})),t.hidden=!1})),location$.subscribe((function(t){e("config","G-SE20CZ58E1",{page_path:t.pathname})}))}));var t=document.createElement("script");t.async=!0,t.src="https://www.googletagmanager.com/gtag/js?id=G-SE20CZ58E1",document.getElementById("__analytics").insertAdjacentElement("afterEnd",t)}</script>
+  
+    <script>"undefined"!=typeof __md_analytics&&__md_analytics()</script>
+  
+
+    
+    
+  
+  
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Salesforce DevOps with sfdx-hardis">
+  <meta property="og:locale" content="fr">
+  <meta property="og:title" content="Lab 1.1 - Installer VS Code, Git et sfdx-hardis">
+  <meta property="og:description" content="Installez Git, Node.js, VS Code et l'extension sfdx-hardis, puis laissez son panneau Setup installer la CLI Salesforce et les plugins sans taper une commande.">
+  <meta property="og:url" content="https://sfdx-hardis-training.github.io/fr/level-1-contributor-basics/1-1-install-vs-code-and-sfdx-hardis/">
+  <meta property="og:image" content="https://sfdx-hardis-training.github.io/_assets/social/course.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="Lab 1.1 - Installer VS Code, Git et sfdx-hardis">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Lab 1.1 - Installer VS Code, Git et sfdx-hardis">
+  <meta name="twitter:description" content="Installez Git, Node.js, VS Code et l'extension sfdx-hardis, puis laissez son panneau Setup installer la CLI Salesforce et les plugins sans taper une commande.">
+  <meta name="twitter:image" content="https://sfdx-hardis-training.github.io/_assets/social/course.png">
+
+  <script>
+    (function () {
+      var here = "fr";
+      var alternates = {"en":"en/level-1-contributor-basics/1-1-install-vs-code-and-sfdx-hardis/","fr":"fr/level-1-contributor-basics/1-1-install-vs-code-and-sfdx-hardis/"};
+      var base = new URL("../../.." || ".", window.location.href).pathname;
+      try {
+        var asked = new URLSearchParams(window.location.search).get("lang");
+        if (asked) {
+          document.cookie =
+            "course-language=" + encodeURIComponent(asked) + "; path=" + base + "; max-age=31536000; samesite=lax";
+        }
+        var cookie = document.cookie.split("; ").filter(function (one) {
+          return one.indexOf("course-language=") === 0;
+        })[0];
+        if (!cookie) {
+          return;
+        }
+        var preferred = asked || decodeURIComponent(cookie.slice("course-language=".length));
+        if (!preferred || preferred === here) {
+          return;
+        }
+        var target = alternates[preferred];
+        if (typeof target !== "string") {
+          return;
+        }
+        var url = new URL(target, new URL(base, window.location.href)).pathname;
+        if (url !== window.location.pathname) {
+          window.location.replace(url + window.location.search + window.location.hash);
+        }
+      } catch (error) {
+        // A browser with no cookies stays where it is, which is the page asked for
+      }
+    })();
+  </script>
+
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="custom" data-md-color-accent="custom">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer" aria-hidden="true"></label>
+    <div data-md-component="skip">
+      <a href="#__skip" class="md-skip">
+        Aller au contenu
+      </a>
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="En-tête">
+    <a href="/fr/" title="Salesforce DevOps with sfdx-hardis" class="md-header__button md-logo" aria-label="Salesforce DevOps with sfdx-hardis" data-md-component="logo">
+      
+  <img src="../../../theme/images/cloudity-text-logo-white.svg" alt="Salesforce DevOps with sfdx-hardis">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer" aria-label="Navigation">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-menu" viewBox="0 0 24 24"><path d="M4 5h16M4 12h16M4 19h16"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Salesforce DevOps with sfdx-hardis
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Lab 1.1 - Installer VS Code, Git et sfdx-hardis
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="none" data-md-color-scheme="default" data-md-color-primary="custom" data-md-color-accent="custom"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="none" data-md-color-scheme="slate" data-md-color-primary="custom" data-md-color-accent="custom"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+      
+
+
+
+  
+
+  
+    
+    
+  
+
+<div class="md-header__option">
+  <div class="md-select md-select--language">
+    <button class="md-header__button md-header__button--flag" aria-label="Sélectionner la langue">
+      
+        <img src="../../../theme/images/flags/fr.svg" alt="Français" class="md-select__flag md-select__flag--current">
+      
+    </button>
+    <div class="md-select__inner">
+      <ul class="md-select__list">
+        
+          
+          <li class="md-select__item"><a href="../../../en/level-1-contributor-basics/1-1-install-vs-code-and-sfdx-hardis/" hreflang="en" data-course-home="/" class="md-select__link">
+              
+                <img src="../../../theme/images/flags/gb.svg" alt="" class="md-select__flag">
+              
+              English
+            </a>
+          </li>
+        
+          
+          <li class="md-select__item"><a href="././" hreflang="fr" data-course-home="/fr/" class="md-select__link">
+              
+                <img src="../../../theme/images/flags/fr.svg" alt="" class="md-select__flag">
+              
+              Français
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</div>
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search" aria-label="Recherche">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-search" viewBox="0 0 24 24"><path d="m21 21-4.34-4.34"/><circle cx="11" cy="11" r="8"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog" aria-label="Recherche">
+  <button type="button" class="md-search__button">
+    Recherche
+  </button>
+</div>
+      
+    
+    <div class="md-header__source">
+      
+        <a href="https://github.com/hardisgroupcom/sfdx-hardis-training" title="Aller au dépôt" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.3.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2026 Fonticons, Inc.--><path fill="currentColor" d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    hardisgroupcom/sfdx-hardis-training
+  </div>
+</a>
+      
+    </div>
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0" data-course-lang="fr" data-course-base="../../.." data-course-alt-en="en/level-1-contributor-basics/1-1-install-vs-code-and-sfdx-hardis/" data-course-alt-fr="fr/level-1-contributor-basics/1-1-install-vs-code-and-sfdx-hardis/">
+  <label class="md-nav__title" for="__drawer">
+    <a href="/fr/" title="Salesforce DevOps with sfdx-hardis" class="md-nav__button md-logo" aria-label="Salesforce DevOps with sfdx-hardis" data-md-component="logo">
+      
+  <img src="../../../theme/images/cloudity-text-logo-white.svg" alt="Salesforce DevOps with sfdx-hardis">
+
+    </a>
+    Salesforce DevOps with sfdx-hardis
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/hardisgroupcom/sfdx-hardis-training" title="Aller au dépôt" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.3.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2026 Fonticons, Inc.--><path fill="currentColor" d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    hardisgroupcom/sfdx-hardis-training
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+      
+    
+      
+      
+      
+    
+      
+      
+      
+    
+      
+      
+      
+    
+      
+      
+      
+    
+      
+      
+      
+    
+      
+      
+      
+    
+      
+      
+      
+        
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Accueil
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+      
+    
+      
+      
+      
+        
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_9" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_9" id="__nav_9_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Niveau 1 - Contributeur Salesforce DevOps, les bases
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        
+          <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_9_label" aria-expanded="true">
+            <label class="md-nav__title" for="__nav_9">
+              <span class="md-nav__icon md-icon"></span>
+              
+  
+  Niveau 1 - Contributeur Salesforce DevOps, les bases
+
+            </label>
+            <ul class="md-nav__list" data-md-scrollfix>
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Commencer ici
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Lab 1.1 - Installer VS Code, Git et sfdx-hardis
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="././" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Lab 1.1 - Installer VS Code, Git et sfdx-hardis
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+
+<nav class="md-nav md-nav--secondary" aria-label="Table des matières">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table des matières
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#la-situation" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        La situation
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#avant-de-commencer" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Avant de commencer
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#les-etapes" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Les étapes
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Les étapes">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-installer-vs-code-et-lextension" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        1. Installer VS Code et l'extension
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-laisser-le-panneau-setup-installer-le-reste" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        2. Laisser le panneau Setup installer le reste
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#ce-que-vous-devez-voir" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Ce que vous devez voir
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#la-suite" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        La suite
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#pour-aller-plus-loin" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Pour aller plus loin
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../1-2-create-your-dev-hub-scratch-orgs-and-pipeline/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Lab 1.2 - Créer votre Dev Hub, vos scratch orgs et votre pipeline CI/CD
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../1-3-start-a-user-story-on-a-git-branch/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Lab 1.3 - Démarrer une User Story sur sa propre branche Git
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../1-4-build-a-custom-field-in-your-org/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Lab 1.4 - Construire un champ personnalisé dans votre org Salesforce
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../1-5-retrieve-commit-and-publish-your-changes/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Lab 1.5 - Récupérer, commiter et publier vos modifications Salesforce
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../1-6-pull-request-deployment-check-and-merge/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Lab 1.6 - Ouvrir une Pull Request, passer le contrôle de déploiement, merger
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../1-7-capstone-deliver-a-user-story-on-your-own/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Lab 1.7 - Épreuve finale : livrer une User Story tout seul
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+            </ul>
+          </nav>
+        
+      
+    </li>
+  
+
+      
+    
+      
+      
+      
+        
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_10" >
+        
+          
+          <label class="md-nav__link" for="__nav_10" id="__nav_10_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Niveau 2 - Contributeur Salesforce DevOps avancé
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        
+          <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_10_label" aria-expanded="false">
+            <label class="md-nav__title" for="__nav_10">
+              <span class="md-nav__icon md-icon"></span>
+              
+  
+  Niveau 2 - Contributeur Salesforce DevOps avancé
+
+            </label>
+            <ul class="md-nav__list" data-md-scrollfix>
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../level-2-contributor-advanced/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Commencer ici
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../level-2-contributor-advanced/2-1-backpromote-your-teammates-work/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Lab 2.1 - Backpromote : remettre votre org de dev au niveau de l'équipe
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../level-2-contributor-advanced/2-2-fix-a-missing-dependency-deployment-error/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Lab 2.2 - Corriger une erreur de déploiement due à une dépendance manquante
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../level-2-contributor-advanced/2-3-fix-broken-records-with-an-apex-deployment-action/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Lab 2.3 - Réparer des enregistrements cassés avec une deployment action Apex
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../level-2-contributor-advanced/2-4-ship-reference-data-and-a-batch-with-deployment-actions/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Lab 2.4 - Livrer des données de référence et un batch avec des deployment actions
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../level-2-contributor-advanced/2-5-pass-code-quality-and-apex-test-coverage/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Lab 2.5 - Passer la barrière de qualité de code et la couverture de tests Apex
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../level-2-contributor-advanced/2-6-permission-sets-and-profiles/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Lab 2.6 - Permission sets, profils, et pourquoi une autorisation disparaît
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../level-2-contributor-advanced/2-7-resolve-a-git-merge-conflict/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Lab 2.7 - Résoudre un conflit de merge Git avec un collègue
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../level-2-contributor-advanced/2-8-recover-from-committing-the-wrong-metadata/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Lab 2.8 - Se remettre d'avoir commité la mauvaise métadonnée
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../level-2-contributor-advanced/2-9-capstone-deliver-a-user-story-that-has-it-all/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Lab 2.9 - Épreuve finale : livrer une User Story qui a tout
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+            </ul>
+          </nav>
+        
+      
+    </li>
+  
+
+      
+    
+      
+      
+      
+        
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_11" >
+        
+          
+          <label class="md-nav__link" for="__nav_11" id="__nav_11_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Niveau 3 - Release manager Salesforce DevOps
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        
+          <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_11_label" aria-expanded="false">
+            <label class="md-nav__title" for="__nav_11">
+              <span class="md-nav__icon md-icon"></span>
+              
+  
+  Niveau 3 - Release manager Salesforce DevOps
+
+            </label>
+            <ul class="md-nav__list" data-md-scrollfix>
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../level-3-release-manager/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Commencer ici
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../level-3-release-manager/3-1-configure-the-pipeline-up-to-production/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Lab 3.1 - Configurer la pipeline CI/CD jusqu'à la production
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../level-3-release-manager/3-2-review-a-contributor-pull-request/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Lab 3.2 - Relire et merger la Pull Request d'un contributeur
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../level-3-release-manager/3-3-deploy-to-integration-and-read-the-log/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Lab 3.3 - Lire le log de déploiement, et ce que .forceignore lui cache
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../level-3-release-manager/3-4-merge-colliding-pull-requests/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Lab 3.4 - Trois Pull Requests se percutent : choisir l'ordre de merge
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../level-3-release-manager/3-5-promote-to-uat-and-write-release-notes/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Lab 3.5 - Promouvoir en UAT et écrire les notes de version
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../level-3-release-manager/3-6-release-to-production-and-read-dora-metrics/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Lab 3.6 - Livrer en production et lire vos métriques DORA
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../level-3-release-manager/3-7-hotfix-and-retrofit/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Lab 3.7 - La production est cassée : hotfix et retrofit
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../level-3-release-manager/3-8-monitor-your-production-org/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Lab 3.8 - Monitorer votre org de production
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../level-3-release-manager/3-9-generate-the-project-documentation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Lab 3.9 - Générer la documentation du projet Salesforce
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../level-3-release-manager/3-10-promote-a-subset-with-promotion-branches/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Lab 3.10 - Promouvoir un sous-ensemble avec les promotion branches (Beta)
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../level-3-release-manager/3-11-capstone-run-a-weekly-release-cycle/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Lab 3.11 - Épreuve finale : mener un cycle de release hebdomadaire
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+            </ul>
+          </nav>
+        
+      
+    </li>
+  
+
+      
+    
+      
+      
+      
+        
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../help/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Aide
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+      
+    
+      
+      
+      
+        
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../BACKLOG/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Backlog
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+      
+    
+      
+      
+      
+        
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../badges/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Badges
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+      
+    
+      
+      
+      
+        
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="https://sfdx-hardis.cloudity.com/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  sfdx-hardis documentation
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+      
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  
+                    
+                    
+                    
+                      
+                    
+                    
+                      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+                      <div class="md-sidebar-button__wrapper">
+                        <label class="md-sidebar-button" for="__toc"></label>
+                      </div>
+                    
+                  
+                  <div class="md-sidebar__inner">
+                    
+
+
+<nav class="md-nav md-nav--secondary" aria-label="Table des matières">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table des matières
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#la-situation" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        La situation
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#avant-de-commencer" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Avant de commencer
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#les-etapes" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Les étapes
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Les étapes">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-installer-vs-code-et-lextension" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        1. Installer VS Code et l'extension
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-laisser-le-panneau-setup-installer-le-reste" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        2. Laisser le panneau Setup installer le reste
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#ce-que-vous-devez-voir" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Ce que vous devez voir
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#la-suite" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        La suite
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#pour-aller-plus-loin" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Pour aller plus loin
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                <a id="__skip" tabindex="-1"></a>
+                
+                  
+
+  
+    <a href="https://github.com/hardisgroupcom/sfdx-hardis-training/edit/main/labs/fr/level-1-contributor-basics/1-1-install-vs-code-and-sfdx-hardis.md" title="Editer cette page" class="md-content__button md-icon" rel="edit">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-file-pen" viewBox="0 0 24 24"><path d="M12.659 22H18a2 2 0 0 0 2-2V8a2.4 2.4 0 0 0-.706-1.706l-3.588-3.588A2.4 2.4 0 0 0 14 2H6a2 2 0 0 0-2 2v9.34"/><path d="M14 2v5a1 1 0 0 0 1 1h5M10.378 12.622a1 1 0 0 1 3 3.003L8.36 20.637a2 2 0 0 1-.854.506l-2.867.837a.5.5 0 0 1-.62-.62l.836-2.869a2 2 0 0 1 .506-.853z"/></svg>
+    </a>
+  
+  
+
+
+<h1 id="lab-11-installer-vs-code-git-et-sfdx-hardis">Lab 1.1 - Installer VS Code, Git et sfdx-hardis<a class="headerlink" href="#lab-11-installer-vs-code-git-et-sfdx-hardis" title="Permanent link">&para;</a></h1>
+<p><strong>Niveau</strong> : 1 Contributeur, les bases</p>
+<p><strong>Durée</strong> : ~15 min</p>
+<p><strong>Vous allez</strong> : transformer un ordinateur ordinaire en machine capable de faire du Salesforce
+DevOps, sans taper une seule commande.</p>
+<h2 id="la-situation">La situation<a class="headerlink" href="#la-situation" title="Permanent link">&para;</a></h2>
+<p>Votre premier matin dans une équipe Salesforce, celle-ci ou une vraie. Avant qu'on puisse vous
+confier un ticket, cinq choses doivent être sur votre machine, et la dernière installe la plupart
+des autres à votre place.</p>
+<div class="admonition tip">
+<p class="admonition-title">Ce lab se suffit à lui-même</p>
+<p>C'est la même liste que vous soyez ici pour la formation ou que vous rejoigniez un projet qui a
+déjà une pipeline, et elle se moque du fournisseur git de ce projet : GitHub, GitLab, Azure
+DevOps et Bitbucket fonctionnent tous pareil à partir d'ici. Si quelqu'un vous a envoyé ici pour
+vous équiper avant votre premier jour, <strong>terminez ce lab et arrêtez-vous</strong>. Le Lab 1.2 est là où
+commence la partie propre à la formation : orgs Salesforce gratuites, repository d'entraînement,
+données fictives. Rien de tout cela n'a sa place sur un vrai projet.</p>
+</div>
+<div class="admonition tip">
+<p class="admonition-title">Pas de VS Code ? Un onglet ou un autre éditeur suffit</p>
+<p><a href="https://www.salesforce.com/agentforce/developers/vibe-coding/ide/">Agentforce Vibes</a> est VS Code dans Google Chrome, lancé depuis une org Salesforce :
+une sandbox de développement, ou l'org Developer Edition gratuite pour laquelle le
+<a href="../1-2-create-your-dev-hub-scratch-orgs-and-pipeline/">Lab 1.2</a> vous inscrit, ce qui veut dire
+que ce chemin ne coûte rien et ne demande rien que vous ne créiez déjà ici. Tout ce cours y
+fonctionne. Deux différences et pas une
+de plus : la CLI Salesforce est déjà là, donc la partie du panneau Setup qui l'installe n'a rien
+à faire, et l'extension vient d'<a href="https://open-vsx.org/extension/NicolasVuillamy/vscode-sfdx-hardis">Open VSX</a>
+et non du Visual Studio Marketplace. Chaque panneau, chaque bouton et chaque étape ci-dessous
+sont les mêmes, et les captures d'écran aussi : elles ont été prises dans VS Code de bureau, qui
+est le même éditeur.</p>
+<p><a href="https://cursor.com/">Cursor</a> et les autres éditeurs construits sur VS Code fonctionnent pareil, et depuis
+le même Open VSX. Quel que soit celui que vous utilisez, la suite de ce lab est écrite pour ce
+que vous y voyez.</p>
+</div>
+<h2 id="avant-de-commencer">Avant de commencer<a class="headerlink" href="#avant-de-commencer" title="Permanent link">&para;</a></h2>
+<ul class="task-list">
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> Un ordinateur sur lequel vous pouvez installer des logiciels, et le droit de le faire, <strong>ou</strong>
+      n'importe quelle org Salesforce depuis laquelle lancer Agentforce Vibes : une sandbox de
+      développement, ou l'org Developer Edition gratuite du Lab 1.2</li>
+</ul>
+<h2 id="les-etapes">Les étapes<a class="headerlink" href="#les-etapes" title="Permanent link">&para;</a></h2>
+<h3 id="1-installer-vs-code-et-lextension">1. Installer VS Code et l'extension<a class="headerlink" href="#1-installer-vs-code-et-lextension" title="Permanent link">&para;</a></h3>
+<div class="admonition tip">
+<p class="admonition-title">Dans Agentforce Vibes, commencez aux extensions</p>
+<p>Les trois téléchargements ci-dessous sont déjà dans l'onglet : Git, Node.js et l'éditeur
+lui-même viennent avec. Passez-les et allez directement à
+<a href="#install-the-extension-pack">l'installation du pack d'extensions</a>, vers la fin de cette étape. Une différence là-bas : la vue Extensions d'un IDE dans le
+navigateur cherche dans
+<a href="https://open-vsx.org/extension/NicolasVuillamy/vscode-sfdx-hardis">Open VSX</a> et non dans le
+Visual Studio Marketplace, et le pack est le même, sous le même nom. Et partout où ce lab dit de
+redémarrer VS Code, rechargez l'onglet du navigateur : cela fait la même chose, c'est-à-dire
+permettre à l'éditeur de voir ce qui vient d'être installé.</p>
+</div>
+<p>D'abord <a href="https://git-scm.com/downloads">Git</a>. Git est l'outil qui enregistre chaque version d'un
+projet et la déplace entre votre portable et l'endroit où votre équipe garde le projet, et tout le
+reste de ce cours repose dessus. Vous n'aurez jamais à taper une commande Git : l'extension les
+lance pour vous, et vous montre laquelle elle a lancée. La page de téléchargement propose votre
+système d'exploitation en haut : sous Windows, prenez <strong>Click here to download</strong> <span class="pill-ref pill-ref-1">(1)</span>,
+l'installeur autonome 64 bits.</p>
+<p><a class="glightbox" data-type="image" href="../../../_assets/annotated/web/git-download.png"><img alt="La page de téléchargement de Git pour Windows" src="../../../_assets/annotated/web/git-download.png" /></a></p>
+<p><strong>Acceptez toutes les valeurs par défaut proposées par l'installeur</strong>, et sous Windows cela compte
+plus qu'il n'y paraît. Ces valeurs par défaut incluent <strong>Git Bash</strong>, un terminal de style Unix livré
+avec Git, et sfdx-hardis s'en sert : plusieurs des commandes que l'extension lance pour vous sont des
+commandes shell que l'invite de commandes Windows ne comprend pas. Si vous décochez les composants
+Git Bash, des pans entiers de ce cours échouent avec des erreurs qui n'ont l'air d'avoir aucun
+rapport avec Git.</p>
+<p>Deux écrans méritent d'être lus plutôt que cliqués au pas de course :</p>
+<ul>
+<li><strong>Select Components</strong> : laissez <strong>Open Git Bash here</strong> et <strong>Open Git GUI here</strong> cochés</li>
+<li><strong>Adjusting your PATH environment</strong> : gardez l'option du milieu, celle qui est recommandée, <strong>Git
+  from the command line and also from 3rd-party software</strong>, pour que VS Code trouve Git</li>
+</ul>
+<p>macOS et Linux ont déjà un shell Unix, il n'y a donc rien à choisir de ce côté.</p>
+<div class="admonition note">
+<p class="admonition-title">Vous l'avez peut-être déjà</p>
+<p>Beaucoup de machines l'ont. Installez-le quand même : l'installeur reconnaît un Git existant et
+propose de le mettre à jour. Le panneau Setup de l'étape 2 le contrôle aussi, et vous dit s'il
+manque.</p>
+</div>
+<div class="admonition tip">
+<p class="admonition-title">Vérifier que Git Bash est bien là, sous Windows</p>
+<p>Faites un clic droit sur n'importe quel dossier : le menu doit proposer <strong>Open Git Bash here</strong>.
+Dans VS Code, vous trouverez aussi <strong>Git Bash</strong> dans la liste déroulante du terminal, à côté de
+PowerShell. Si aucun des deux n'apparaît, relancez l'installeur Git et gardez les valeurs par
+défaut cette fois.</p>
+</div>
+<p>Ouvrez ensuite <a href="https://code.visualstudio.com/">Visual Studio Code</a> et prenez le téléchargement qui
+correspond à votre machine. Sous Windows c'est le bouton <strong>Windows</strong> <span class="pill-ref pill-ref-1">(1)</span> ; les deux cartes à côté
+contiennent les versions macOS et Linux. Son installeur ne demande aucun choix : acceptez la licence
+et gardez toutes les valeurs par défaut qu'il propose.</p>
+<p><a class="glightbox" data-type="image" href="../../../_assets/annotated/web/vscode-download.png"><img alt="La page de téléchargement de Visual Studio Code, une carte par système d'exploitation" src="../../../_assets/annotated/web/vscode-download.png" /></a></p>
+<p>Puis <a href="https://nodejs.org/">Node.js</a>, <strong>en version 22 au minimum, 24 recommandée</strong>. Deux choses à ne
+pas rater sur cette page :</p>
+<ol>
+<li>le sélecteur de version <span class="pill-ref pill-ref-1">(1)</span>. Celle marquée <strong>LTS</strong> est le choix sûr, tant qu'elle affiche 22
+   ou plus</li>
+<li><strong>Windows Installer (.msi)</strong> <span class="pill-ref pill-ref-2">(2)</span>, ou l'équivalent pour votre machine</li>
+</ol>
+<p><a class="glightbox" data-type="image" href="../../../_assets/annotated/web/nodejs-download.png"><img alt="La page de téléchargement de Node.js, avec le sélecteur de version et les boutons d'installeur" src="../../../_assets/annotated/web/nodejs-download.png" /></a></p>
+<p>L'installeur de Node.js est comme celui de VS Code : acceptez la licence et gardez toutes les
+valeurs par défaut.</p>
+<div class="admonition warning">
+<p class="admonition-title">Redémarrez VS Code après avoir installé Git ou Node.js</p>
+<p>Les installeurs de Git et de Node.js s'ajoutent au <strong>PATH</strong>, la liste des endroits où votre machine cherche une
+commande. Un programme ne lit cette liste qu'à son démarrage : un VS Code déjà ouvert au moment
+de l'installation ne les trouve donc toujours pas, et le panneau Setup de l'étape 2 les signale
+manquants alors qu'ils sont là. Fermez VS Code complètement, toutes fenêtres comprises, et
+rouvrez-le.</p>
+<p>La même chose vaut pour un terminal que vous aviez déjà ouvert.</p>
+</div>
+<p><a id="install-the-extension-pack"></a></p>
+<p>Ouvrez ensuite VS Code et installez les extensions. L'icône <strong>Extensions</strong> <span class="pill-ref pill-ref-1">(1)</span> se trouve dans la
+barre étroite de gauche, et ressemble à quatre petits carrés dont l'un est détaché. Cliquez dessus,
+tapez <code>hardis</code> dans la zone de recherche <span class="pill-ref pill-ref-2">(2)</span>, et cliquez sur <strong>Install</strong> sur <strong>SFDX Hardis
+Extension Pack for Salesforce, by Cloudity</strong> <span class="pill-ref pill-ref-3">(3)</span>, publié par Nicolas Vuillamy.</p>
+<p><a class="glightbox" data-type="image" href="../../../_assets/annotated/vscode/extensions-install.png"><img alt="La vue Extensions de VS Code, avec hardis tapé dans la zone de recherche" src="../../../_assets/annotated/vscode/extensions-install.png" /></a></p>
+<p>Deux choses se passent autour de ce clic, et toutes deux sont faciles à rater :</p>
+<ul>
+<li>VS Code peut demander <strong>Do you trust the publishers of these extensions?</strong>. Répondez <strong>Trust
+  Publishers &amp; Install</strong>. Un pack installe des extensions de plusieurs éditeurs, et il s'arrête là
+  tant que vous ne l'avez pas dit</li>
+<li>Une fois le pack installé, ouvrez l'icône d'engrenage à côté de lui et cochez <strong>Auto Update</strong>. Le
+  cours et le produit avancent ensemble, et une extension en retard de quelques versions est la
+  première raison pour laquelle un panneau de ces labs ne ressemble pas à sa capture</li>
+</ul>
+<p>Le pack installe sfdx-hardis lui-même ainsi que les outils qui vont avec : Git Graph, qui dessine vos
+branches, le support YAML et Markdown que les fichiers de configuration utilisent, et le visualiseur
+de logs Apex. Les niveaux suivants s'en servent, prenez donc le pack plutôt que l'extension seule
+juste au-dessus.</p>
+<p>Une nouvelle icône apparaît dans la barre de gauche <span class="pill-ref pill-ref-1">(1)</span>. Cliquez dessus : l'onglet <strong>Welcome</strong>
+<span class="pill-ref pill-ref-2">(2)</span> s'ouvre, et c'est par cet onglet que commence chaque lab de ce cours.</p>
+<p><a class="glightbox" data-type="image" href="../../../_assets/annotated/vscode/welcome--first-open.png"><img alt="VS Code avec l'onglet Welcome de sfdx-hardis ouvert" src="../../../_assets/annotated/vscode/welcome--first-open.png" /></a></p>
+<h3 id="2-laisser-le-panneau-setup-installer-le-reste">2. Laisser le panneau Setup installer le reste<a class="headerlink" href="#2-laisser-le-panneau-setup-installer-le-reste" title="Permanent link">&para;</a></h3>
+<p>Il vous faut la CLI Salesforce et quelques plugins. Vous n'allez pas les installer à la main :
+l'extension a un panneau qui vérifie ce qui manque et l'installe.</p>
+<div class="admonition tip">
+<p class="admonition-title">Dans Agentforce Vibes, la CLI Salesforce est déjà là</p>
+<p>Sa carte est verte avant même que vous commenciez, et le panneau n'a plus que les plugins à
+installer. Lancez le même <strong>Run pending installs</strong> et lisez la même liste ; elle est simplement
+plus courte.</p>
+</div>
+<p>Sur la Welcome page, le bouton en haut à gauche du bandeau d'en-tête <span class="pill-ref pill-ref-1">(1)</span> ouvre le panneau Setup.
+Il n'y a pas de carte appelée Setup : le bouton porte l'état de vos dépendances, il affiche donc
+<strong>Check in progress</strong> tant qu'il cherche, puis soit <strong>Dependencies up to date</strong>, soit
+<strong>N update(s) needed</strong>. Survolez-le et l'infobulle dit <strong>Open Setup</strong>. Attendez la fin du contrôle,
+puis cliquez.</p>
+<p><a class="glightbox" data-type="image" href="../../../_assets/annotated/vscode/welcome--setup-button.png"><img alt="L'en-tête de la Welcome page, avec à sa gauche le bouton d'état des dépendances" src="../../../_assets/annotated/vscode/welcome--setup-button.png" /></a></p>
+<p>Le panneau liste chaque dépendance dont la pipeline a besoin, avec la version que vous avez et la
+version à jour. Celles qu'il faut connaître par leur nom :</p>
+<ul>
+<li><strong>Salesforce CLI</strong> - le programme auquel parle chaque outil Salesforce de votre machine</li>
+<li><strong>sfdx-hardis</strong> - le complément qui ajoute les commandes User Story à cette CLI</li>
+<li><strong>SFDMU</strong> - charge et extrait des enregistrements, c'est ainsi que vos orgs reçoivent leurs données</li>
+<li><strong>sfdx-git-delta</strong> - calcule ce qui a changé entre deux versions du projet, c'est ce que les
+  déploiements envoient</li>
+<li><strong>Salesforce Extension Pack</strong> - l'outillage Salesforce officiel pour VS Code</li>
+</ul>
+<p>Node.js et <strong>Git</strong> <span class="pill-ref pill-ref-3">(3)</span> ont aussi chacun leur carte : le panneau contrôle ce que vous avez
+installé à l'étape 1 et le dit.</p>
+<p><a class="glightbox" data-type="image" href="../../../_assets/annotated/vscode/setup.png"><img alt="Le panneau Setup, listant chaque dépendance avec sa version" src="../../../_assets/annotated/vscode/setup.png" /></a></p>
+<p>L'image a été prise sur une machine où tout était déjà en place : chaque carte est verte et ne
+propose rien d'autre que <strong>Re-check</strong> <span class="pill-ref pill-ref-2">(2)</span>, et le bandeau du haut n'a rien à proposer <span class="pill-ref pill-ref-1">(1)</span>.</p>
+<p>Votre première exécution ne ressemblera pas à cela. Tout ce qui manque ou n'est pas à jour passe à
+l'orange et son bouton affiche <strong>Install</strong> ou <strong>Upgrade</strong>, et le bandeau du haut porte alors
+<strong>Run pending installs</strong> <span class="pill-ref pill-ref-1">(1)</span>. Servez-vous de celui-là : il met toute la liste en file d'attente
+et rend compte de chaque élément au fur et à mesure.</p>
+<p>Cela prend quelques minutes. C'est la partie la plus longue de ce lab, et la seule que vous ne
+referez jamais.</p>
+<div class="admonition warning">
+<p class="admonition-title">Redémarrez VS Code une fois les installations terminées</p>
+<p>La CLI Salesforce atterrit elle aussi sur le PATH, la même règle s'applique donc : fermez
+VS Code et rouvrez-le avant de continuer. Appuyez ensuite sur <strong>Re-check</strong> dans le panneau
+Setup. Tout ce qui était encore rouge pour cette raison passe au vert.</p>
+</div>
+<details>
+<summary>Sous le capot : ce que le panneau Setup vient de faire</summary>
+<p>Pour chaque dépendance manquante, il a lancé la commande npm toute simple que vous auriez lancée
+vous-même, par exemple :</p>
+<div class="highlight"><pre><span></span><code>npm install --global @salesforce/cli
+sf plugins install sfdx-hardis
+sf plugins install sfdmu
+sf plugins install sfdx-git-delta
+</code></pre></div>
+<p>puis il a relancé <code>sf version</code> et <code>sf plugins</code> et comparé les réponses aux versions publiées sur le
+registre npm. Cette comparaison est toute la raison d'être du panneau : une pipeline casse de façon
+déroutante quand une personne a deux versions majeures de retard, et personne ne s'en aperçoit
+jusqu'à ce qu'un déploiement échoue.</p>
+</details>
+<h2 id="ce-que-vous-devez-voir">Ce que vous devez voir<a class="headerlink" href="#ce-que-vous-devez-voir" title="Permanent link">&para;</a></h2>
+<p>Le panneau <strong>Setup</strong> sans rien à installer :</p>
+<p><a class="glightbox" data-type="image" href="../../../_assets/annotated/vscode/setup--ready.png"><img alt="Le panneau Setup une fois tout installé" src="../../../_assets/annotated/vscode/setup--ready.png" /></a></p>
+<p>La ligne à lire est le résumé du haut <span class="pill-ref pill-ref-1">(1)</span>. Il nomme tout ce qui manque encore, et manquant est le
+seul état qui vous bloque. Chaque carte en dessous est verte, <strong>Salesforce CLI</strong> <span class="pill-ref pill-ref-2">(2)</span> compris,
+sans rien d'autre à faire que <strong>Re-check</strong>.</p>
+<p>Un <strong>Upgrade</strong> orange sur l'une d'elles n'est pas un échec : cela veut dire qu'une version plus
+récente existe, et le bouton ira la chercher quand vous en aurez envie.</p>
+<p>C'est tout ce lab. Votre machine peut maintenant faire tourner tout ce que la suite du cours, et tout
+projet Salesforce qui utilise sfdx-hardis, va lui demander.</p>
+<details class="troubleshoot">
+<summary>En cas de problème</summary>
+<p><strong>Le panneau Setup dit que la CLI Salesforce manque alors qu'il vient de l'installer.</strong>
+Elle a atterri quelque part qui n'était pas sur le PATH d'un terminal déjà ouvert. Fermez VS Code
+complètement et rouvrez-le.</p>
+<p><strong>L'extension n'apparaît pas après son installation.</strong>
+Rechargez la fenêtre : <strong>View &gt; Command Palette</strong>, puis <strong>Developer: Reload Window</strong>.</p>
+<p><strong>Le panneau Setup affiche une ligne rouge que vous n'arrivez pas à faire passer.</strong>
+Cliquez sur la ligne. Le panneau dit ce qu'il a tenté et ce qu'on lui a répondu, et ce message est
+presque toujours la réponse.</p>
+</details>
+<h2 id="la-suite">La suite<a class="headerlink" href="#la-suite" title="Permanent link">&para;</a></h2>
+<p>Si vous êtes venu ici pour équiper un vrai projet, vous avez fini : ouvrez le repository de votre
+équipe et le panneau <strong>DevOps Pipeline</strong> vous dira le reste.</p>
+<p>Si vous suivez la formation, le <a href="../1-2-create-your-dev-hub-scratch-orgs-and-pipeline/">Lab 1.2</a> vous construit un petit environnement de travail : une org
+Salesforce gratuite, trois scratch orgs créées à partir d'elle, une copie du projet, et une pipeline.
+C'est la dernière étape d'installation.</p>
+<h2 id="pour-aller-plus-loin">Pour aller plus loin<a class="headerlink" href="#pour-aller-plus-loin" title="Permanent link">&para;</a></h2>
+<ul>
+<li><a href="https://sfdx-hardis.cloudity.com/salesforce-devops-use-install/">Installer sfdx-hardis</a></li>
+<li><a href="https://sfdx-hardis.cloudity.com/vscode-extension/">L'extension VS Code</a></li>
+</ul>
+<p><a class="md-button md-button--primary" href="../1-2-create-your-dev-hub-scratch-orgs-and-pipeline/">Suite : Lab 1.2 - Créer votre Dev Hub, vos scratch orgs et votre pipeline CI/CD</a></p>
+
+
+
+
+
+
+
+
+
+  
+  
+
+
+
+  
+
+
+
+
+  <h2 id="__comments">Questions and comments</h2>
+  <script src="https://giscus.app/client.js"
+          data-repo="hardisgroupcom/sfdx-hardis-training"
+          data-repo-id="R_kgDOUcjgQw"
+          data-category="Q&amp;A"
+          data-category-id="DIC_kwDOUcjgQ84DF-lC"
+          data-mapping="pathname"
+          data-strict="1"
+          data-reactions-enabled="1"
+          data-emit-metadata="0"
+          data-input-position="top"
+          data-theme="preferred_color_scheme"
+          data-lang="en"
+          data-loading="lazy"
+          crossorigin="anonymous"
+          async>
+  </script>
+
+  <script>
+    // Keep the Giscus iframe in sync with the palette toggle. It is a
+    // cross-origin frame, so its theme can only be changed by postMessage.
+    (function () {
+      if (window.__giscusThemeSync) {
+        return;
+      }
+      window.__giscusThemeSync = true;
+      var giscusTheme = function () {
+        var scheme = document.body.getAttribute("data-md-color-scheme");
+        return scheme === "slate" ? "dark" : "light";
+      };
+      var apply = function () {
+        var frame = document.querySelector("iframe.giscus-frame");
+        if (frame && frame.contentWindow) {
+          frame.contentWindow.postMessage(
+            { giscus: { setConfig: { theme: giscusTheme() } } },
+            "https://giscus.app"
+          );
+        }
+      };
+      new MutationObserver(apply).observe(document.body, {
+        attributes: true,
+        attributeFilter: ["data-md-color-scheme"]
+      });
+      window.addEventListener("message", function (event) {
+        if (event.origin === "https://giscus.app") {
+          apply();
+        }
+      });
+    })();
+  </script>
+
+                
+              </article>
+            </div>
+          
+          
+  <script>var tabs=__md_get("__tabs");if(Array.isArray(tabs))e:for(var set of document.querySelectorAll(".tabbed-set")){var labels=set.querySelector(".tabbed-labels");for(var tab of tabs)for(var label of labels.getElementsByTagName("label"))if(label.innerText.trim()===tab){var input=document.getElementById(label.htmlFor);input.checked=!0;continue e}}</script>
+
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-circle-arrow-up" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="m16 12-4-4-4 4M12 16V8"/></svg>
+  Retour en haut de la page
+</button>
+        
+      </main>
+      
+        
+
+
+
+
+<footer class="md-footer">
+  
+    
+      
+      <nav class="md-footer__inner md-grid" aria-label="Pied de page" >
+        
+          
+          <a href="../" class="md-footer__link md-footer__link--prev" aria-label="Précédent: Commencer ici">
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-arrow-left" viewBox="0 0 24 24"><path d="m12 19-7-7 7-7M19 12H5"/></svg>
+            </div>
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Précédent
+              </span>
+              <div class="md-ellipsis">
+                Commencer ici
+              </div>
+            </div>
+          </a>
+        
+        
+          
+          <a href="../1-2-create-your-dev-hub-scratch-orgs-and-pipeline/" class="md-footer__link md-footer__link--next" aria-label="Suivant: Lab 1.2 - Créer votre Dev Hub, vos scratch orgs et votre pipeline CI&#x2f;CD">
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Suivant
+              </span>
+              <div class="md-ellipsis">
+                Lab 1.2 - Créer votre Dev Hub, vos scratch orgs et votre pipeline CI/CD
+              </div>
+            </div>
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-arrow-right" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+            </div>
+          </a>
+        
+      </nav>
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      Cloudity and friends
+    </div>
+  
+  
+</div>
+      
+        
+<div class="md-social">
+  
+    
+    
+    
+    
+    <a href="https://github.com/hardisgroupcom/sfdx-hardis" target="_blank" rel="noopener" title="sfdx-hardis on GitHub" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.3.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2026 Fonticons, Inc.--><path fill="currentColor" d="M216.5 362.5c-66-8-112.5-55.5-112.5-117 0-25 9-52 24-70-6.5-16.5-5.5-51.5 2-66 20-2.5 47 8 63 22.5 19-6 39-9 63.5-9s44.5 3 62.5 8.5c15.5-14 43-24.5 63-22 7 13.5 8 48.5 1.5 65.5 16 19 24.5 44.5 24.5 70.5 0 61.5-46.5 108-113.5 116.5 17 11 28.5 35 28.5 62.5v52c0 15 12.5 23.5 27.5 17.5C441 459.5 512 369 512 257 512 115.5 397 0 255.5 0S0 115.5 0 257c0 111 70.5 203 165.5 237.5 13.5 5 26.5-4 26.5-17.5v-40c-7 3-16 5-24 5-33 0-52.5-18-66.5-51.5-5.5-13.5-11.5-21.5-23-23-6-.5-8-3-8-6 0-6 10-10.5 20-10.5 14.5 0 27 9 40 27.5 10 14.5 20.5 21 33 21s20.5-4.5 32-16c8.5-8.5 15-16 21-21"/></svg>
+    </a>
+  
+    
+    
+    
+    
+    <a href="https://sfdx-hardis.cloudity.com/" target="_blank" rel="noopener" title="sfdx-hardis documentation" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.3.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2026 Fonticons, Inc.--><path fill="currentColor" d="M384 512H96c-53 0-96-43-96-96V96C0 43 43 0 96 0h304c26.5 0 48 21.5 48 48v288c0 20.9-13.4 38.7-32 45.3V448c17.7 0 32 14.3 32 32s-14.3 32-32 32zM96 384c-17.7 0-32 14.3-32 32s14.3 32 32 32h256v-64zm32-232c0 13.3 10.7 24 24 24h176c13.3 0 24-10.7 24-24s-10.7-24-24-24H152c-13.3 0-24 10.7-24 24m24 72c-13.3 0-24 10.7-24 24s10.7 24 24 24h176c13.3 0 24-10.7 24-24s-10.7-24-24-24z"/></svg>
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog" role="status" aria-atomic="true">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      
+      
+        
+        
+      <script id="__config" type="application/json">{"annotate":null,"base":"../../..","features":["content.action.edit","content.code.copy","content.tabs.link","navigation.instant","navigation.tracking","navigation.top","navigation.footer","search.suggest","search.highlight","toc.follow"],"redirect":null,"search":"../../../assets/javascripts/workers/search.7d14d953.min.js","tags":null,"translations":{"clipboard.copied":"Copié dans le presse-papier","clipboard.copy":"Copier dans le presse-papier","clipboard.error":"Could not copy to clipboard","search.result.more.one":"1 de plus sur cette page","search.result.more.other":"# de plus sur cette page","search.result.none":"Aucun document trouvé","search.result.one":"1 document trouvé","search.result.other":"# documents trouvés","search.result.placeholder":"Taper pour démarrer la recherche","search.result.term.missing":"Non trouvé","select.version":"Sélectionner la version"},"version":null}</script>
+    
+    
+      <script src="../../../assets/javascripts/bundle.8b1c90bd.min.js"></script>
+      
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/tablesort/5.2.1/tablesort.min.js"></script>
+      
+        <script src="../../../theme/javascripts/tables.js"></script>
+      
+        <script src="../../../theme/javascripts/lightbox.js"></script>
+      
+        <script src="../../../theme/javascripts/after-footer.js"></script>
+      
+        <script src="../../../theme/javascripts/language-switch.js"></script>
+      
+    
+  </body>
+</html>

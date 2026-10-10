@@ -1,0 +1,138 @@
+{
+  "_comment": "VS Code images scripts/build/shots.mjs cannot find in vscode/.shot-gates.json: the ones taken by hand, and the ones taken under another pipeline state (SF_MOCK_PIPELINE_STATE) then copied in under another name. 'file' is the name the harness writes, the key the name the labs use.",
+  "manual": ["extensions-install", "clone-repository"],
+  "variants": {
+    "devops-pipeline-fresh": {
+      "gate": "devops-pipeline",
+      "file": "devops-pipeline",
+      "state": "fresh"
+    },
+    "devops-pipeline-disconnected": {
+      "gate": "devops-pipeline",
+      "file": "devops-pipeline",
+      "state": "fresh-disconnected"
+    },
+    "devops-pipeline-level3": {
+      "gate": "devops-pipeline",
+      "file": "devops-pipeline",
+      "state": "level3"
+    },
+    "pipeline-branch-modal-uat": {
+      "gate": "pipeline-modals",
+      "file": "pipeline-branch-modal",
+      "_env_comment": "The window of uat, which has no merge target before Level 3, so it shows its go-lives: the point is the uat box in devops-pipeline.png.",
+      "env": {
+        "SFDX_HARDIS_DOC_SCREENSHOTS_BRANCH_NODE": "1343,477"
+      }
+    },
+    "pipeline-branch-modal-level3": {
+      "gate": "pipeline-modals",
+      "file": "pipeline-branch-modal",
+      "state": "level3",
+      "_env_comment": "The level3 diagram is laid out differently: the point is the integration box in devops-pipeline-level3.png, in window pixels.",
+      "env": {
+        "SFDX_HARDIS_DOC_SCREENSHOTS_BRANCH_NODE": "880,432"
+      }
+    },
+    "devops-pipeline-promotion": {
+      "gate": "promotion",
+      "file": "promotion-pipeline",
+      "state": "level3",
+      "_env_comment": "Lab 3.10: the level3 pipeline with enablePromotionBranches on and the promotion of US-057 open on the uat to preprod arrow. The promotion variant is a separate fixture overlay, so every other capture keeps a project with no promotion in flight.",
+      "env": {
+        "SFDX_HARDIS_DOC_SCREENSHOTS_PROMOTION": "true"
+      }
+    },
+    "pipeline-branch-modal-promotion": {
+      "gate": "promotion",
+      "file": "promotion-branch-modal",
+      "state": "level3",
+      "_env_comment": "Lab 3.10 step 4: the uat window with its checkbox column, five stories waiting, US-061, US-059 and US-057 ticked and the two others left alone. The uat node of the level3 diagram and the rows to tick come from promotionNode and promotionRows of the helios universe fixture.",
+      "env": {
+        "SFDX_HARDIS_DOC_SCREENSHOTS_PROMOTION": "true"
+      }
+    },
+    "promotion-create-select": {
+      "gate": "promotion-create",
+      "state": "level3",
+      "_env_comment": "Lab 3.10 step 4: the command the Create promotion button ran, stopped on the selection to confirm, with the three ticked stories pre-filled.",
+      "env": {
+        "SFDX_HARDIS_DOC_SCREENSHOTS_PROMOTION": "true"
+      }
+    },
+    "promotion-create-conflict": {
+      "gate": "promotion-create",
+      "state": "level3",
+      "_env_comment": "Lab 3.10 step 4: the same run stopped on the conflict question of the US-059 cherry-pick, the recommended answer first.",
+      "env": {
+        "SFDX_HARDIS_DOC_SCREENSHOTS_PROMOTION": "true"
+      }
+    },
+    "promotion-create-completed": {
+      "gate": "promotion-create",
+      "state": "level3",
+      "_env_comment": "Lab 3.10 step 5: the end of the run, with the warning about the markers and the prompt report file next to the Pull Request button.",
+      "env": {
+        "SFDX_HARDIS_DOC_SCREENSHOTS_PROMOTION": "true"
+      }
+    },
+    "promotion-conflict-editor": {
+      "gate": "promotion-conflict",
+      "state": "level3",
+      "_env_comment": "Lab 3.10 step 6: the Panel Batch layout as the promotion committed it, open in the editor with the Accept Current / Accept Incoming / Accept Both code lenses of VS Code over the conflict block.",
+      "env": {
+        "SFDX_HARDIS_DOC_SCREENSHOTS_PROMOTION": "true"
+      }
+    },
+    "pipeline-config-danger": {
+      "gate": "promotion",
+      "file": "promotion-settings",
+      "state": "level3",
+      "_env_comment": "Lab 3.1 step 10 and Lab 3.10 step 1: the Danger Zone of the Global Pipeline Settings, where enablePromotionBranches and allowedPromotionSteps are set.",
+      "env": {
+        "SFDX_HARDIS_DOC_SCREENSHOTS_PROMOTION": "true"
+      }
+    },
+    "pipeline-cards-level1": {
+      "_comment": "The cards as Level 1 sees them: no feature branch and no open Pull Request yet. The default state is the Level 2 world.",
+      "gate": "pipeline-cards",
+      "file": "pipeline-cards",
+      "state": "fresh",
+      "env": {
+        "SFDX_HARDIS_DOC_SCREENSHOTS_BRANCH": "features/US-014-panels-required"
+      }
+    },
+    "pipeline-packages-menu": {
+      "_comment": "Only Lab 1.5 shows it, so it is taken in the Level 1 state.",
+      "gate": "pipeline-menus",
+      "file": "pipeline-packages-menu",
+      "state": "fresh",
+      "env": {
+        "SFDX_HARDIS_DOC_SCREENSHOTS_BRANCH": "features/US-014-panels-required"
+      }
+    },
+    "pipeline-pr-actions-list": {
+      "_comment": "Lab 2.3 shows the one action its Pull Request carries: the fixture holds one of each type for the editor captures, so this keeps only the backfill.",
+      "gate": "pipeline-modals",
+      "file": "pipeline-pr-actions-list",
+      "env": {
+        "SFDX_HARDIS_DOC_SCREENSHOTS_ACTIONS_KEEP": "7a1c3d2e-2d0b-4f1e-8e3b-024b00000004"
+      }
+    },
+    "package-xml-filtered": {
+      "gate": "training-files",
+      "file": "package-xml-filtered",
+      "_comment": "Labs 2.2 and 2.4. Listed here until the first capture writes its gate into .shot-gates.json."
+    },
+    "editor-field-file": {
+      "gate": "training-files",
+      "file": "editor-field-file",
+      "_comment": "Labs 2.2 and 2.4. Listed here until the first capture writes its gate into .shot-gates.json."
+    },
+    "editor-crew-capacity-csv": {
+      "gate": "training-files",
+      "file": "editor-crew-capacity-csv",
+      "_comment": "Labs 2.2 and 2.4. Listed here until the first capture writes its gate into .shot-gates.json."
+    }
+  }
+}

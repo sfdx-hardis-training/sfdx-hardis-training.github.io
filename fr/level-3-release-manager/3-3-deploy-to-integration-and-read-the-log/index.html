@@ -1,0 +1,2744 @@
+
+<!doctype html>
+<html lang="fr" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Lisez un log de déploiement sfdx-hardis, trouvez ce qu'un joker .forceignore cache, et rattrapez des actions de post-déploiement en échec après le merge.">
+      
+      
+      
+        <link rel="canonical" href="https://sfdx-hardis-training.github.io/fr/level-3-release-manager/3-3-deploy-to-integration-and-read-the-log/">
+      
+      
+        <link rel="prev" href="../3-2-review-a-contributor-pull-request/">
+      
+      
+        <link rel="next" href="../3-4-merge-colliding-pull-requests/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../../theme/images/badge-mark.svg">
+      <meta name="generator" content="zensical-0.0.69">
+    
+    
+      
+        <title>Lab 3.3 - Lire le log de déploiement, et ce que .forceignore lui cache - Salesforce DevOps with sfdx-hardis</title>
+      
+    
+    
+      
+        
+      
+      <link rel="stylesheet" href="../../../assets/stylesheets/modern/main.e15858d4.min.css">
+      
+        
+          
+        
+        <link rel="stylesheet" href="../../../assets/stylesheets/modern/palette.b27955a4.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+    
+    
+      <link rel="stylesheet" href="../../../theme/stylesheets/extra.css">
+    
+    <script>__md_scope=new URL("../../..",location),__md_scope.pathname.endsWith("/")||(__md_scope=new URL(__md_scope.pathname+"/",location)),__md_hash=e=>[...e].reduce(((e,t)=>(e<<5)-e+t.charCodeAt(0)),0),__md_get=(e,t=localStorage,_=__md_scope)=>JSON.parse(t.getItem(_.pathname+"."+e)),__md_set=(e,t,_=localStorage,a=__md_scope)=>{try{_.setItem(a.pathname+"."+e,JSON.stringify(t))}catch(e){}},document.documentElement.setAttribute("data-platform",navigator.platform)</script>
+    
+      
+  
+
+
+  
+  
+
+<script id="__analytics">function __md_analytics(){function e(){dataLayer.push(arguments)}window.dataLayer=window.dataLayer||[],e("js",new Date),e("config","G-SE20CZ58E1"),document.addEventListener("DOMContentLoaded",(function(){document.forms.search&&document.forms.search.query.addEventListener("blur",(function(){this.value&&e("event","search",{search_term:this.value})}));document$.subscribe((function(){var t=document.forms.feedback;if(void 0!==t)for(var a of t.querySelectorAll("[type=submit]"))a.addEventListener("click",(function(a){a.preventDefault();var n=document.location.pathname,d=this.getAttribute("data-md-value");e("event","feedback",{page:n,data:d}),t.firstElementChild.disabled=!0;var r=t.querySelector(".md-feedback__note [data-md-value='"+d+"']");r&&(r.hidden=!1)})),t.hidden=!1})),location$.subscribe((function(t){e("config","G-SE20CZ58E1",{page_path:t.pathname})}))}));var t=document.createElement("script");t.async=!0,t.src="https://www.googletagmanager.com/gtag/js?id=G-SE20CZ58E1",document.getElementById("__analytics").insertAdjacentElement("afterEnd",t)}</script>
+  
+    <script>"undefined"!=typeof __md_analytics&&__md_analytics()</script>
+  
+
+    
+    
+  
+  
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Salesforce DevOps with sfdx-hardis">
+  <meta property="og:locale" content="fr">
+  <meta property="og:title" content="Lab 3.3 - Lire le log de déploiement, et ce que .forceignore lui cache">
+  <meta property="og:description" content="Lisez un log de déploiement sfdx-hardis, trouvez ce qu'un joker .forceignore cache, et rattrapez des actions de post-déploiement en échec après le merge.">
+  <meta property="og:url" content="https://sfdx-hardis-training.github.io/fr/level-3-release-manager/3-3-deploy-to-integration-and-read-the-log/">
+  <meta property="og:image" content="https://sfdx-hardis-training.github.io/_assets/social/course.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="Lab 3.3 - Lire le log de déploiement, et ce que .forceignore lui cache">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Lab 3.3 - Lire le log de déploiement, et ce que .forceignore lui cache">
+  <meta name="twitter:description" content="Lisez un log de déploiement sfdx-hardis, trouvez ce qu'un joker .forceignore cache, et rattrapez des actions de post-déploiement en échec après le merge.">
+  <meta name="twitter:image" content="https://sfdx-hardis-training.github.io/_assets/social/course.png">
+
+  <script>
+    (function () {
+      var here = "fr";
+      var alternates = {"en":"en/level-3-release-manager/3-3-deploy-to-integration-and-read-the-log/","fr":"fr/level-3-release-manager/3-3-deploy-to-integration-and-read-the-log/"};
+      var base = new URL("../../.." || ".", window.location.href).pathname;
+      try {
+        var asked = new URLSearchParams(window.location.search).get("lang");
+        if (asked) {
+          document.cookie =
+            "course-language=" + encodeURIComponent(asked) + "; path=" + base + "; max-age=31536000; samesite=lax";
+        }
+        var cookie = document.cookie.split("; ").filter(function (one) {
+          return one.indexOf("course-language=") === 0;
+        })[0];
+        if (!cookie) {
+          return;
+        }
+        var preferred = asked || decodeURIComponent(cookie.slice("course-language=".length));
+        if (!preferred || preferred === here) {
+          return;
+        }
+        var target = alternates[preferred];
+        if (typeof target !== "string") {
+          return;
+        }
+        var url = new URL(target, new URL(base, window.location.href)).pathname;
+        if (url !== window.location.pathname) {
+          window.location.replace(url + window.location.search + window.location.hash);
+        }
+      } catch (error) {
+        // A browser with no cookies stays where it is, which is the page asked for
+      }
+    })();
+  </script>
+
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="custom" data-md-color-accent="custom">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer" aria-hidden="true"></label>
+    <div data-md-component="skip">
+      <a href="#__skip" class="md-skip">
+        Aller au contenu
+      </a>
+    </div>
+    <div data-md-component="announce">
+      
+        <aside class="md-banner">
+          <div class="md-banner__inner md-grid md-typeset">
+            
+            
+      <strong>Ce niveau est en phase de relecture.</strong> Il est complet et a été déroulé de bout
+      en bout, et maintenant il a besoin de vous. Si une étape ne fonctionne pas, ou si l'écran ne
+      correspond pas à ce que dit la page, merci de
+      <a href="#__comments">laisser un commentaire en bas de cette page</a>. C'est le moyen le plus
+      rapide de faire corriger le problème, et cela aide la personne suivante.
+    
+          </div>
+          
+        </aside>
+      
+    </div>
+    
+    
+      
+
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="En-tête">
+    <a href="/fr/" title="Salesforce DevOps with sfdx-hardis" class="md-header__button md-logo" aria-label="Salesforce DevOps with sfdx-hardis" data-md-component="logo">
+      
+  <img src="../../../theme/images/cloudity-text-logo-white.svg" alt="Salesforce DevOps with sfdx-hardis">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer" aria-label="Navigation">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-menu" viewBox="0 0 24 24"><path d="M4 5h16M4 12h16M4 19h16"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Salesforce DevOps with sfdx-hardis
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Lab 3.3 - Lire le log de déploiement, et ce que .forceignore lui cache
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="none" data-md-color-scheme="default" data-md-color-primary="custom" data-md-color-accent="custom"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="none" data-md-color-scheme="slate" data-md-color-primary="custom" data-md-color-accent="custom"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+      
+
+
+
+  
+
+  
+    
+    
+  
+
+<div class="md-header__option">
+  <div class="md-select md-select--language">
+    <button class="md-header__button md-header__button--flag" aria-label="Sélectionner la langue">
+      
+        <img src="../../../theme/images/flags/fr.svg" alt="Français" class="md-select__flag md-select__flag--current">
+      
+    </button>
+    <div class="md-select__inner">
+      <ul class="md-select__list">
+        
+          
+          <li class="md-select__item"><a href="../../../en/level-3-release-manager/3-3-deploy-to-integration-and-read-the-log/" hreflang="en" data-course-home="/" class="md-select__link">
+              
+                <img src="../../../theme/images/flags/gb.svg" alt="" class="md-select__flag">
+              
+              English
+            </a>
+          </li>
+        
+          
+          <li class="md-select__item"><a href="././" hreflang="fr" data-course-home="/fr/" class="md-select__link">
+              
+                <img src="../../../theme/images/flags/fr.svg" alt="" class="md-select__flag">
+              
+              Français
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</div>
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search" aria-label="Recherche">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-search" viewBox="0 0 24 24"><path d="m21 21-4.34-4.34"/><circle cx="11" cy="11" r="8"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog" aria-label="Recherche">
+  <button type="button" class="md-search__button">
+    Recherche
+  </button>
+</div>
+      
+    
+    <div class="md-header__source">
+      
+        <a href="https://github.com/hardisgroupcom/sfdx-hardis-training" title="Aller au dépôt" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.3.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2026 Fonticons, Inc.--><path fill="currentColor" d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    hardisgroupcom/sfdx-hardis-training
+  </div>
+</a>
+      
+    </div>
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0" data-course-lang="fr" data-course-base="../../.." data-course-alt-en="en/level-3-release-manager/3-3-deploy-to-integration-and-read-the-log/" data-course-alt-fr="fr/level-3-release-manager/3-3-deploy-to-integration-and-read-the-log/">
+  <label class="md-nav__title" for="__drawer">
+    <a href="/fr/" title="Salesforce DevOps with sfdx-hardis" class="md-nav__button md-logo" aria-label="Salesforce DevOps with sfdx-hardis" data-md-component="logo">
+      
+  <img src="../../../theme/images/cloudity-text-logo-white.svg" alt="Salesforce DevOps with sfdx-hardis">
+
+    </a>
+    Salesforce DevOps with sfdx-hardis
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/hardisgroupcom/sfdx-hardis-training" title="Aller au dépôt" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.3.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2026 Fonticons, Inc.--><path fill="currentColor" d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    hardisgroupcom/sfdx-hardis-training
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+      
+    
+      
+      
+      
+    
+      
+      
+      
+    
+      
+      
+      
+    
+      
+      
+      
+    
+      
+      
+      
+    
+      
+      
+      
+    
+      
+      
+      
+        
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Accueil
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+      
+    
+      
+      
+      
+        
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_9" >
+        
+          
+          <label class="md-nav__link" for="__nav_9" id="__nav_9_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Niveau 1 - Contributeur Salesforce DevOps, les bases
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        
+          <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_9_label" aria-expanded="false">
+            <label class="md-nav__title" for="__nav_9">
+              <span class="md-nav__icon md-icon"></span>
+              
+  
+  Niveau 1 - Contributeur Salesforce DevOps, les bases
+
+            </label>
+            <ul class="md-nav__list" data-md-scrollfix>
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../level-1-contributor-basics/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Commencer ici
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../level-1-contributor-basics/1-1-install-vs-code-and-sfdx-hardis/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Lab 1.1 - Installer VS Code, Git et sfdx-hardis
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../level-1-contributor-basics/1-2-create-your-dev-hub-scratch-orgs-and-pipeline/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Lab 1.2 - Créer votre Dev Hub, vos scratch orgs et votre pipeline CI/CD
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../level-1-contributor-basics/1-3-start-a-user-story-on-a-git-branch/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Lab 1.3 - Démarrer une User Story sur sa propre branche Git
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../level-1-contributor-basics/1-4-build-a-custom-field-in-your-org/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Lab 1.4 - Construire un champ personnalisé dans votre org Salesforce
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../level-1-contributor-basics/1-5-retrieve-commit-and-publish-your-changes/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Lab 1.5 - Récupérer, commiter et publier vos modifications Salesforce
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../level-1-contributor-basics/1-6-pull-request-deployment-check-and-merge/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Lab 1.6 - Ouvrir une Pull Request, passer le contrôle de déploiement, merger
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../level-1-contributor-basics/1-7-capstone-deliver-a-user-story-on-your-own/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Lab 1.7 - Épreuve finale : livrer une User Story tout seul
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+            </ul>
+          </nav>
+        
+      
+    </li>
+  
+
+      
+    
+      
+      
+      
+        
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_10" >
+        
+          
+          <label class="md-nav__link" for="__nav_10" id="__nav_10_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Niveau 2 - Contributeur Salesforce DevOps avancé
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        
+          <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_10_label" aria-expanded="false">
+            <label class="md-nav__title" for="__nav_10">
+              <span class="md-nav__icon md-icon"></span>
+              
+  
+  Niveau 2 - Contributeur Salesforce DevOps avancé
+
+            </label>
+            <ul class="md-nav__list" data-md-scrollfix>
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../level-2-contributor-advanced/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Commencer ici
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../level-2-contributor-advanced/2-1-backpromote-your-teammates-work/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Lab 2.1 - Backpromote : remettre votre org de dev au niveau de l'équipe
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../level-2-contributor-advanced/2-2-fix-a-missing-dependency-deployment-error/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Lab 2.2 - Corriger une erreur de déploiement due à une dépendance manquante
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../level-2-contributor-advanced/2-3-fix-broken-records-with-an-apex-deployment-action/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Lab 2.3 - Réparer des enregistrements cassés avec une deployment action Apex
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../level-2-contributor-advanced/2-4-ship-reference-data-and-a-batch-with-deployment-actions/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Lab 2.4 - Livrer des données de référence et un batch avec des deployment actions
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../level-2-contributor-advanced/2-5-pass-code-quality-and-apex-test-coverage/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Lab 2.5 - Passer la barrière de qualité de code et la couverture de tests Apex
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../level-2-contributor-advanced/2-6-permission-sets-and-profiles/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Lab 2.6 - Permission sets, profils, et pourquoi une autorisation disparaît
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../level-2-contributor-advanced/2-7-resolve-a-git-merge-conflict/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Lab 2.7 - Résoudre un conflit de merge Git avec un collègue
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../level-2-contributor-advanced/2-8-recover-from-committing-the-wrong-metadata/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Lab 2.8 - Se remettre d'avoir commité la mauvaise métadonnée
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../level-2-contributor-advanced/2-9-capstone-deliver-a-user-story-that-has-it-all/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Lab 2.9 - Épreuve finale : livrer une User Story qui a tout
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+            </ul>
+          </nav>
+        
+      
+    </li>
+  
+
+      
+    
+      
+      
+      
+        
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_11" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_11" id="__nav_11_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Niveau 3 - Release manager Salesforce DevOps
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        
+          <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_11_label" aria-expanded="true">
+            <label class="md-nav__title" for="__nav_11">
+              <span class="md-nav__icon md-icon"></span>
+              
+  
+  Niveau 3 - Release manager Salesforce DevOps
+
+            </label>
+            <ul class="md-nav__list" data-md-scrollfix>
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Commencer ici
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../3-1-configure-the-pipeline-up-to-production/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Lab 3.1 - Configurer la pipeline CI/CD jusqu'à la production
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../3-2-review-a-contributor-pull-request/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Lab 3.2 - Relire et merger la Pull Request d'un contributeur
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Lab 3.3 - Lire le log de déploiement, et ce que .forceignore lui cache
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="././" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Lab 3.3 - Lire le log de déploiement, et ce que .forceignore lui cache
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+
+<nav class="md-nav md-nav--secondary" aria-label="Table des matières">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table des matières
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#la-situation" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        La situation
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#avant-de-commencer" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Avant de commencer
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#partie-1-lire-le-log" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Partie 1 : lire le log
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Partie 1 : lire le log">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-ouvrir-le-job" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        1. Ouvrir le job
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-le-lire-en-cinq-parties" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        2. Le lire en cinq parties
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-comprendre-pourquoi-le-package-est-plus-gros-que-le-diff" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        3. Comprendre pourquoi le package est plus gros que le diff
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#4-savoir-ce-quest-smart-deploy-et-ce-quil-nest-pas" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        4. Savoir ce qu'est Smart Deploy, et ce qu'il n'est pas
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#5-verifier-dans-lorg-pas-dans-le-log" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        5. Vérifier dans l'org, pas dans le log
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#partie-2-ce-que-forceignore-cache" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Partie 2 : ce que .forceignore cache
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Partie 2 : ce que .forceignore cache">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#6-une-pull-request-qui-echoue-sur-un-champ-quelle-transporte" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        6. Une Pull Request qui échoue sur un champ qu'elle transporte
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#7-trouver-ce-que-le-deploiement-na-jamais-vu" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        7. Trouver ce que le déploiement n'a jamais vu
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#8-le-renvoyer-avec-la-correction-nommee" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        8. Le renvoyer avec la correction nommée
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#partie-3-quand-une-action-de-post-deploiement-echoue" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Partie 3 : quand une action de post-déploiement échoue
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Partie 3 : quand une action de post-déploiement échoue">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#9-merger-une-pull-request-dont-les-actions-echouent-apres-le-merge" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        9. Merger une Pull Request dont les actions échouent après le merge
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#10-lire-ce-qui-a-echoue-et-ce-qui-na-pas-tourne" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        10. Lire ce qui a échoué, et ce qui n'a pas tourné
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#11-corriger-lorg-puis-relancer" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        11. Corriger l'org, puis relancer
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#12-une-definition-fausse-retourne-a-son-auteur" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        12. Une définition fausse retourne à son auteur
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#13-marquer-comme-fait-ce-qui-a-ete-fait-a-la-main" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        13. Marquer comme fait ce qui a été fait à la main
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#ce-que-vous-devez-voir" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Ce que vous devez voir
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#verifiez-votre-travail" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Vérifiez votre travail
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#pour-aller-plus-loin" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Pour aller plus loin
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../3-4-merge-colliding-pull-requests/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Lab 3.4 - Trois Pull Requests se percutent : choisir l'ordre de merge
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../3-5-promote-to-uat-and-write-release-notes/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Lab 3.5 - Promouvoir en UAT et écrire les notes de version
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../3-6-release-to-production-and-read-dora-metrics/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Lab 3.6 - Livrer en production et lire vos métriques DORA
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../3-7-hotfix-and-retrofit/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Lab 3.7 - La production est cassée : hotfix et retrofit
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../3-8-monitor-your-production-org/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Lab 3.8 - Monitorer votre org de production
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../3-9-generate-the-project-documentation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Lab 3.9 - Générer la documentation du projet Salesforce
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../3-10-promote-a-subset-with-promotion-branches/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Lab 3.10 - Promouvoir un sous-ensemble avec les promotion branches (Beta)
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../3-11-capstone-run-a-weekly-release-cycle/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Lab 3.11 - Épreuve finale : mener un cycle de release hebdomadaire
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+            </ul>
+          </nav>
+        
+      
+    </li>
+  
+
+      
+    
+      
+      
+      
+        
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../help/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Aide
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+      
+    
+      
+      
+      
+        
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../BACKLOG/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Backlog
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+      
+    
+      
+      
+      
+        
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../badges/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Badges
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+      
+    
+      
+      
+      
+        
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="https://sfdx-hardis.cloudity.com/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  sfdx-hardis documentation
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+      
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  
+                    
+                    
+                    
+                      
+                    
+                    
+                      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+                      <div class="md-sidebar-button__wrapper">
+                        <label class="md-sidebar-button" for="__toc"></label>
+                      </div>
+                    
+                  
+                  <div class="md-sidebar__inner">
+                    
+
+
+<nav class="md-nav md-nav--secondary" aria-label="Table des matières">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table des matières
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#la-situation" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        La situation
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#avant-de-commencer" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Avant de commencer
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#partie-1-lire-le-log" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Partie 1 : lire le log
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Partie 1 : lire le log">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-ouvrir-le-job" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        1. Ouvrir le job
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-le-lire-en-cinq-parties" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        2. Le lire en cinq parties
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-comprendre-pourquoi-le-package-est-plus-gros-que-le-diff" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        3. Comprendre pourquoi le package est plus gros que le diff
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#4-savoir-ce-quest-smart-deploy-et-ce-quil-nest-pas" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        4. Savoir ce qu'est Smart Deploy, et ce qu'il n'est pas
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#5-verifier-dans-lorg-pas-dans-le-log" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        5. Vérifier dans l'org, pas dans le log
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#partie-2-ce-que-forceignore-cache" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Partie 2 : ce que .forceignore cache
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Partie 2 : ce que .forceignore cache">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#6-une-pull-request-qui-echoue-sur-un-champ-quelle-transporte" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        6. Une Pull Request qui échoue sur un champ qu'elle transporte
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#7-trouver-ce-que-le-deploiement-na-jamais-vu" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        7. Trouver ce que le déploiement n'a jamais vu
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#8-le-renvoyer-avec-la-correction-nommee" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        8. Le renvoyer avec la correction nommée
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#partie-3-quand-une-action-de-post-deploiement-echoue" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Partie 3 : quand une action de post-déploiement échoue
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Partie 3 : quand une action de post-déploiement échoue">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#9-merger-une-pull-request-dont-les-actions-echouent-apres-le-merge" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        9. Merger une Pull Request dont les actions échouent après le merge
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#10-lire-ce-qui-a-echoue-et-ce-qui-na-pas-tourne" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        10. Lire ce qui a échoué, et ce qui n'a pas tourné
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#11-corriger-lorg-puis-relancer" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        11. Corriger l'org, puis relancer
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#12-une-definition-fausse-retourne-a-son-auteur" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        12. Une définition fausse retourne à son auteur
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#13-marquer-comme-fait-ce-qui-a-ete-fait-a-la-main" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        13. Marquer comme fait ce qui a été fait à la main
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#ce-que-vous-devez-voir" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Ce que vous devez voir
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#verifiez-votre-travail" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Vérifiez votre travail
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#pour-aller-plus-loin" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Pour aller plus loin
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                <a id="__skip" tabindex="-1"></a>
+                
+                  
+
+  
+    <a href="https://github.com/hardisgroupcom/sfdx-hardis-training/edit/main/labs/fr/level-3-release-manager/3-3-deploy-to-integration-and-read-the-log.md" title="Editer cette page" class="md-content__button md-icon" rel="edit">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-file-pen" viewBox="0 0 24 24"><path d="M12.659 22H18a2 2 0 0 0 2-2V8a2.4 2.4 0 0 0-.706-1.706l-3.588-3.588A2.4 2.4 0 0 0 14 2H6a2 2 0 0 0-2 2v9.34"/><path d="M14 2v5a1 1 0 0 0 1 1h5M10.378 12.622a1 1 0 0 1 3 3.003L8.36 20.637a2 2 0 0 1-.854.506l-2.867.837a.5.5 0 0 1-.62-.62l.836-2.869a2 2 0 0 1 .506-.853z"/></svg>
+    </a>
+  
+  
+
+
+<h1 id="lab-33-lire-le-log-de-deploiement-et-ce-que-forceignore-lui-cache">Lab 3.3 - Lire le log de déploiement, et ce que .forceignore lui cache<a class="headerlink" href="#lab-33-lire-le-log-de-deploiement-et-ce-que-forceignore-lui-cache" title="Permanent link">&para;</a></h1>
+<p><strong>Niveau</strong> : 3 Release Manager</p>
+<p><strong>Durée</strong> : ~45 min</p>
+<p><strong>Vous allez</strong> : lire correctement un log de déploiement, relire une Pull Request dont le contrôle
+échoue sur un champ qui est pourtant dans son diff et trouver le fichier qui le cache, puis
+rattraper des actions de post-déploiement en échec après un merge, sans redéployer.</p>
+<h2 id="la-situation">La situation<a class="headerlink" href="#la-situation" title="Permanent link">&para;</a></h2>
+<p>Merger la correction de présentation de page de Mariia a démarré un job de déploiement. La plupart
+des gens regardent la couleur et passent à autre chose.</p>
+<p>Un release manager le lit, parce que le log de déploiement est le seul endroit qui dise ce qui a
+réellement atteint l'org, et que l'écart entre cela et ce que vous pensiez livrer est l'origine des
+incidents.</p>
+<h2 id="avant-de-commencer">Avant de commencer<a class="headerlink" href="#avant-de-commencer" title="Permanent link">&para;</a></h2>
+<ul class="task-list">
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <a href="../3-2-review-a-contributor-pull-request/">Lab 3.2</a> terminé : la correction de présentation de page de Mariia mergée dans <code>integration</code></li>
+</ul>
+<h2 id="partie-1-lire-le-log">Partie 1 : lire le log<a class="headerlink" href="#partie-1-lire-le-log" title="Permanent link">&para;</a></h2>
+<h3 id="1-ouvrir-le-job">1. Ouvrir le job<a class="headerlink" href="#1-ouvrir-le-job" title="Permanent link">&para;</a></h3>
+<p>Onglet <strong>Actions</strong> de votre fork (votre copie personnelle du repository du cours sur GitHub, par
+exemple <code>github.com/my-username/sfdx-hardis-training</code>), l'exécution <strong>Process Deployment
+(sfdx-hardis)</strong> qui a démarré quand vous avez mergé.</p>
+<p>Ou depuis VS Code : le panneau <strong>DevOps Pipeline</strong> pose le job sur la flèche entre <code>integration</code> et
+son org <span class="pill-ref pill-ref-1">(1)</span>, coloré selon son statut, et la légende sous le diagramme <span class="pill-ref pill-ref-2">(2)</span> dit ce que signifie
+chaque couleur. Cliquez sur le marqueur pour ouvrir l'exécution.</p>
+<p><a class="glightbox" data-type="image" href="../../../_assets/annotated/vscode/devops-pipeline--deployment-status.png"><img alt="Le panneau DevOps Pipeline, avec le statut du déploiement sur la flèche vers l'org" src="../../../_assets/annotated/vscode/devops-pipeline--deployment-status.png" /></a></p>
+<h3 id="2-le-lire-en-cinq-parties">2. Le lire en cinq parties<a class="headerlink" href="#2-le-lire-en-cinq-parties" title="Permanent link">&para;</a></h3>
+<p>Un log de déploiement sfdx-hardis a toujours la même forme :</p>
+<p><strong>Un : l'authentification.</strong> Quelle org, quel mécanisme. Sur <code>integration</code>, il dit auth URL : le
+raccourci du Niveau 1, que le <a href="../3-1-configure-the-pipeline-up-to-production/">Lab 3.1</a> a laissé en place. Sur <code>preprod</code> et <code>main</code>, il dit JWT.
+S'il dit un jour autre chose, c'est que quelque chose a changé sans que vous le changiez.</p>
+<p><strong>Deux : ce qu'il faut déployer.</strong> Le package qu'il a calculé, et d'où. C'est la partie intéressante
+et l'étape 3 en parle.</p>
+<p><strong>Trois : les actions pre-deploy.</strong> Tout ce qui est déclaré pour tourner avant, avec son résultat.</p>
+<p><strong>Quatre : le déploiement Salesforce.</strong> Composants déployés, tests lancés, couverture, durée. Sur un
+job de merge, cherchez <code>Deployment mode: FULL + Quick Deploy</code>. Le job de contrôle de votre Pull
+Request avait déjà validé ce package exact, tests compris, et le job de merge a demandé à Salesforce
+d'appliquer cette validation plutôt que de redéployer. C'est pourquoi il prend quelques secondes, et
+pourquoi il ne lance lui-même aucun test.</p>
+<p><strong>Cinq : les actions post-deploy</strong>, puis la notification.</p>
+<h3 id="3-comprendre-pourquoi-le-package-est-plus-gros-que-le-diff">3. Comprendre pourquoi le package est plus gros que le diff<a class="headerlink" href="#3-comprendre-pourquoi-le-package-est-plus-gros-que-le-diff" title="Permanent link">&para;</a></h3>
+<p>Vous avez modifié un composant. Lisez maintenant ce que le job a réellement envoyé.</p>
+<p>Ouvrez le package : panneau <strong>DevOps Pipeline</strong>, menu <strong>Deployment packages</strong>, <strong>Package XML</strong>. Il
+liste toute l'application Helios, quelques dizaines de composants, et <strong>c'est cela le package</strong> : sur
+ce projet chaque déploiement vers <code>integration</code> envoie le tout, quoi qu'ait dit le diff. Le compteur
+de composants envoyés du log le dira.</p>
+<p>C'est le comportement par défaut, et il vaut la peine de le ressentir une fois avant d'apprendre ce
+qui le corrige.</p>
+<p><strong>Le déploiement delta.</strong> Au lieu d'envoyer le package déclaré, sfdx-hardis calcule ce qui a changé
+entre le commit déjà déployé dans cette org et le nouveau, et n'envoie que cela. Un déploiement
+Salesforce complet d'un projet mature prend 40 minutes ; un delta en prend 3. La contrepartie est que
+l'org doit vraiment être au commit où la pipeline la croit.</p>
+<p><a class="glightbox" data-type="image" href="../../../_assets/annotated/vscode/pipeline-config-deployment--delta.png"><img alt="Le panneau Global Pipeline Settings, onglet Deployment" src="../../../_assets/annotated/vscode/pipeline-config-deployment--delta.png" /></a></p>
+<div class="admonition note">
+<p class="admonition-title">Ce projet a le delta désactivé, exprès</p>
+<p><code>useDeltaDeployment</code> est absent de <code>config/.sfdx-hardis.yml</code> : chaque déploiement de ce cours
+envoie donc le package complet. Lisez-le vous-même : <strong>DevOps Pipeline</strong>, menu engrenage,
+<strong>Pipeline Settings</strong>, portée <strong>Global Settings</strong> <span class="pill-ref pill-ref-1">(1)</span>, onglet <strong>Deployment</strong> <span class="pill-ref pill-ref-2">(2)</span>.
+<strong>Use Delta Deployment</strong> <span class="pill-ref pill-ref-3">(3)</span> affiche <strong>Disabled</strong>.</p>
+<p>L'application Helios fait maintenant une soixantaine de composants : un déploiement complet coûte une
+minute et le delta n'économiserait rien tout en ajoutant une façon pour le cours d'échouer de
+manière déroutante sur une dépendance manquante. Activez-le quand un déploiement commence à vous
+coûter du temps réel, ce qui sur un vrai projet arrive vite. Il y a une deuxième clé pour les
+promotions entre branches majeures, <code>enableDeltaDeploymentBetweenMajorBranches</code>, dans l'onglet
+<strong>Danger Zone</strong>, et elle est désactivée par défaut pour la même raison : une promotion transporte
+davantage, et c'est l'endroit le plus risqué où en envoyer moins.</p>
+</div>
+<p>Trouvez la ligne <code>Components: N deployed</code> dans le log, sous <em>Deployment summary</em>. Sur une exécution
+standard de ce cours, elle tourne autour de soixante. Comparez-la avec l'unique fichier de
+votre Pull Request. L'écart est le coût du delta désactivé, et c'est l'argument pour l'activer.</p>
+<h3 id="4-savoir-ce-quest-smart-deploy-et-ce-quil-nest-pas">4. Savoir ce qu'est Smart Deploy, et ce qu'il n'est pas<a class="headerlink" href="#4-savoir-ce-quest-smart-deploy-et-ce-quil-nest-pas" title="Permanent link">&para;</a></h3>
+<p>"Smart Deploy" est le nom de la commande, pas celui d'un filtre. <code>sf hardis:project:deploy:smart</code>
+est l'orchestrateur : il décide du package, réutilise un déploiement validé en Quick Deploy quand il
+le peut, lance les actions pre et post déploiement, traduit les erreurs Salesforce en conseils, et
+écrit le commentaire de la Pull Request. Il est intelligent sur le <strong>job</strong>, pas sur la comparaison
+entre votre repository et l'org composant par composant.</p>
+<p>Deux choses qu'on suppose souvent en faire partie et qui n'en font pas partie :</p>
+<ul>
+<li><strong>Rien ne compare chaque composant à l'org pour écarter les identiques.</strong> Il existe un mécanisme
+  optionnel qui en fait quelque chose d'approchant, <code>manifest/packageDeployOnChange.xml</code>, et il ne
+  regarde jamais que les composants listés dans ce fichier. Le fichier n'existe pas dans ce projet,
+  et il ne fait rien tant qu'il n'existe pas</li>
+<li><strong>Le nettoyage n'est pas un filtre de déploiement.</strong> Il a tourné sur la machine d'un contributeur,
+  au moment du commit. L'étape 3 de la section sous le capot ci-dessous en parle</li>
+</ul>
+<p>La réponse honnête à "pourquoi a-t-il déployé soixante composants pour en changer un" est donc :
+parce que rien n'a été configuré pour l'en empêcher. C'est une décision de ce projet, pas quelque
+chose que l'outil fait pour vous.</p>
+<h3 id="5-verifier-dans-lorg-pas-dans-le-log">5. Vérifier dans l'org, pas dans le log<a class="headerlink" href="#5-verifier-dans-lorg-pas-dans-le-log" title="Permanent link">&para;</a></h3>
+<p>Ouvrez <code>helios-integration</code> depuis <strong>Orgs Manager</strong> : trouvez-la par son alias <span class="pill-ref pill-ref-2">(2)</span>, vérifiez
+qu'elle dit toujours <strong>Connected</strong> <span class="pill-ref pill-ref-3">(3)</span>, puis <strong>Open</strong> dans le menu d'actions au bout de sa ligne.
+Si elle dit déconnectée à la place, ce même menu propose <strong>Reconnect</strong>, et <strong>Add Org</strong> <span class="pill-ref pill-ref-1">(1)</span> est la
+façon de connecter une org que le tableau n'a pas du tout.</p>
+<p><a class="glightbox" data-type="image" href="../../../_assets/annotated/vscode/orgs-manager.png"><img alt="Le tableau Orgs Manager, avec l'alias et l'état de connexion de chaque org" src="../../../_assets/annotated/vscode/orgs-manager.png" /></a></p>
+<p>Vérifiez que votre modification est bien là : ouvrez un enregistrement Installation, et
+<strong>Total Capacity (kW)</strong> est de retour sur la présentation de page, dans la colonne de droite à côté
+du champ de plafond de Mariia.</p>
+<p>Un log est une affirmation. L'org est le fait. Sur un vrai projet, vous vérifiez l'org après chaque
+déploiement vers un environnement majeur, et cela prend trente secondes.</p>
+<h2 id="partie-2-ce-que-forceignore-cache">Partie 2 : ce que .forceignore cache<a class="headerlink" href="#partie-2-ce-que-forceignore-cache" title="Permanent link">&para;</a></h2>
+<h3 id="6-une-pull-request-qui-echoue-sur-un-champ-quelle-transporte">6. Une Pull Request qui échoue sur un champ qu'elle transporte<a class="headerlink" href="#6-une-pull-request-qui-echoue-sur-un-champ-quelle-transporte" title="Permanent link">&para;</a></h3>
+<p>Romain a une story pour les planificateurs. <strong>Training: Level 3</strong> &gt; <strong>Simulate my teammates</strong>, et
+choisissez <strong>US-056 Show the panels each crew member has to lay</strong>. Cela ouvre sa Pull Request vers
+<code>integration</code>.</p>
+<p>Attendez ses contrôles. Le contrôle de déploiement échoue, et le commentaire sfdx-hardis nomme un
+champ :</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>Installation__c-Installation Layout  In field: field - no CustomField named Installation__c.Crew_Workload__c found
+</code></pre></div>
+<p>Ouvrez maintenant <strong>Files changed</strong>. <code>Crew_Workload__c.field-meta.xml</code> y est, dans le diff. Le champ
+est dans la Pull Request, et le déploiement dit qu'il n'existe pas.</p>
+<h3 id="7-trouver-ce-que-le-deploiement-na-jamais-vu">7. Trouver ce que le déploiement n'a jamais vu<a class="headerlink" href="#7-trouver-ce-que-le-deploiement-na-jamais-vu" title="Permanent link">&para;</a></h3>
+<p>Quand un composant est dans la branche et pas dans le déploiement, le premier fichier à ouvrir est
+<code>.forceignore</code>. Il dit à la CLI Salesforce ce qu'il faut ignorer à la récupération <strong>et</strong> au
+déploiement, et un composant qu'il capture est invisible dans les deux sens, sans erreur ni
+avertissement.</p>
+<p>Le diff de Romain le modifie lui aussi :</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a># My scratch test fields, never versioned (Romain)
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>**/objects/Installation__c/fields/Crew_W*.field-meta.xml
+</code></pre></div>
+<p>Cette ligne est un motif, pas un nom de fichier. Le <code>*</code> tient lieu de n'importe quel texte : il
+capture donc tout champ d'Installation dont le nom commence par <code>Crew_W</code>, son champ de test bricolé,
+et <code>Crew_Workload__c</code>, le champ de sa propre story. Le déploiement l'a laissé de côté, la
+présentation de page et le permission set qui s'en servent ont atteint l'org sans lui, et Salesforce
+les a refusés.</p>
+<p><code>.forceignore</code> est un fichier à l'échelle du projet, et c'est au release manager de le garder : une
+seule ligne négligente change ce que chaque déploiement envoie, pour tout le monde, à partir de là.</p>
+<h3 id="8-le-renvoyer-avec-la-correction-nommee">8. Le renvoyer avec la correction nommée<a class="headerlink" href="#8-le-renvoyer-avec-la-correction-nommee" title="Permanent link">&para;</a></h3>
+<p>Laissez un commentaire de revue sur la ligne <code>.forceignore</code> du diff :</p>
+<blockquote>
+<p>This wildcard also matches <code>Crew_Workload__c</code>, the field of this story, so no deployment ever
+sends it. Name your test field exactly, with no <code>*</code>, so nothing else can match by accident.</p>
+</blockquote>
+<p>Un chemin exact vieillit mal lui aussi, mais il vieillit <strong>bruyamment</strong> : le jour où le fichier
+disparaît, rien d'autre ne se met à être ignoré.</p>
+<p>Romain répond : <strong>Simulate my teammates</strong> &gt; <strong>US-056 Romain names his test field exactly in
+.forceignore</strong>. Cela ajoute son commit à la même Pull Request, le contrôle retourne, et il passe au
+vert. Lisez le diff de son nouveau commit, puis mergez.</p>
+<details>
+<summary>Sous le capot : d'où vient le package, et où se fait vraiment le nettoyage</summary>
+<p>Le job a lancé :</p>
+<div class="highlight"><pre><span></span><code>sf hardis:project:deploy:smart
+</code></pre></div>
+<p>et le package qu'il a envoyé a été construit ainsi :</p>
+<ol>
+<li><strong>Partir de <code>manifest/package.xml</code></strong>, le package déclaré, plus
+   <code>manifest/destructiveChanges.xml</code> pour ce qui est retiré</li>
+<li><strong>Le delta</strong>, si <code>useDeltaDeployment</code> est activé : <code>sfdx-git-delta</code> calcule les composants
+   modifiés entre le dernier commit déployé et <code>HEAD</code>, et tout le reste est ressorti du package.
+   <code>enableDeltaDeploymentBetweenMajorBranches</code> décide si la même chose s'applique à un déploiement de
+   majeure à majeure, et est désactivé par défaut parce qu'une promotion vers la production est le
+   pire endroit possible pour découvrir que l'org a dérivé</li>
+<li><strong>Le gestionnaire d'écrasement</strong>, quand le package contient quelque chose que <code>manifest/package-no-overwrite.xml</code> liste :
+   l'org est interrogée, et tout composant <strong>listé dans ce fichier</strong> que l'org possède déjà est retiré.
+   Quand rien dans le package ne correspond à la liste, l'org n'est pas interrogée du tout, et le log le dit. Il est
+   limité à sa propre liste et à rien d'autre, et un composant qu'il protège est quand même créé dans
+   une org qui ne l'a pas encore</li>
+<li><strong>Le deploy-on-change</strong>, si <code>manifest/packageDeployOnChange.xml</code> existe : ces composants, et eux
+   seuls, sont récupérés depuis l'org et comparés, et ceux qui n'ont pas changé sont écartés</li>
+</ol>
+<p>Les étapes 2 et 4 sont désactivées dans ce projet. L'étape 3 s'exécute, et ses lignes <code>[NoOverwrite]</code>
+sont dans le log, mais rien de ce que déploie Helios n'est encore dans sa liste : ce que Salesforce
+reçoit est donc l'étape 1.</p>
+<p><strong>Le nettoyage n'est pas dans cette liste, et c'est ce qu'il faut retenir.</strong> Les règles
+<code>autoCleanTypes</code> tournent à l'intérieur de <code>sf hardis:work:save</code>, sur la machine d'un contributeur,
+avant le commit. Elles réécrivent les fichiers sur le disque et commitent le résultat, c'est
+pourquoi le <a href="../../level-1-contributor-basics/1-5-retrieve-commit-and-publish-your-changes/">Lab 1.5</a>
+a pu vous montrer le diff qu'elles ont produit. Au moment où un déploiement tourne, il n'y a plus
+rien à nettoyer : le repository est déjà la version nettoyée.</p>
+<p>Deux modes de défaillance à savoir reconnaître :</p>
+<ul>
+<li><strong>L'org a dérivé.</strong> Quelqu'un a modifié quelque chose dans l'org à la main et le déploiement
+  l'écrase sans un mot, parce que rien n'a comparé. Le <a href="../3-7-hotfix-and-retrofit/">Lab 3.7</a> parle de cela</li>
+<li><strong>Le delta a perdu une dépendance.</strong> Votre modification a besoin d'un composant qui n'a pas changé,
+  le delta ne l'emporte donc pas, et le déploiement échoue sur une référence. La correction n'est pas
+  de désactiver le delta : c'est d'inclure la dépendance, ce à quoi sert <code>manifest/package.xml</code></li>
+</ul>
+<!-- command-links:start -->
+<p>Documentation des commandes : <a href="https://sfdx-hardis.cloudity.com/hardis/project/deploy/smart/">hardis:project:deploy:smart</a>, <a href="https://sfdx-hardis.cloudity.com/hardis/work/save/">hardis:work:save</a></p>
+<!-- command-links:end -->
+</details>
+<h2 id="partie-3-quand-une-action-de-post-deploiement-echoue">Partie 3 : quand une action de post-déploiement échoue<a class="headerlink" href="#partie-3-quand-une-action-de-post-deploiement-echoue" title="Permanent link">&para;</a></h2>
+<h3 id="9-merger-une-pull-request-dont-les-actions-echouent-apres-le-merge">9. Merger une Pull Request dont les actions échouent après le merge<a class="headerlink" href="#9-merger-une-pull-request-dont-les-actions-echouent-apres-le-merge" title="Permanent link">&para;</a></h3>
+<p>Mariia a une story faite d'actions de déploiement, sans métadonnées. <strong>Training: Level 3</strong> &gt;
+<strong>Simulate my teammates</strong>, et choisissez <strong>US-062 Put the delivery managers in a Crew Leads group</strong>.
+Cela ouvre sa Pull Request vers <code>integration</code>, avec trois actions de post-déploiement dans son
+fichier d'actions :</p>
+<ol>
+<li><strong>Put the delivery managers in the Crew Leads group</strong>, un script Apex</li>
+<li><strong>Recalculate the crew capacity once</strong>, une action Run Batch</li>
+<li><strong>Add the deployment user to the Crew Leads group</strong>, un script Apex</li>
+</ol>
+<p>Son contrôle passe au vert. Cela prouve moins qu'il n'y paraît : les trois actions ne tournent que
+pendant le job de déploiement, après le merge, donc le contrôle les a sautées. Mergez-la.</p>
+<p>Le job de déploiement passe au rouge. Les métadonnées sont déployées, puis la première action a
+échoué, et sfdx-hardis s'est arrêté là : les deux autres n'ont jamais tourné.</p>
+<h3 id="10-lire-ce-qui-a-echoue-et-ce-qui-na-pas-tourne">10. Lire ce qui a échoué, et ce qui n'a pas tourné<a class="headerlink" href="#10-lire-ce-qui-a-echoue-et-ce-qui-na-pas-tourne" title="Permanent link">&para;</a></h3>
+<p><strong>Le log du job</strong> nomme l'échec. Le script Apex a demandé à l'org un groupe public nommé
+<code>Helios_Crew_Leads</code>, et l'org n'en a pas :</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>System.QueryException: List has no rows for assignment to SObject
+</code></pre></div>
+<p>Mariia a créé le groupe à la main dans sa propre org, dans Setup, comme on en crée un le plus
+souvent : rien dans sa Pull Request ne le crée.</p>
+<p><strong>Le commentaire de déploiement</strong> de sa Pull Request s'ouvre sur <strong>❌ Deployed to <code>integration</code>, but
+an action failed after the deployment</strong> : l'org a les nouvelles métadonnées. Sous <strong>❌ Failed
+action</strong>, il montre la fin de la sortie du script, et sous <strong>⏸️ Not run, waiting for the failed
+action</strong> les deux autres.</p>
+<p><strong>Le commentaire Deployment Actions</strong> de sa Pull Request résume tout dans son verdict, <strong>In
+integration: ❌ 1 failed · ⏸️ 2 waiting</strong>, et liste les trois actions sous <strong>Needs you</strong> <span class="pill-ref pill-ref-1">(1)</span> : ❌
+pour celle qui a échoué, ⏸️ pour les deux qu'elle a arrêtées, chacune avec une case à cocher. Le
+tableau <strong>Status by org</strong> <span class="pill-ref pill-ref-2">(2)</span> dit la même chose dans la colonne <code>integration</code>.</p>
+<p><a class="glightbox" data-type="image" href="../../../_assets/annotated/web/github-pr-deployment-actions-failed.png"><img alt="Le commentaire Deployment Actions avec une action en échec et deux actions arrêtées" src="../../../_assets/annotated/web/github-pr-deployment-actions-failed.png" /></a></p>
+<p><strong>La DevOps Pipeline</strong> : cliquez sur <code>integration</code>, puis sur l'onglet <strong>Deployment Actions</strong>. Les
+actions sont regroupées par Pull Request, numérotées dans l'ordre où elles tournent. La colonne
+<strong>Status</strong> <span class="pill-ref pill-ref-1">(1)</span> donne l'état de chaque action dans l'org d'<code>integration</code>, et celle en échec porte
+les boutons <strong>Retry</strong> et <strong>Mark as done in integration</strong> <span class="pill-ref pill-ref-2">(2)</span>. Le menu au bout de chaque ligne contient le reste,
+<strong>Move to my Pull Request</strong> compris.</p>
+<p><a class="glightbox" data-type="image" href="../../../_assets/annotated/vscode/pipeline-branch-modal-actions-failed.png"><img alt="L'onglet Deployment Actions d'integration, avec l'état de chaque action et le menu d'une action en échec" src="../../../_assets/annotated/vscode/pipeline-branch-modal-actions-failed.png" /></a></p>
+<p>Aucune ne relance le job de déploiement : les métadonnées sont déjà dans l'org, et un second
+déploiement ne ferait que refaire ce qui a marché. La bonne façon d'en sortir dépend de la raison
+de chaque échec :</p>
+<table>
+<thead>
+<tr>
+<th>Pourquoi elle a échoué</th>
+<th>Comment en sortir</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Il manquait quelque chose à l'org, et elle l'a désormais</td>
+<td><strong>Retry</strong></td>
+</tr>
+<tr>
+<td>L'action elle-même est fausse</td>
+<td>La déplacer dans une Pull Request de correction</td>
+</tr>
+<tr>
+<td>Quelqu'un l'a déjà faite à la main</td>
+<td><strong>Mark as done</strong></td>
+</tr>
+</tbody>
+</table>
+<h3 id="11-corriger-lorg-puis-relancer">11. Corriger l'org, puis relancer<a class="headerlink" href="#11-corriger-lorg-puis-relancer" title="Permanent link">&para;</a></h3>
+<p>La première action est juste : c'est l'org à qui il manque son groupe. Créez-le dans
+<code>helios-integration</code> :</p>
+<ol>
+<li>Ouvrez <code>helios-integration</code> depuis <strong>Orgs Manager</strong>, puis <strong>Setup</strong>, tapez <code>Public Groups</code> dans
+   la boîte Quick Find, et cliquez sur <strong>New</strong></li>
+<li><strong>Label</strong> <code>Crew Leads</code>, <strong>Group Name</strong> <code>Helios_Crew_Leads</code>, puis <strong>Save</strong></li>
+</ol>
+<p>La définition de l'action est lue dans la branche que vous avez récupérée. Récupérez <code>integration</code>
+et faites un pull, depuis le nom de branche de la barre d'état et le panneau Source Control, pour
+que le fichier d'actions de Mariia soit là.</p>
+<p>De retour dans l'onglet <strong>Deployment Actions</strong>, cliquez sur <strong>Retry</strong> sur la ligne de <strong>Put the
+delivery managers in the Crew Leads group</strong>. La commande tourne dans VS Code, sur
+<code>helios-integration</code> :</p>
+<ul>
+<li>l'action tourne et passe au vert, et la commande demande quoi faire des deux actions que son échec
+  a arrêtées <span class="pill-ref pill-ref-1">(1)</span></li>
+<li>répondez <strong>Run the next action only</strong> <span class="pill-ref pill-ref-2">(2)</span></li>
+<li>l'action de capacité des équipes tourne, et échoue <span class="pill-ref pill-ref-3">(3)</span> : la classe <code>CrewCapacityBach</code>
+  n'existe pas</li>
+</ul>
+<p><a class="glightbox" data-type="image" href="../../../_assets/annotated/vscode/action-run-prompts.png"><img alt="Le panneau de commande qui relance l'action, demande quoi faire des actions arrêtées, puis la suivante qui échoue" src="../../../_assets/annotated/vscode/action-run-prompts.png" /></a></p>
+<p>Le commentaire de la Pull Request indique maintenant ✅ pour la première action, avec une note
+disant que vous l'avez lancée depuis votre poste, ❌ pour l'action de capacité des équipes, et ⏸️
+pour la dernière.</p>
+<details>
+<summary>Sous le capot : ce que Retry a lancé</summary>
+<p>Le bouton a lancé :</p>
+<div class="highlight"><pre><span></span><code>sf hardis:project:action:run --pr &lt;numéro de US-062&gt; --action-id &lt;id&gt; --org-branch integration
+</code></pre></div>
+<ul>
+<li><strong>Pas de déploiement.</strong> Elle lance la seule action, avec le code qu'un job de déploiement utilise
+  pour chaque action : filtres de branches cibles, références aux sorties d'autres actions,
+  contrôles de validité</li>
+<li><strong>L'org vient de la branche.</strong> <code>integration</code> désigne <code>helios-integration</code> par le
+  <code>targetUsername</code> de <code>config/branches/.sfdx-hardis.integration.yml</code>, et la commande utilise cette
+  org telle que vous l'avez connectée dans Orgs Manager. Les commandes <code>sf</code> que l'action démarre la ciblent pour cette
+  exécution seulement : votre org par défaut ne change pas</li>
+<li><strong>Le résultat va dans le commentaire de la Pull Request</strong>, avec votre nom d'utilisateur git et
+  votre nom d'utilisateur Salesforce dans la note, grâce au jeton du fournisseur git que VS Code
+  détient. Sans lui, la commande refuse de tourner, parce que le déploiement suivant ne saurait pas
+  que l'action a été faite</li>
+<li><strong>Les actions arrêtées sont mémorisées.</strong> Quand le job de déploiement s'est arrêté, il a
+  enregistré les deux autres comme <code>not-run</code>, liées à celle en échec : c'est ainsi que la commande
+  savait quoi proposer ensuite</li>
+<li>Une action avec un <code>customUsername</code> tourne sous cet utilisateur. Quand votre poste n'y est pas
+  connecté, la commande vous demande de vous connecter avec lui, et vérifie que vous l'avez fait</li>
+</ul>
+<!-- command-links:start -->
+<p>Documentation de la commande : <a href="https://sfdx-hardis.cloudity.com/hardis/project/action/run/">hardis:project:action:run</a></p>
+<!-- command-links:end -->
+</details>
+<h3 id="12-une-definition-fausse-retourne-a-son-auteur">12. Une définition fausse retourne à son auteur<a class="headerlink" href="#12-une-definition-fausse-retourne-a-son-auteur" title="Permanent link">&para;</a></h3>
+<p>Relancer l'action de capacité des équipes échouera à chaque fois : le nom de sa classe a une
+coquille, dans un fichier d'une Pull Request déjà mergée. Modifier ce fichier sur <code>integration</code>
+n'aiderait pas non plus : un déploiement ne lit que les actions des Pull Requests qu'il déploie.</p>
+<p>Renvoyez-la. Commentez la Pull Request mergée de Mariia :</p>
+<blockquote>
+<p>The crew capacity action names <code>CrewCapacityBach</code>, which does not exist: it should be
+<code>CrewCapacityBatch</code>. Can you move it to a fix Pull Request?</p>
+</blockquote>
+<p>Elle la corrige comme le produit le propose : depuis sa nouvelle branche, <strong>Move to my Pull
+Request</strong> dans le menu de la ligne en échec déplace l'action dans le fichier d'actions de sa propre
+Pull Request, avec le même id, et elle y corrige le nom de la classe.</p>
+<p><strong>Simulate my teammates</strong> &gt; <strong>US-062 Mariia fixes the crew capacity action</strong>. Relisez sa Pull
+Request :</p>
+<ul>
+<li><strong>Files changed</strong> : l'action a quitté le fichier d'actions de US-062 et est arrivée dans le
+  fichier de la nouvelle Pull Request, avec <code>className: CrewCapacityBatch</code> et <code>movedFrom</code> qui vaut
+  le numéro de US-062</li>
+<li>toujours dans <strong>Files changed</strong> : un nouveau fichier, <code>groups/Helios_Crew_Leads.group-meta.xml</code>,
+  et un bloc de plus dans <code>manifest/package.xml</code>. Un groupe public est une métadonnée comme une
+  autre, et Mariia a mis le sien dans les sources. Dans <code>integration</code>, le déploiement trouve le
+  groupe que vous avez créé à l'étape 11 et le garde, sous le libellé <code>Crew Leads</code>. Dans <code>uat</code>, <code>preprod</code> et la
+  production, où personne n'a rien créé, le déploiement le crée avant que les actions ne
+  s'exécutent. Sans ce fichier, la première action échouerait dans chacune d'elles comme elle a
+  échoué ici</li>
+<li>l'onglet <strong>Deployment Actions</strong> de sa Pull Request : ouvrez l'action, et l'éditeur montre d'où
+  elle vient, sous <strong>Moved from</strong> <span class="pill-ref pill-ref-1">(1)</span></li>
+</ul>
+<p><a class="glightbox" data-type="image" href="../../../_assets/annotated/vscode/pipeline-edit-action-moved.png"><img alt="L'éditeur d'action de déploiement qui montre la Pull Request d'où l'action a été déplacée" src="../../../_assets/annotated/vscode/pipeline-edit-action-moved.png" /></a></p>
+<p>Mergez-la. Son job de déploiement lance l'action, depuis la nouvelle Pull Request, et passe au
+vert. Rouvrez le commentaire Deployment Actions de US-062 : l'action de capacité des équipes
+indique ↪️ <strong>moved to</strong> la Pull Request de correction <span class="pill-ref pill-ref-1">(1)</span>, avec un lien, au lieu d'une case
+rouge que personne ne pouvait effacer.</p>
+<p><a class="glightbox" data-type="image" href="../../../_assets/annotated/web/github-pr-deployment-actions-moved.png"><img alt="Le commentaire Deployment Actions de US-062, avec l'action déplacée dans la Pull Request de correction" src="../../../_assets/annotated/web/github-pr-deployment-actions-moved.png" /></a></p>
+<p>Quand les deux Pull Requests partiront ensemble vers <code>uat</code>, au <a href="../3-5-promote-to-uat-and-write-release-notes/">Lab 3.5</a>, US-062 ne portera plus
+l'action, et elle tournera une seule fois, depuis la correction.</p>
+<h3 id="13-marquer-comme-fait-ce-qui-a-ete-fait-a-la-main">13. Marquer comme fait ce qui a été fait à la main<a class="headerlink" href="#13-marquer-comme-fait-ce-qui-a-ete-fait-a-la-main" title="Permanent link">&para;</a></h3>
+<p>La dernière action ajoute l'utilisateur de déploiement à Crew Leads. La relancer marcherait, mais la
+faire prend vingt secondes : faites-la à la main, comme un release manager le fait quand une
+livraison ne peut pas attendre :</p>
+<ol>
+<li>Dans <code>helios-integration</code>, <strong>Setup</strong> &gt; <strong>Public Groups</strong> &gt; <strong>Crew Leads</strong> &gt; <strong>Edit</strong></li>
+<li>Ajoutez votre utilisateur dans <strong>Selected Members</strong>, puis <strong>Save</strong></li>
+</ol>
+<p>Ensuite, dans l'onglet <strong>Deployment Actions</strong>, ouvrez le menu de <strong>Add the deployment user to the
+Crew Leads group</strong> et cliquez sur <strong>Mark as done in integration</strong>. Rien ne s'ouvre : sfdx-hardis l'enregistre en
+arrière-plan comme faite dans <code>integration</code>, avec une note qui vous nomme, et coche sa case dans les
+commentaires de la Pull Request. Le bouton affiche <strong>Marking as done...</strong> jusqu'à ce que l'action
+affiche <strong>Done</strong> dans l'onglet.</p>
+<p>Le prochain déploiement vers <code>integration</code> la saute. Dans <code>uat</code> et au-delà, elle tourne toujours,
+parce que personne ne l'y a faite.</p>
+<p>Cocher sa case dans la liste <strong>Needs you</strong> du commentaire Deployment Actions fait la même
+chose, enregistrée par le prochain job sfdx-hardis : utilisez-la quand vous êtes sur GitHub plutôt
+que dans VS Code.</p>
+<details>
+<summary>Sous le capot : ce que laissent les trois façons d'en sortir</summary>
+<ul>
+<li><strong>Retry</strong> a lancé <code>sf hardis:project:action:run</code>, comme à l'étape 11</li>
+<li>
+<p><strong>Move to my Pull Request</strong> a lancé, côté Mariia :</p>
+<div class="highlight"><pre><span></span><code>  sf hardis:project:action:update --scope pr --pr-id &lt;US-062&gt; --when post-deploy --action-id &lt;id&gt; --move-to-pr &lt;sa Pull Request&gt;
+</code></pre></div>
+<p>Elle retire l'action de <code>scripts/actions/.sfdx-hardis.&lt;US-062&gt;.yml</code>, l'ajoute au fichier de sa
+Pull Request avec <code>movedFrom: &lt;US-062&gt;</code>, et garde son id. Quand un déploiement porte les deux, la
+copie d'origine est écartée, et l'exécution de la copie écrit ↪️ dans le commentaire de US-062
+- <strong>Mark as done</strong> a lancé :</p>
+<div class="highlight"><pre><span></span><code>  sf hardis:project:action:set-status --pr &lt;US-062&gt; --action-id &lt;id&gt; --org-branch integration --status success
+</code></pre></div>
+<p>Le statut devient <code>success</code>, ce qui fait que les déploiements suivants la sautent, et la note
+garde la vérité : <em>Not run in CI, then closed by hand by vous (votre nom d'utilisateur) on la date</em></p>
+</li>
+</ul>
+<p>Tout vit dans le commentaire "Deployment Actions" de la Pull Request qui porte l'action : aucun
+objet Salesforce, rien à installer. Ce commentaire est aussi l'endroit où un release manager
+regarde avant une promotion, pour voir ce qui est encore rouge.</p>
+<!-- command-links:start -->
+<p>Documentation des commandes : <a href="https://sfdx-hardis.cloudity.com/hardis/project/action/run/">hardis:project:action:run</a>, <a href="https://sfdx-hardis.cloudity.com/hardis/project/action/update/">hardis:project:action:update</a>, <a href="https://sfdx-hardis.cloudity.com/hardis/project/action/set-status/">hardis:project:action:set-status</a></p>
+<!-- command-links:end -->
+</details>
+<h2 id="ce-que-vous-devez-voir">Ce que vous devez voir<a class="headerlink" href="#ce-que-vous-devez-voir" title="Permanent link">&para;</a></h2>
+<ul>
+<li>Une exécution <strong>Process Deployment (sfdx-hardis)</strong> verte sur <code>integration</code></li>
+<li>Un log où vous savez dire combien de composants sont partis, et pourquoi ce nombre n'est pas un</li>
+<li>La modification présente dans <code>helios-integration</code></li>
+<li>La US-056 de Romain mergée, <code>Crew_Workload__c</code> dans <code>helios-integration</code>, et plus aucun joker dans
+  <code>.forceignore</code></li>
+<li>La US-062 de Mariia et sa correction mergées, et dans son commentaire Deployment Actions : ✅ pour
+  la première action avec une note disant que vous l'avez lancée, ↪️ pour l'action de capacité des
+  équipes, ✅ pour la dernière avec une note disant que vous l'avez close à la main</li>
+<li>Dans <code>helios-integration</code>, un groupe public <strong>Crew Leads</strong> qui contient les delivery managers et
+  vous</li>
+<li><code>force-app/main/default/groups/Helios_Crew_Leads.group-meta.xml</code> sur <code>integration</code>, pour que les
+  orgs suivantes reçoivent le groupe par le déploiement</li>
+</ul>
+<details class="troubleshoot">
+<summary>En cas de problème</summary>
+<p><strong>Le déploiement a échoué alors que le contrôle était passé.</strong>
+Quelque chose a changé entre les deux : l'org, ou un autre déploiement arrivé avant. Lisez l'erreur,
+et vérifiez si quelqu'un a déployé à la main.</p>
+<p><strong>Le log dit "nothing to deploy".</strong>
+Avec le delta désactivé, cela ne devrait pas arriver sur ce projet, parce que le package est déclaré
+et non calculé. Si cela arrive, vérifiez que <code>manifest/package.xml</code> est toujours dans la branche et
+liste toujours quelque chose.</p>
+<p><strong>Le job n'a jamais démarré.</strong>
+Le workflow ne se déclenche que sur les pushes vers des branches majeures. Vérifiez que le merge a
+bien atterri sur <code>integration</code>.</p>
+<p><strong>Le contrôle de Romain échoue encore après son deuxième commit.</strong>
+Le contrôle a tourné sur le merge de sa branche avec <code>integration</code> telle qu'elle était au moment de
+son push. Si vous avez modifié <code>.forceignore</code> sur <code>integration</code> entre-temps, cliquez sur
+<strong>Update branch</strong> sur sa Pull Request : GitHub y merge <code>integration</code>, et le contrôle retourne.</p>
+<p><strong>L'onglet Deployment Actions n'a pas de colonne Status, ou pas de Retry dans le menu.</strong>
+L'état vient de sfdx-hardis, qui demande une version récente et votre connexion GitHub : mettez-le à
+jour depuis le panneau <strong>Dependencies</strong>, et vérifiez que l'icône du fournisseur git de la DevOps
+Pipeline est connectée. Une ligne ne propose Retry que si son action a échoué ou a été arrêtée,
+après le déploiement.</p>
+<p><strong>Retry dit qu'aucune org de helios-integration n'est connectée.</strong>
+Connectez <code>helios-integration</code> dans <strong>Orgs Manager</strong>, puis cliquez à nouveau sur <strong>Retry</strong>.</p>
+<p><strong>Retry dit ne pas trouver l'action.</strong>
+La définition est lue dans la branche que vous avez récupérée : récupérez <code>integration</code> et faites un
+pull, pour que le fichier d'actions de Mariia soit là.</p>
+<p><strong>La première action échoue encore après la création du groupe.</strong>
+Vérifiez le <strong>Group Name</strong> : il doit être exactement <code>Helios_Crew_Leads</code>. Le libellé peut être
+n'importe lequel.</p>
+<p><strong>La correction de Mariia s'arrête sur "not merged in your fork".</strong>
+Sa correction retire une action du fichier d'actions de US-062, nommé d'après le numéro de sa Pull
+Request : mergez d'abord US-062.</p>
+</details>
+<h2 id="verifiez-votre-travail">Vérifiez votre travail<a class="headerlink" href="#verifiez-votre-travail" title="Permanent link">&para;</a></h2>
+<p>Welcome page &gt; <strong>Training: Level 3</strong> &gt; <strong>Check my work</strong>, puis choisissez le <strong>Lab 3.3</strong>.</p>
+<h2 id="pour-aller-plus-loin">Pour aller plus loin<a class="headerlink" href="#pour-aller-plus-loin" title="Permanent link">&para;</a></h2>
+<ul>
+<li><a href="https://sfdx-hardis.cloudity.com/salesforce-devops-deploy-major-branches/">Déployer vers les orgs majeures</a></li>
+<li><a href="https://sfdx-hardis.cloudity.com/salesforce-devops-smart-deployment/">Les rouages de Smart Deploy</a></li>
+<li><a href="https://sfdx-hardis.cloudity.com/salesforce-devops-work-on-user-story-deployment-actions/#recover-a-failed-action">Rattraper une action de déploiement en échec</a></li>
+</ul>
+<p><a class="md-button md-button--primary" href="../3-4-merge-colliding-pull-requests/">Suite : Lab 3.4 - Trois Pull Requests se percutent : choisir l'ordre de merge</a></p>
+
+
+
+
+
+
+
+
+
+  
+  
+
+
+
+  
+
+
+
+
+  <h2 id="__comments">Questions and comments</h2>
+  <script src="https://giscus.app/client.js"
+          data-repo="hardisgroupcom/sfdx-hardis-training"
+          data-repo-id="R_kgDOUcjgQw"
+          data-category="Q&amp;A"
+          data-category-id="DIC_kwDOUcjgQ84DF-lC"
+          data-mapping="pathname"
+          data-strict="1"
+          data-reactions-enabled="1"
+          data-emit-metadata="0"
+          data-input-position="top"
+          data-theme="preferred_color_scheme"
+          data-lang="en"
+          data-loading="lazy"
+          crossorigin="anonymous"
+          async>
+  </script>
+
+  <script>
+    // Keep the Giscus iframe in sync with the palette toggle. It is a
+    // cross-origin frame, so its theme can only be changed by postMessage.
+    (function () {
+      if (window.__giscusThemeSync) {
+        return;
+      }
+      window.__giscusThemeSync = true;
+      var giscusTheme = function () {
+        var scheme = document.body.getAttribute("data-md-color-scheme");
+        return scheme === "slate" ? "dark" : "light";
+      };
+      var apply = function () {
+        var frame = document.querySelector("iframe.giscus-frame");
+        if (frame && frame.contentWindow) {
+          frame.contentWindow.postMessage(
+            { giscus: { setConfig: { theme: giscusTheme() } } },
+            "https://giscus.app"
+          );
+        }
+      };
+      new MutationObserver(apply).observe(document.body, {
+        attributes: true,
+        attributeFilter: ["data-md-color-scheme"]
+      });
+      window.addEventListener("message", function (event) {
+        if (event.origin === "https://giscus.app") {
+          apply();
+        }
+      });
+    })();
+  </script>
+
+                
+              </article>
+            </div>
+          
+          
+  <script>var tabs=__md_get("__tabs");if(Array.isArray(tabs))e:for(var set of document.querySelectorAll(".tabbed-set")){var labels=set.querySelector(".tabbed-labels");for(var tab of tabs)for(var label of labels.getElementsByTagName("label"))if(label.innerText.trim()===tab){var input=document.getElementById(label.htmlFor);input.checked=!0;continue e}}</script>
+
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-circle-arrow-up" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="m16 12-4-4-4 4M12 16V8"/></svg>
+  Retour en haut de la page
+</button>
+        
+      </main>
+      
+        
+
+
+
+
+<footer class="md-footer">
+  
+    
+      
+      <nav class="md-footer__inner md-grid" aria-label="Pied de page" >
+        
+          
+          <a href="../3-2-review-a-contributor-pull-request/" class="md-footer__link md-footer__link--prev" aria-label="Précédent: Lab 3.2 - Relire et merger la Pull Request d&#x27;un contributeur">
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-arrow-left" viewBox="0 0 24 24"><path d="m12 19-7-7 7-7M19 12H5"/></svg>
+            </div>
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Précédent
+              </span>
+              <div class="md-ellipsis">
+                Lab 3.2 - Relire et merger la Pull Request d'un contributeur
+              </div>
+            </div>
+          </a>
+        
+        
+          
+          <a href="../3-4-merge-colliding-pull-requests/" class="md-footer__link md-footer__link--next" aria-label="Suivant: Lab 3.4 - Trois Pull Requests se percutent : choisir l&#x27;ordre de merge">
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Suivant
+              </span>
+              <div class="md-ellipsis">
+                Lab 3.4 - Trois Pull Requests se percutent : choisir l'ordre de merge
+              </div>
+            </div>
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-arrow-right" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+            </div>
+          </a>
+        
+      </nav>
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      Cloudity and friends
+    </div>
+  
+  
+</div>
+      
+        
+<div class="md-social">
+  
+    
+    
+    
+    
+    <a href="https://github.com/hardisgroupcom/sfdx-hardis" target="_blank" rel="noopener" title="sfdx-hardis on GitHub" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.3.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2026 Fonticons, Inc.--><path fill="currentColor" d="M216.5 362.5c-66-8-112.5-55.5-112.5-117 0-25 9-52 24-70-6.5-16.5-5.5-51.5 2-66 20-2.5 47 8 63 22.5 19-6 39-9 63.5-9s44.5 3 62.5 8.5c15.5-14 43-24.5 63-22 7 13.5 8 48.5 1.5 65.5 16 19 24.5 44.5 24.5 70.5 0 61.5-46.5 108-113.5 116.5 17 11 28.5 35 28.5 62.5v52c0 15 12.5 23.5 27.5 17.5C441 459.5 512 369 512 257 512 115.5 397 0 255.5 0S0 115.5 0 257c0 111 70.5 203 165.5 237.5 13.5 5 26.5-4 26.5-17.5v-40c-7 3-16 5-24 5-33 0-52.5-18-66.5-51.5-5.5-13.5-11.5-21.5-23-23-6-.5-8-3-8-6 0-6 10-10.5 20-10.5 14.5 0 27 9 40 27.5 10 14.5 20.5 21 33 21s20.5-4.5 32-16c8.5-8.5 15-16 21-21"/></svg>
+    </a>
+  
+    
+    
+    
+    
+    <a href="https://sfdx-hardis.cloudity.com/" target="_blank" rel="noopener" title="sfdx-hardis documentation" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.3.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2026 Fonticons, Inc.--><path fill="currentColor" d="M384 512H96c-53 0-96-43-96-96V96C0 43 43 0 96 0h304c26.5 0 48 21.5 48 48v288c0 20.9-13.4 38.7-32 45.3V448c17.7 0 32 14.3 32 32s-14.3 32-32 32zM96 384c-17.7 0-32 14.3-32 32s14.3 32 32 32h256v-64zm32-232c0 13.3 10.7 24 24 24h176c13.3 0 24-10.7 24-24s-10.7-24-24-24H152c-13.3 0-24 10.7-24 24m24 72c-13.3 0-24 10.7-24 24s10.7 24 24 24h176c13.3 0 24-10.7 24-24s-10.7-24-24-24z"/></svg>
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog" role="status" aria-atomic="true">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      
+      
+        
+        
+      <script id="__config" type="application/json">{"annotate":null,"base":"../../..","features":["content.action.edit","content.code.copy","content.tabs.link","navigation.instant","navigation.tracking","navigation.top","navigation.footer","search.suggest","search.highlight","toc.follow"],"redirect":null,"search":"../../../assets/javascripts/workers/search.7d14d953.min.js","tags":null,"translations":{"clipboard.copied":"Copié dans le presse-papier","clipboard.copy":"Copier dans le presse-papier","clipboard.error":"Could not copy to clipboard","search.result.more.one":"1 de plus sur cette page","search.result.more.other":"# de plus sur cette page","search.result.none":"Aucun document trouvé","search.result.one":"1 document trouvé","search.result.other":"# documents trouvés","search.result.placeholder":"Taper pour démarrer la recherche","search.result.term.missing":"Non trouvé","select.version":"Sélectionner la version"},"version":null}</script>
+    
+    
+      <script src="../../../assets/javascripts/bundle.8b1c90bd.min.js"></script>
+      
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/tablesort/5.2.1/tablesort.min.js"></script>
+      
+        <script src="../../../theme/javascripts/tables.js"></script>
+      
+        <script src="../../../theme/javascripts/lightbox.js"></script>
+      
+        <script src="../../../theme/javascripts/after-footer.js"></script>
+      
+        <script src="../../../theme/javascripts/language-switch.js"></script>
+      
+    
+  </body>
+</html>

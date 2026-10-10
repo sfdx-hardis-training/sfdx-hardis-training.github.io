@@ -1,0 +1,8 @@
+{
+  "id": "US-050",
+  "subject": "Configure the pipeline up to production",
+  "url": "https://sfdx-hardis-training.github.io/BACKLOG/US-050/",
+  "owner": "You",
+  "branch": "features/US-050-pipeline-up-to-production",
+  "lab": "3.1"
+}

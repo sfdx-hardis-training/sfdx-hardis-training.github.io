@@ -1,0 +1,2872 @@
+
+<!doctype html>
+<html lang="fr" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Étendez une pipeline Salesforce à deux étages jusqu'à la production : branches, protections, et preprod et production authentifiées en JWT par Add/Configure Org.">
+      
+      
+      
+        <link rel="canonical" href="https://sfdx-hardis-training.github.io/fr/level-3-release-manager/3-1-configure-the-pipeline-up-to-production/">
+      
+      
+        <link rel="prev" href="../">
+      
+      
+        <link rel="next" href="../3-2-review-a-contributor-pull-request/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../../theme/images/badge-mark.svg">
+      <meta name="generator" content="zensical-0.0.69">
+    
+    
+      
+        <title>Lab 3.1 - Configurer la pipeline CI/CD jusqu'à la production - Salesforce DevOps with sfdx-hardis</title>
+      
+    
+    
+      
+        
+      
+      <link rel="stylesheet" href="../../../assets/stylesheets/modern/main.e15858d4.min.css">
+      
+        
+          
+        
+        <link rel="stylesheet" href="../../../assets/stylesheets/modern/palette.b27955a4.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+    
+    
+      <link rel="stylesheet" href="../../../theme/stylesheets/extra.css">
+    
+    <script>__md_scope=new URL("../../..",location),__md_scope.pathname.endsWith("/")||(__md_scope=new URL(__md_scope.pathname+"/",location)),__md_hash=e=>[...e].reduce(((e,t)=>(e<<5)-e+t.charCodeAt(0)),0),__md_get=(e,t=localStorage,_=__md_scope)=>JSON.parse(t.getItem(_.pathname+"."+e)),__md_set=(e,t,_=localStorage,a=__md_scope)=>{try{_.setItem(a.pathname+"."+e,JSON.stringify(t))}catch(e){}},document.documentElement.setAttribute("data-platform",navigator.platform)</script>
+    
+      
+  
+
+
+  
+  
+
+<script id="__analytics">function __md_analytics(){function e(){dataLayer.push(arguments)}window.dataLayer=window.dataLayer||[],e("js",new Date),e("config","G-SE20CZ58E1"),document.addEventListener("DOMContentLoaded",(function(){document.forms.search&&document.forms.search.query.addEventListener("blur",(function(){this.value&&e("event","search",{search_term:this.value})}));document$.subscribe((function(){var t=document.forms.feedback;if(void 0!==t)for(var a of t.querySelectorAll("[type=submit]"))a.addEventListener("click",(function(a){a.preventDefault();var n=document.location.pathname,d=this.getAttribute("data-md-value");e("event","feedback",{page:n,data:d}),t.firstElementChild.disabled=!0;var r=t.querySelector(".md-feedback__note [data-md-value='"+d+"']");r&&(r.hidden=!1)})),t.hidden=!1})),location$.subscribe((function(t){e("config","G-SE20CZ58E1",{page_path:t.pathname})}))}));var t=document.createElement("script");t.async=!0,t.src="https://www.googletagmanager.com/gtag/js?id=G-SE20CZ58E1",document.getElementById("__analytics").insertAdjacentElement("afterEnd",t)}</script>
+  
+    <script>"undefined"!=typeof __md_analytics&&__md_analytics()</script>
+  
+
+    
+    
+  
+  
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Salesforce DevOps with sfdx-hardis">
+  <meta property="og:locale" content="fr">
+  <meta property="og:title" content="Lab 3.1 - Configurer la pipeline CI/CD jusqu'à la production">
+  <meta property="og:description" content="Étendez une pipeline Salesforce à deux étages jusqu'à la production : branches, protections, et preprod et production authentifiées en JWT par Add/Configure Org.">
+  <meta property="og:url" content="https://sfdx-hardis-training.github.io/fr/level-3-release-manager/3-1-configure-the-pipeline-up-to-production/">
+  <meta property="og:image" content="https://sfdx-hardis-training.github.io/_assets/social/course.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="Lab 3.1 - Configurer la pipeline CI/CD jusqu'à la production">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Lab 3.1 - Configurer la pipeline CI/CD jusqu'à la production">
+  <meta name="twitter:description" content="Étendez une pipeline Salesforce à deux étages jusqu'à la production : branches, protections, et preprod et production authentifiées en JWT par Add/Configure Org.">
+  <meta name="twitter:image" content="https://sfdx-hardis-training.github.io/_assets/social/course.png">
+
+  <script>
+    (function () {
+      var here = "fr";
+      var alternates = {"en":"en/level-3-release-manager/3-1-configure-the-pipeline-up-to-production/","fr":"fr/level-3-release-manager/3-1-configure-the-pipeline-up-to-production/"};
+      var base = new URL("../../.." || ".", window.location.href).pathname;
+      try {
+        var asked = new URLSearchParams(window.location.search).get("lang");
+        if (asked) {
+          document.cookie =
+            "course-language=" + encodeURIComponent(asked) + "; path=" + base + "; max-age=31536000; samesite=lax";
+        }
+        var cookie = document.cookie.split("; ").filter(function (one) {
+          return one.indexOf("course-language=") === 0;
+        })[0];
+        if (!cookie) {
+          return;
+        }
+        var preferred = asked || decodeURIComponent(cookie.slice("course-language=".length));
+        if (!preferred || preferred === here) {
+          return;
+        }
+        var target = alternates[preferred];
+        if (typeof target !== "string") {
+          return;
+        }
+        var url = new URL(target, new URL(base, window.location.href)).pathname;
+        if (url !== window.location.pathname) {
+          window.location.replace(url + window.location.search + window.location.hash);
+        }
+      } catch (error) {
+        // A browser with no cookies stays where it is, which is the page asked for
+      }
+    })();
+  </script>
+
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="custom" data-md-color-accent="custom">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer" aria-hidden="true"></label>
+    <div data-md-component="skip">
+      <a href="#__skip" class="md-skip">
+        Aller au contenu
+      </a>
+    </div>
+    <div data-md-component="announce">
+      
+        <aside class="md-banner">
+          <div class="md-banner__inner md-grid md-typeset">
+            
+            
+      <strong>Ce niveau est en phase de relecture.</strong> Il est complet et a été déroulé de bout
+      en bout, et maintenant il a besoin de vous. Si une étape ne fonctionne pas, ou si l'écran ne
+      correspond pas à ce que dit la page, merci de
+      <a href="#__comments">laisser un commentaire en bas de cette page</a>. C'est le moyen le plus
+      rapide de faire corriger le problème, et cela aide la personne suivante.
+    
+          </div>
+          
+        </aside>
+      
+    </div>
+    
+    
+      
+
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="En-tête">
+    <a href="/fr/" title="Salesforce DevOps with sfdx-hardis" class="md-header__button md-logo" aria-label="Salesforce DevOps with sfdx-hardis" data-md-component="logo">
+      
+  <img src="../../../theme/images/cloudity-text-logo-white.svg" alt="Salesforce DevOps with sfdx-hardis">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer" aria-label="Navigation">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-menu" viewBox="0 0 24 24"><path d="M4 5h16M4 12h16M4 19h16"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Salesforce DevOps with sfdx-hardis
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Lab 3.1 - Configurer la pipeline CI/CD jusqu'à la production
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="none" data-md-color-scheme="default" data-md-color-primary="custom" data-md-color-accent="custom"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="none" data-md-color-scheme="slate" data-md-color-primary="custom" data-md-color-accent="custom"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+      
+
+
+
+  
+
+  
+    
+    
+  
+
+<div class="md-header__option">
+  <div class="md-select md-select--language">
+    <button class="md-header__button md-header__button--flag" aria-label="Sélectionner la langue">
+      
+        <img src="../../../theme/images/flags/fr.svg" alt="Français" class="md-select__flag md-select__flag--current">
+      
+    </button>
+    <div class="md-select__inner">
+      <ul class="md-select__list">
+        
+          
+          <li class="md-select__item"><a href="../../../en/level-3-release-manager/3-1-configure-the-pipeline-up-to-production/" hreflang="en" data-course-home="/" class="md-select__link">
+              
+                <img src="../../../theme/images/flags/gb.svg" alt="" class="md-select__flag">
+              
+              English
+            </a>
+          </li>
+        
+          
+          <li class="md-select__item"><a href="././" hreflang="fr" data-course-home="/fr/" class="md-select__link">
+              
+                <img src="../../../theme/images/flags/fr.svg" alt="" class="md-select__flag">
+              
+              Français
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</div>
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search" aria-label="Recherche">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-search" viewBox="0 0 24 24"><path d="m21 21-4.34-4.34"/><circle cx="11" cy="11" r="8"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog" aria-label="Recherche">
+  <button type="button" class="md-search__button">
+    Recherche
+  </button>
+</div>
+      
+    
+    <div class="md-header__source">
+      
+        <a href="https://github.com/hardisgroupcom/sfdx-hardis-training" title="Aller au dépôt" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.3.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2026 Fonticons, Inc.--><path fill="currentColor" d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    hardisgroupcom/sfdx-hardis-training
+  </div>
+</a>
+      
+    </div>
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0" data-course-lang="fr" data-course-base="../../.." data-course-alt-en="en/level-3-release-manager/3-1-configure-the-pipeline-up-to-production/" data-course-alt-fr="fr/level-3-release-manager/3-1-configure-the-pipeline-up-to-production/">
+  <label class="md-nav__title" for="__drawer">
+    <a href="/fr/" title="Salesforce DevOps with sfdx-hardis" class="md-nav__button md-logo" aria-label="Salesforce DevOps with sfdx-hardis" data-md-component="logo">
+      
+  <img src="../../../theme/images/cloudity-text-logo-white.svg" alt="Salesforce DevOps with sfdx-hardis">
+
+    </a>
+    Salesforce DevOps with sfdx-hardis
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/hardisgroupcom/sfdx-hardis-training" title="Aller au dépôt" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.3.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2026 Fonticons, Inc.--><path fill="currentColor" d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    hardisgroupcom/sfdx-hardis-training
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+      
+    
+      
+      
+      
+    
+      
+      
+      
+    
+      
+      
+      
+    
+      
+      
+      
+    
+      
+      
+      
+    
+      
+      
+      
+    
+      
+      
+      
+        
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Accueil
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+      
+    
+      
+      
+      
+        
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_9" >
+        
+          
+          <label class="md-nav__link" for="__nav_9" id="__nav_9_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Niveau 1 - Contributeur Salesforce DevOps, les bases
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        
+          <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_9_label" aria-expanded="false">
+            <label class="md-nav__title" for="__nav_9">
+              <span class="md-nav__icon md-icon"></span>
+              
+  
+  Niveau 1 - Contributeur Salesforce DevOps, les bases
+
+            </label>
+            <ul class="md-nav__list" data-md-scrollfix>
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../level-1-contributor-basics/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Commencer ici
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../level-1-contributor-basics/1-1-install-vs-code-and-sfdx-hardis/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Lab 1.1 - Installer VS Code, Git et sfdx-hardis
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../level-1-contributor-basics/1-2-create-your-dev-hub-scratch-orgs-and-pipeline/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Lab 1.2 - Créer votre Dev Hub, vos scratch orgs et votre pipeline CI/CD
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../level-1-contributor-basics/1-3-start-a-user-story-on-a-git-branch/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Lab 1.3 - Démarrer une User Story sur sa propre branche Git
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../level-1-contributor-basics/1-4-build-a-custom-field-in-your-org/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Lab 1.4 - Construire un champ personnalisé dans votre org Salesforce
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../level-1-contributor-basics/1-5-retrieve-commit-and-publish-your-changes/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Lab 1.5 - Récupérer, commiter et publier vos modifications Salesforce
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../level-1-contributor-basics/1-6-pull-request-deployment-check-and-merge/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Lab 1.6 - Ouvrir une Pull Request, passer le contrôle de déploiement, merger
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../level-1-contributor-basics/1-7-capstone-deliver-a-user-story-on-your-own/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Lab 1.7 - Épreuve finale : livrer une User Story tout seul
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+            </ul>
+          </nav>
+        
+      
+    </li>
+  
+
+      
+    
+      
+      
+      
+        
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_10" >
+        
+          
+          <label class="md-nav__link" for="__nav_10" id="__nav_10_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Niveau 2 - Contributeur Salesforce DevOps avancé
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        
+          <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_10_label" aria-expanded="false">
+            <label class="md-nav__title" for="__nav_10">
+              <span class="md-nav__icon md-icon"></span>
+              
+  
+  Niveau 2 - Contributeur Salesforce DevOps avancé
+
+            </label>
+            <ul class="md-nav__list" data-md-scrollfix>
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../level-2-contributor-advanced/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Commencer ici
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../level-2-contributor-advanced/2-1-backpromote-your-teammates-work/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Lab 2.1 - Backpromote : remettre votre org de dev au niveau de l'équipe
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../level-2-contributor-advanced/2-2-fix-a-missing-dependency-deployment-error/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Lab 2.2 - Corriger une erreur de déploiement due à une dépendance manquante
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../level-2-contributor-advanced/2-3-fix-broken-records-with-an-apex-deployment-action/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Lab 2.3 - Réparer des enregistrements cassés avec une deployment action Apex
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../level-2-contributor-advanced/2-4-ship-reference-data-and-a-batch-with-deployment-actions/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Lab 2.4 - Livrer des données de référence et un batch avec des deployment actions
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../level-2-contributor-advanced/2-5-pass-code-quality-and-apex-test-coverage/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Lab 2.5 - Passer la barrière de qualité de code et la couverture de tests Apex
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../level-2-contributor-advanced/2-6-permission-sets-and-profiles/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Lab 2.6 - Permission sets, profils, et pourquoi une autorisation disparaît
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../level-2-contributor-advanced/2-7-resolve-a-git-merge-conflict/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Lab 2.7 - Résoudre un conflit de merge Git avec un collègue
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../level-2-contributor-advanced/2-8-recover-from-committing-the-wrong-metadata/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Lab 2.8 - Se remettre d'avoir commité la mauvaise métadonnée
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../level-2-contributor-advanced/2-9-capstone-deliver-a-user-story-that-has-it-all/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Lab 2.9 - Épreuve finale : livrer une User Story qui a tout
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+            </ul>
+          </nav>
+        
+      
+    </li>
+  
+
+      
+    
+      
+      
+      
+        
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_11" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_11" id="__nav_11_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Niveau 3 - Release manager Salesforce DevOps
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        
+          <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_11_label" aria-expanded="true">
+            <label class="md-nav__title" for="__nav_11">
+              <span class="md-nav__icon md-icon"></span>
+              
+  
+  Niveau 3 - Release manager Salesforce DevOps
+
+            </label>
+            <ul class="md-nav__list" data-md-scrollfix>
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Commencer ici
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Lab 3.1 - Configurer la pipeline CI/CD jusqu'à la production
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="././" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Lab 3.1 - Configurer la pipeline CI/CD jusqu'à la production
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+
+<nav class="md-nav md-nav--secondary" aria-label="Table des matières">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table des matières
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#la-situation" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        La situation
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#avant-de-commencer" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Avant de commencer
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#les-etapes" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Les étapes
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Les étapes">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-decider-la-forme" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        1. Décider la forme
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-creer-la-branche-preprod" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        2. Créer la branche preprod
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-proteger-preprod-et-main" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        3. Protéger preprod et main
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#4-demarrer-une-user-story-pour-la-configuration" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        4. Démarrer une User Story pour la configuration
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#5-configurer-preprod-et-son-org-addconfigure-org" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        5. Configurer preprod et son org : Add/Configure Org
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#6-stocker-les-deux-secrets-puis-laisser-la-commande-finir" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        6. Stocker les deux secrets, puis laisser la commande finir
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#7-verifier-lautorisation-quelle-a-faite-pour-vous" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        7. Vérifier l'autorisation qu'elle a faite pour vous
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#8-la-meme-chose-pour-main" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        8. La même chose pour main
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#9-laisser-les-contributeurs-demarrer-un-hotfix" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        9. Laisser les contributeurs démarrer un hotfix
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#10-activer-les-promotion-branches-pour-une-semaine-que-vous-esperez-ne-pas-avoir" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        10. Activer les promotion branches, pour une semaine que vous espérez ne pas avoir
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#11-publier-la-configuration-par-une-pull-request" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        11. Publier la configuration par une Pull Request
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#12-regarder-le-diagramme-a-nouveau" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        12. Regarder le diagramme à nouveau
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#ce-que-vous-devez-voir" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Ce que vous devez voir
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#verifiez-votre-travail" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Vérifiez votre travail
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#pour-aller-plus-loin" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Pour aller plus loin
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../3-2-review-a-contributor-pull-request/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Lab 3.2 - Relire et merger la Pull Request d'un contributeur
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../3-3-deploy-to-integration-and-read-the-log/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Lab 3.3 - Lire le log de déploiement, et ce que .forceignore lui cache
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../3-4-merge-colliding-pull-requests/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Lab 3.4 - Trois Pull Requests se percutent : choisir l'ordre de merge
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../3-5-promote-to-uat-and-write-release-notes/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Lab 3.5 - Promouvoir en UAT et écrire les notes de version
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../3-6-release-to-production-and-read-dora-metrics/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Lab 3.6 - Livrer en production et lire vos métriques DORA
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../3-7-hotfix-and-retrofit/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Lab 3.7 - La production est cassée : hotfix et retrofit
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../3-8-monitor-your-production-org/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Lab 3.8 - Monitorer votre org de production
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../3-9-generate-the-project-documentation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Lab 3.9 - Générer la documentation du projet Salesforce
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../3-10-promote-a-subset-with-promotion-branches/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Lab 3.10 - Promouvoir un sous-ensemble avec les promotion branches (Beta)
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../3-11-capstone-run-a-weekly-release-cycle/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Lab 3.11 - Épreuve finale : mener un cycle de release hebdomadaire
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+            </ul>
+          </nav>
+        
+      
+    </li>
+  
+
+      
+    
+      
+      
+      
+        
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../help/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Aide
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+      
+    
+      
+      
+      
+        
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../BACKLOG/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Backlog
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+      
+    
+      
+      
+      
+        
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../badges/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Badges
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+      
+    
+      
+      
+      
+        
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="https://sfdx-hardis.cloudity.com/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  sfdx-hardis documentation
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+      
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  
+                    
+                    
+                    
+                      
+                    
+                    
+                      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+                      <div class="md-sidebar-button__wrapper">
+                        <label class="md-sidebar-button" for="__toc"></label>
+                      </div>
+                    
+                  
+                  <div class="md-sidebar__inner">
+                    
+
+
+<nav class="md-nav md-nav--secondary" aria-label="Table des matières">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table des matières
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#la-situation" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        La situation
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#avant-de-commencer" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Avant de commencer
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#les-etapes" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Les étapes
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Les étapes">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-decider-la-forme" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        1. Décider la forme
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-creer-la-branche-preprod" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        2. Créer la branche preprod
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-proteger-preprod-et-main" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        3. Protéger preprod et main
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#4-demarrer-une-user-story-pour-la-configuration" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        4. Démarrer une User Story pour la configuration
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#5-configurer-preprod-et-son-org-addconfigure-org" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        5. Configurer preprod et son org : Add/Configure Org
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#6-stocker-les-deux-secrets-puis-laisser-la-commande-finir" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        6. Stocker les deux secrets, puis laisser la commande finir
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#7-verifier-lautorisation-quelle-a-faite-pour-vous" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        7. Vérifier l'autorisation qu'elle a faite pour vous
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#8-la-meme-chose-pour-main" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        8. La même chose pour main
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#9-laisser-les-contributeurs-demarrer-un-hotfix" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        9. Laisser les contributeurs démarrer un hotfix
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#10-activer-les-promotion-branches-pour-une-semaine-que-vous-esperez-ne-pas-avoir" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        10. Activer les promotion branches, pour une semaine que vous espérez ne pas avoir
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#11-publier-la-configuration-par-une-pull-request" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        11. Publier la configuration par une Pull Request
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#12-regarder-le-diagramme-a-nouveau" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        12. Regarder le diagramme à nouveau
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#ce-que-vous-devez-voir" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Ce que vous devez voir
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#verifiez-votre-travail" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Vérifiez votre travail
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#pour-aller-plus-loin" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Pour aller plus loin
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                <a id="__skip" tabindex="-1"></a>
+                
+                  
+
+  
+    <a href="https://github.com/hardisgroupcom/sfdx-hardis-training/edit/main/labs/fr/level-3-release-manager/3-1-configure-the-pipeline-up-to-production.md" title="Editer cette page" class="md-content__button md-icon" rel="edit">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-file-pen" viewBox="0 0 24 24"><path d="M12.659 22H18a2 2 0 0 0 2-2V8a2.4 2.4 0 0 0-.706-1.706l-3.588-3.588A2.4 2.4 0 0 0 14 2H6a2 2 0 0 0-2 2v9.34"/><path d="M14 2v5a1 1 0 0 0 1 1h5M10.378 12.622a1 1 0 0 1 3 3.003L8.36 20.637a2 2 0 0 1-.854.506l-2.867.837a.5.5 0 0 1-.62-.62l.836-2.869a2 2 0 0 1 .506-.853z"/></svg>
+    </a>
+  
+  
+
+
+<h1 id="lab-31-configurer-la-pipeline-cicd-jusqua-la-production">Lab 3.1 - Configurer la pipeline CI/CD jusqu'à la production<a class="headerlink" href="#lab-31-configurer-la-pipeline-cicd-jusqua-la-production" title="Permanent link">&para;</a></h1>
+<p><strong>Niveau</strong> : 3 Release Manager</p>
+<p><strong>Durée</strong> : ~50 min</p>
+<p><strong>Vous allez</strong> : transformer une pipeline à deux étages en une pipeline à quatre étages qui atteint la
+production, donner aux deux nouveaux étages leur org et un identifiant avec lequel un vrai projet peut
+vivre, et publier tout cela de la façon dont toute modification atteint une branche majeure : par une
+Pull Request.</p>
+<h2 id="la-situation">La situation<a class="headerlink" href="#la-situation" title="Permanent link">&para;</a></h2>
+<p>Ouvrez le panneau <strong>DevOps Pipeline</strong> et regardez ce que Victor a laissé.</p>
+<p><a class="glightbox" data-type="image" href="../../../_assets/annotated/vscode/devops-pipeline--one-column.png"><img alt="Le panneau DevOps Pipeline avec integration et uat seulement" src="../../../_assets/annotated/vscode/devops-pipeline--one-column.png" /></a></p>
+<p><code>integration</code> <span class="pill-ref pill-ref-1">(1)</span> et <code>uat</code>, chacune avec son org <span class="pill-ref pill-ref-2">(2)</span>, et les branches de feature que vos
+collègues ont en cours. Le travail atteint les testeurs métier, et là il s'arrête. Il n'y a pas de
+<code>preprod</code>, et <code>main</code>, la production, est une branche où rien ne déploie : toutes les livraisons
+jusqu'ici ont atteint la production à la main, ce qui est exactement le genre de livraison dont
+personne ne peut rien dire après coup.</p>
+<p>Et les deux étages qui existent atteignent leurs orgs par un raccourci. La CI se connecte à
+<code>helios-integration</code> et <code>helios-uat</code> avec <code>SFDX_AUTH_URL_INTEGRATION</code> et <code>SFDX_AUTH_URL_UAT</code>, deux
+secrets contenant des refresh tokens OAuth de longue durée. Le Niveau 1 vous a dit que c'était une
+exception pour des scratch orgs jetables. Trois choses ne vont pas avec eux sur un vrai projet :</p>
+<ol>
+<li><strong>Ils ne peuvent pas être renouvelés.</strong> En changer un veut dire se réauthentifier, en tant
+   qu'humain, dans un navigateur</li>
+<li><strong>Ce sont des identifiants au porteur sans portée.</strong> Quiconque lit le secret dispose de tout ce
+   dont cet utilisateur dispose, depuis n'importe où, jusqu'à révocation</li>
+<li><strong>Ils sont liés à une personne.</strong> Quand cette personne part ou que son token est réinitialisé, le
+   pipeline s'arrête, et personne ne sait pourquoi</li>
+</ol>
+<p>L'alternative est un <strong>flow JWT via une External Client App</strong> : un certificat que vous détenez, un
+utilisateur pré-autorisé, aucun mot de passe nulle part, et une révocation en supprimant une
+application. sfdx-hardis le met en place pour vous, org par org, et écrit la configuration de branche
+au passage.</p>
+<div class="admonition note">
+<p class="admonition-title">Deux orgs ici, toutes les orgs sur un vrai projet</p>
+<p>Sur un vrai projet, chaque connexion de la CI passe par le JWT, <code>integration</code> et <code>uat</code> compris.
+Ce lab le met en place pour deux orgs, <code>helios-preprod</code> et <code>helios-prod</code>, parce que deux
+apprennent tout ce que quatre apprendraient. <code>integration</code> et <code>uat</code> gardent leur raccourci du
+Niveau 1, ce qui vous épargne une heure à refaire deux fois la même chose.</p>
+</div>
+<p>C'est votre première semaine. Rien de tout cela n'est inhabituel : la plupart des projets démarrent
+avec les étages dont ils ont besoin le premier jour, et finir la pipeline attend le jour où quelqu'un
+a besoin de livrer correctement.</p>
+<h2 id="avant-de-commencer">Avant de commencer<a class="headerlink" href="#avant-de-commencer" title="Permanent link">&para;</a></h2>
+<ul class="task-list">
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> Niveaux 1 et 2 terminés</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>helios-prod</code> toujours connectée dans <strong>Orgs Manager</strong>. C'est l'org Developer Edition à
+      laquelle vous vous êtes inscrit au Niveau 1, et le Dev Hub de vos scratch orgs. À partir de ce
+      lab, c'est aussi la production</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> Une org Developer Edition gratuite de plus, créée sur
+      <a href="https://developer.salesforce.com/signup">developer.salesforce.com/signup</a> exactement comme la
+      première, et connectée dans <strong>Orgs Manager</strong> avec l'alias <code>helios-preprod</code></li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> Les deux alimentées : Welcome page &gt; <strong>Training: Level 3</strong> &gt; <strong>Set up one of my training
+      orgs</strong>, une fois pour <code>helios-preprod</code> et une fois pour <code>helios-prod</code></li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>SFDX_AUTH_URL_INTEGRATION</code> et <code>SFDX_AUTH_URL_UAT</code> toujours dans votre fork, comme depuis le
+      Niveau 1 : ce lab n'y touche pas</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> Sur <code>integration</code> dans VS Code, avec rien en attente dans le panneau <strong>Source Control</strong></li>
+</ul>
+<div class="admonition note">
+<p class="admonition-title">La CI, pas votre poste de travail</p>
+<p>Votre propre connexion à ces orgs existe déjà et ne change pas : Orgs Manager continue de
+fonctionner exactement comme avant. Ce que vous mettez en place ici, c'est la façon dont un
+<strong>runner GitHub</strong>, qui n'est pas vous et n'a pas de navigateur, atteint chaque org.</p>
+</div>
+<h2 id="les-etapes">Les étapes<a class="headerlink" href="#les-etapes" title="Permanent link">&para;</a></h2>
+<h3 id="1-decider-la-forme">1. Décider la forme<a class="headerlink" href="#1-decider-la-forme" title="Permanent link">&para;</a></h3>
+<p>Quatre questions, et leurs réponses sont toute la pipeline :</p>
+<table>
+<thead>
+<tr>
+<th>Question</th>
+<th>Réponse Helios</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Quelles branches sont <strong>majeures</strong>, c'est-à-dire ont une org et un job de déploiement ?</td>
+<td><code>integration</code>, <code>uat</code>, <code>preprod</code>, <code>main</code></td>
+</tr>
+<tr>
+<td>Quelle branche peut merger dans quelle autre ?</td>
+<td><code>integration</code> dans <code>uat</code>, <code>uat</code> dans <code>preprod</code>, <code>preprod</code> dans <code>main</code>. Rien n'en saute une</td>
+</tr>
+<tr>
+<td>Quelle branche est la production ?</td>
+<td><code>main</code></td>
+</tr>
+<tr>
+<td>D'où part un correctif urgent ?</td>
+<td>De <code>preprod</code>, pour qu'il n'emporte jamais ce qui attend encore dans <code>integration</code> et <code>uat</code></td>
+</tr>
+</tbody>
+</table>
+<p>Si vous ne savez pas les énoncer en une phrase chacune, les configurer n'y changera rien.</p>
+<p><code>preprod</code> gagne sa place de deux façons. C'est la dernière répétition avant la production, une org
+qui contient ce que la production contient et dans laquelle personne ne travaille : une livraison qui
+s'y déploie proprement n'a presque plus de surprises devant elle. Et c'est de là que partent les
+hotfixes, ce dont parle le <a href="../3-7-hotfix-and-retrofit/">Lab 3.7</a>.</p>
+<p>L'ordre de ce lab découle d'une règle : <strong>une branche doit exister avant qu'une org puisse lui être
+attachée</strong>. Les branches viennent donc d'abord, puis leur protection, puis leurs orgs.</p>
+<h3 id="2-creer-la-branche-preprod">2. Créer la branche preprod<a class="headerlink" href="#2-creer-la-branche-preprod" title="Permanent link">&para;</a></h3>
+<p><code>main</code> existe déjà : c'est la branche par défaut de tout fork. <code>preprod</code> non, et elle part de <code>main</code>,
+parce qu'elle contient ce que la production contient.</p>
+<p>Dans votre fork (votre copie personnelle du repository du cours sur GitHub, par exemple
+<code>github.com/my-username/sfdx-hardis-training</code>), ouvrez la page <strong>Branches</strong> : le compteur de
+branches à côté du sélecteur de branche, ou <code>github.com/my-username/sfdx-hardis-training/branches</code>.
+Cliquez sur <strong>New branch</strong> en haut à droite. Tapez <code>preprod</code> comme nom <span class="pill-ref pill-ref-1">(1)</span>, laissez la source
+sur votre fork et <code>main</code> <span class="pill-ref pill-ref-2">(2)</span>, et cliquez sur <strong>Create new branch</strong> <span class="pill-ref pill-ref-3">(3)</span>.</p>
+<p><a class="glightbox" data-type="image" href="../../../_assets/annotated/web/github-new-branch.png"><img alt="La boîte New branch de GitHub, créant preprod à partir de main" src="../../../_assets/annotated/web/github-new-branch.png" /></a></p>
+<p>Prévenez ensuite VS Code : dans le panneau <strong>Source Control</strong>, menu <strong>...</strong>, <strong>Pull, Push</strong> &gt;
+<strong>Fetch</strong>. Les étapes suivantes listent les branches de votre fork, et une branche que VS Code n'a
+pas récupérée n'est pas dans la liste.</p>
+<h3 id="3-proteger-preprod-et-main">3. Protéger preprod et main<a class="headerlink" href="#3-proteger-preprod-et-main" title="Permanent link">&para;</a></h3>
+<p>À partir de maintenant, <strong>personne ne pousse sur une branche majeure</strong> : ni un contributeur, ni vous.
+Toute modification atteint <code>integration</code>, <code>uat</code>, <code>preprod</code> et <code>main</code> par une Pull Request dont les
+contrôles sont verts, et GitHub l'impose au lieu de faire confiance à chacun pour s'en souvenir.
+Depuis le <a href="../../level-1-contributor-basics/1-2-create-your-dev-hub-scratch-orgs-and-pipeline/">Lab 1.2</a>, <code>integration</code> et <code>uat</code> fonctionnent ainsi : la mise en place de l'environnement
+les a protégées. <code>preprod</code> et <code>main</code> sont à vous de protéger, et un release manager le fait le jour
+où les branches rejoignent la pipeline, pas après le premier mauvais merge.</p>
+<p>Dans votre fork (<code>github.com/my-username/sfdx-hardis-training</code>), cliquez sur <strong>Settings</strong> <span class="pill-ref pill-ref-1">(1)</span>,
+puis <strong>Branches</strong> <span class="pill-ref pill-ref-2">(2)</span> dans le menu de gauche. Les deux règles <span class="pill-ref pill-ref-4">(4)</span> sont celles que la mise en
+place de votre environnement a créées au <a href="../../level-1-contributor-basics/1-2-create-your-dev-hub-scratch-orgs-and-pipeline/">Lab 1.2</a>. Cliquez sur <strong>Add rule</strong> <span class="pill-ref pill-ref-3">(3)</span>.</p>
+<p><a class="glightbox" data-type="image" href="../../../_assets/annotated/web/github-branch-rules.png"><img alt="Les réglages Branches d'un fork, avec le bouton Add rule et les deux règles existantes" src="../../../_assets/annotated/web/github-branch-rules.png" /></a></p>
+<p>Le formulaire est long, et cinq choses y comptent. L'image est la règle d'<code>integration</code>, ouverte
+depuis la liste ci-dessus : elle montre donc les valeurs que vous êtes sur le point de poser.</p>
+<p><a class="glightbox" data-type="image" href="../../../_assets/annotated/web/github-branch-rule.png"><img alt="Une règle de protection de branche exigeant une Pull Request et deux contrôles de statut, sans dérogation" src="../../../_assets/annotated/web/github-branch-rule.png" /></a></p>
+<ol>
+<li><strong>Branch name pattern</strong> <span class="pill-ref pill-ref-1">(1)</span> : <code>preprod</code></li>
+<li>Cochez <strong>Require a pull request before merging</strong> <span class="pill-ref pill-ref-2">(2)</span>, et décochez <strong>Require approvals</strong> en
+   dessous : vous travaillez seul ici, et GitHub ne vous laisse jamais approuver votre propre Pull
+   Request. Sur un vrai projet, demandez une approbation</li>
+<li>Cochez <strong>Require status checks to pass before merging</strong> <span class="pill-ref pill-ref-3">(3)</span>. Une zone de recherche apparaît en
+   dessous. Tapez <code>Simulate</code> et choisissez <strong>Simulate Deployment to Major Org</strong>, puis tapez <code>Mega</code> et
+   choisissez <strong>Mega-Linter</strong>. Les deux atterrissent dans <strong>Status checks that are required</strong> : ce
+   sont les deux contrôles que lance chaque Pull Request de ce cours</li>
+<li>Cochez <strong>Do not allow bypassing the above settings</strong> <span class="pill-ref pill-ref-4">(4)</span>. Sans cela, le propriétaire du repository,
+   c'est-à-dire vous, a encore une case pour pousser ou merger quand même</li>
+<li>Cliquez sur <strong>Create</strong> en bas. Sur une règle existante, le même bouton affiche <strong>Save changes</strong>
+   <span class="pill-ref pill-ref-5">(5)</span></li>
+</ol>
+<p>Puis <strong>Add rule</strong> à nouveau, pour <code>main</code>, avec les mêmes réglages. De retour sur la liste : quatre
+règles, <code>integration</code>, <code>uat</code>, <code>preprod</code> et <code>main</code>.</p>
+<p>La zone de recherche ne propose que les contrôles qui ont tourné sur ce repository dans les sept
+derniers jours. Les deux ont tourné sur vos Pull Requests du Niveau 2, ils y sont donc, sauf si vous
+avez fait une longue pause : dans ce cas ouvrez d'abord n'importe quelle Pull Request vers
+<code>integration</code>, et ses contrôles les remettent dans la liste.</p>
+<details>
+<summary>Sous le capot : ce que la règle impose</summary>
+<p>Un contrôle requis est reconnu par <strong>le nom de son job</strong>, pas par le fichier de workflow.
+<code>Simulate Deployment to Major Org</code> est le job de <code>.github/workflows/check-deploy.yml</code>, qui tourne sur
+chaque Pull Request vers les quatre branches majeures. <code>Mega-Linter</code> est le job de
+<code>.github/workflows/megalinter.yml</code>, qui tourne sur chaque push, donc sur le dernier commit de chaque
+Pull Request ouverte depuis une branche de votre fork.</p>
+<p>Un workflow qui ne tourne que quand certains fichiers changent, comme <code>link-check.yml</code> ici, ne doit
+jamais être requis : une Pull Request qui ne touche pas ces fichiers l'attend pour toujours, et
+GitHub l'affiche comme <strong>Expected</strong>, jamais comme en échec.</p>
+<p>La même règle, posée par l'API GitHub, est ce que <strong>Set up my training environment</strong> a fait pour
+<code>integration</code> et <code>uat</code> :</p>
+<div class="highlight"><pre><span></span><code>gh api -X PUT repos/&lt;your-handle&gt;/sfdx-hardis-training/branches/preprod/protection \
+  -F "required_pull_request_reviews[required_approving_review_count]=0" \
+  -f "required_status_checks[contexts][]=Simulate Deployment to Major Org" \
+  -f "required_status_checks[contexts][]=Mega-Linter" \
+  -F "required_status_checks[strict]=false" -F enforce_admins=true -F restrictions=null
+</code></pre></div>
+<p><code>strict=false</code> est un choix : <code>true</code> exigerait en plus que chaque Pull Request soit à jour par
+rapport à sa cible avant d'être mergée, ce qui, sur une <code>integration</code> chargée, veut dire mettre à
+jour chaque branche ouverte après chaque merge. GitLab, Azure DevOps et Bitbucket ont les mêmes
+réglages sous d'autres noms : branches protégées, politiques de branche, contrôles de merge.</p>
+</details>
+<h3 id="4-demarrer-une-user-story-pour-la-configuration">4. Démarrer une User Story pour la configuration<a class="headerlink" href="#4-demarrer-une-user-story-pour-la-configuration" title="Permanent link">&para;</a></h3>
+<p>Chaque fichier que ce lab écrit finit sur <code>integration</code>, et <code>integration</code> n'accepte que des Pull
+Requests : la protection que vous venez de regarder est ce qui refuse le reste. Avant d'écrire le
+moindre fichier, placez-vous donc sur une branche à vous. La configuration est une modification comme
+une autre, elle remonte la pipeline avec le reste du travail, et elle a droit à une User Story comme
+n'importe quelle modification.</p>
+<p>Dans le panneau <strong>DevOps Pipeline</strong>, sous <strong>Project Contribution Workflow</strong> <span class="pill-ref pill-ref-1">(1)</span>, cliquez sur
+<strong>New User Story</strong> <span class="pill-ref pill-ref-2">(2)</span>, comme au <a href="../../level-1-contributor-basics/1-3-start-a-user-story-on-a-git-branch/">Lab 1.3</a>.</p>
+<p><a class="glightbox" data-type="image" href="../../../_assets/annotated/vscode/pipeline-cards--new-user-story.png"><img alt="La carte New User Story du panneau DevOps Pipeline" src="../../../_assets/annotated/vscode/pipeline-cards--new-user-story.png" /></a></p>
+<ol>
+<li>La première ligne indique <strong>Automatically selected target branch is integration</strong>. C'est juste :
+   <code>preprod</code> n'entre dans cette liste qu'à l'étape 9</li>
+<li><strong>What type of User Story do you want to create?</strong> - <strong>Feature: a new capability or an
+   improvement</strong></li>
+<li><strong>What is the name of your new User Story?</strong> - <code>US-050-pipeline-up-to-production</code>. Le cours
+   vérifie les noms de User Story selon le motif <code>US-nnn</code>, et US-050 est la story du backlog pour ce
+   travail</li>
+<li><strong>Which Salesforce org do you want to work in?</strong> - la dernière réponse, <strong>🤠 I'm hardcore, I
+   don't need an org !</strong>, celle sans aucune org. Rien dans ce lab ne se construit dans une org : vous
+   modifiez les fichiers du projet, et les commandes écrivent elles-mêmes dans les orgs</li>
+</ol>
+<p>La commande crée <code>features/US-050-pipeline-up-to-production</code> à partir d'<code>integration</code> et s'y
+positionne. Tout ce que les étapes suivantes écrivent atterrit là.</p>
+<h3 id="5-configurer-preprod-et-son-org-addconfigure-org">5. Configurer preprod et son org : Add/Configure Org<a class="headerlink" href="#5-configurer-preprod-et-son-org-addconfigure-org" title="Permanent link">&para;</a></h3>
+<p>Passons aux orgs. Une seule commande fait tout pour une branche : elle écrit la configuration de
+branche, l'org dans laquelle elle déploie et la branche dans laquelle elle merge, crée l'identifiant
+avec lequel la CI se connecte, et déploie l'External Client App dans l'org. Vous la lancez une fois
+par branche, en commençant par <code>preprod</code>.</p>
+<p>Dans le panneau <strong>DevOps Pipeline</strong>, cliquez sur l'engrenage <span class="pill-ref pill-ref-1">(1)</span> en haut à droite et choisissez
+<strong>Add/Configure Org</strong> <span class="pill-ref pill-ref-2">(2)</span>.</p>
+<p><a class="glightbox" data-type="image" href="../../../_assets/annotated/vscode/pipeline-settings-menu--add-org.png"><img alt="Le menu engrenage du panneau DevOps Pipeline, ouvert sur Add/Configure Org" src="../../../_assets/annotated/vscode/pipeline-settings-menu--add-org.png" /></a></p>
+<p>La commande tourne dans un panneau et pose une question à la fois <span class="pill-ref pill-ref-1">(1)</span>, avec les réponses à
+cliquer en dessous <span class="pill-ref pill-ref-2">(2)</span>. La voici à la deuxième question, avec <code>helios-preprod</code> déjà choisie.</p>
+<p><a class="glightbox" data-type="image" href="../../../_assets/annotated/vscode/configure-auth-branch--branch-question.png"><img alt="La commande Add/Configure Org demandant quelle branche git configurer" src="../../../_assets/annotated/vscode/configure-auth-branch--branch-question.png" /></a></p>
+<p>Elle pose une douzaine de questions, dans cet ordre :</p>
+<ol>
+<li><strong>Please select or login into the org you want to configure the SF CLI Authentication</strong> -
+   <code>helios-preprod</code>. La commande en fait votre org par défaut. Si elle vous redemande l'org,
+   choisissez encore <code>helios-preprod</code></li>
+<li><strong>What is the name of the git branch you want to configure Automated CI/CD deployments from?</strong> -
+   <code>preprod</code>. La liste est construite depuis les branches de votre fork, et les branches dont le nom
+   contient un <code>/</code> sont écartées, c'est pourquoi votre branche de User Story n'est pas proposée</li>
+<li><strong>What is the base URL or domain or the org you want to connect to, as preprod related
+   org ?</strong> Prenez <strong>☢️ Other: Dev org, Production org or DevHub org (login.salesforce.com)</strong> :
+   <code>helios-preprod</code> est une org Developer Edition, qui se connecte comme le fait la production.
+   Seules les scratch orgs et les sandboxes utilisent <code>test.salesforce.com</code>. Lisez la liste plutôt
+   que d'appuyer sur Entrée</li>
+<li><strong>What are the target git branches that preprod will be able to merge in?</strong> - <code>main</code>. C'est le
+   chemin de merge de l'étape 1, écrit sous <code>mergeTargets</code></li>
+<li><strong>What is the Salesforce username that will be used for deployments by CI server ?</strong> - le nom
+   d'utilisateur de <code>helios-preprod</code>, qu'elle vous propose déjà rempli</li>
+<li><strong>How do you want to provide the SSL certificate?</strong> - <strong>Generate a self-signed certificate
+   (default)</strong>. L'autre réponse, signé par une autorité, ne génère rien et se contente d'afficher des
+   instructions</li>
+<li><strong>Do you want sfdx-hardis to configure the SF CLI External Client App or Connected App on your
+   org ?</strong> - oui</li>
+<li><strong>Which JWT certificate storage mode do you want?</strong> - <strong>ClientId + decryption key as secret
+   variables + encrypted certificate as file (default)</strong>. L'autre mode met le certificat lui-même
+   dans un troisième secret et supprime le fichier</li>
+<li><strong>Please confirm when variables have been set.</strong> Celle-ci est un arrêt, et l'étape 6 est ce
+   qu'elle attend. Ne cliquez pas encore sur <strong>Validate</strong></li>
+<li>Puis, après votre confirmation : le <strong>nom</strong> de l'External Client App, un <strong>e-mail de contact</strong>,
+    et le <strong>profil à pré-autoriser</strong>. Prenez <strong>System Administrator</strong> : il est déjà sélectionné,
+    gardez-le. La liste affiche les noms de profils dans la langue de l'utilisateur de l'org : une
+    org réglée en français liste donc <code>Administrateur système</code> à la place</li>
+</ol>
+<h3 id="6-stocker-les-deux-secrets-puis-laisser-la-commande-finir">6. Stocker les deux secrets, puis laisser la commande finir<a class="headerlink" href="#6-stocker-les-deux-secrets-puis-laisser-la-commande-finir" title="Permanent link">&para;</a></h3>
+<p>Juste au-dessus de la question 9, le panneau affiche les deux valeurs dont la CI a besoin <span class="pill-ref pill-ref-2">(2)</span>,
+chacune avec un bouton de copie. Rien ne les réaffiche, ne fermez donc pas le panneau. Le panneau
+garde chaque question à laquelle vous avez répondu <span class="pill-ref pill-ref-1">(1)</span>, et les fichiers qu'il a écrits sont dans
+la barre de rapports en bas <span class="pill-ref pill-ref-3">(3)</span>.</p>
+<p><a class="glightbox" data-type="image" href="../../../_assets/annotated/vscode/configure-auth-variables--secrets.png"><img alt="La commande Add/Configure Org affichant les deux secrets et attendant qu'ils soient stockés" src="../../../_assets/annotated/vscode/configure-auth-variables--secrets.png" /></a></p>
+<p>Dans votre fork (<code>github.com/my-username/sfdx-hardis-training</code>), ouvrez <strong>Settings &gt; Secrets and
+variables &gt; Actions (1)</strong>, puis cliquez sur <strong>New repository secret</strong> <span class="pill-ref pill-ref-2">(2)</span> :</p>
+<p><a class="glightbox" data-type="image" href="../../../_assets/annotated/web/github-secrets-actions.png"><img alt="Là où un fork garde les valeurs que sa CI lit" src="../../../_assets/annotated/web/github-secrets-actions.png" /></a></p>
+<p>La page liste les <strong>noms</strong> des secrets que le repository détient et jamais leurs valeurs <span class="pill-ref pill-ref-3">(3)</span>.
+Rien, pas même GitHub, ne peut vous remontrer une valeur stockée. C'est toute la raison pour
+laquelle le panneau vous demande de ne pas le fermer.</p>
+<table>
+<thead>
+<tr>
+<th>Nom</th>
+<th>Valeur</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>SFDX_CLIENT_ID_PREPROD</code></td>
+<td>la consumer key affichée par la commande</td>
+</tr>
+<tr>
+<td><code>SFDX_CLIENT_KEY_PREPROD</code></td>
+<td>la passphrase affichée par la commande</td>
+</tr>
+</tbody>
+</table>
+<p>Chaque secret est un formulaire : le <strong>Name</strong> <span class="pill-ref pill-ref-1">(1)</span>, le <strong>Secret</strong> <span class="pill-ref pill-ref-2">(2)</span> collé depuis le panneau, puis
+<strong>Add secret</strong> <span class="pill-ref pill-ref-3">(3)</span>. Le premier est <code>SFDX_CLIENT_ID_PREPROD</code>, avec la consumer key :</p>
+<p><a class="glightbox" data-type="image" href="../../../_assets/annotated/web/github-secret-new.png"><img alt="Le formulaire New secret, avec le nom et la valeur copiée depuis le panneau" src="../../../_assets/annotated/web/github-secret-new.png" /></a></p>
+<p>Puis le second. Cliquez de nouveau sur <strong>New repository secret</strong>, et remplissez le même formulaire
+avec <code>SFDX_CLIENT_KEY_PREPROD</code> et la passphrase. C'est celui qu'on oublie, et sans lui la CI a une
+clé qu'elle ne peut pas ouvrir :</p>
+<p><a class="glightbox" data-type="image" href="../../../_assets/annotated/web/github-secret-new--key.png"><img alt="Le formulaire New secret rempli avec SFDX_CLIENT_KEY_PREPROD et la passphrase copiée depuis le panneau" src="../../../_assets/annotated/web/github-secret-new--key.png" /></a></p>
+<p>De retour sur la liste, les deux noms y sont. Le suffixe est <strong>le nom de la branche en
+majuscules</strong>. C'est toute la convention, et c'est pourquoi les noms ne sont pas arbitraires.</p>
+<div class="admonition note">
+<p class="admonition-title">L'avertissement orange sur votre YAML de pipeline</p>
+<p>Sous les deux valeurs, le panneau avertit que sur GitHub un secret doit aussi être passé au job
+dans <code>.github/workflows/*.yml</code>. Il a raison, et c'est l'étape que les gens oublient : un secret
+que GitHub détient et que le workflow ne lit jamais est un secret dont le job ne dispose pas. Les
+workflows de ce cours passent déjà les huit, <code>SFDX_CLIENT_ID_*</code> et <code>SFDX_CLIENT_KEY_*</code> pour les
+quatre branches, et ce lab en remplit quatre. Ouvrez <code>.github/workflows/process-deploy.yml</code> et
+lisez son bloc <code>env:</code> une fois, parce que sur votre propre projet ce bloc, c'est à vous de
+l'écrire.</p>
+</div>
+<p>Cliquez maintenant sur <strong>Validate</strong> à la question 9, répondez aux trois dernières questions, et
+laissez la commande créer l'application.</p>
+<p>Ce qu'elle a écrit, et où :</p>
+<table>
+<thead>
+<tr>
+<th>Quoi</th>
+<th>Où</th>
+<th>Ce que c'est</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>La configuration de branche</td>
+<td><code>config/branches/.sfdx-hardis.preprod.yml</code></td>
+<td><code>targetUsername</code>, <code>instanceUrl</code> et <code>mergeTargets</code></td>
+</tr>
+<tr>
+<td>Une clé privée chiffrée</td>
+<td><code>config/branches/.jwt/preprod.key</code></td>
+<td>L'identifiant lui-même, destiné à être commité</td>
+</tr>
+<tr>
+<td>Un certificat</td>
+<td><code>preprod.crt</code> dans votre dossier personnel, supprimé après le déploiement</td>
+<td>Ce qui est téléversé dans l'org</td>
+</tr>
+<tr>
+<td>Une définition d'External Client App</td>
+<td>déployée dans l'org par la commande</td>
+<td>Ce contre quoi Salesforce authentifie</td>
+</tr>
+<tr>
+<td>Deux valeurs à stocker comme secrets</td>
+<td>affichées dans le panneau de la commande</td>
+<td><code>SFDX_CLIENT_ID_PREPROD</code> et <code>SFDX_CLIENT_KEY_PREPROD</code></td>
+</tr>
+</tbody>
+</table>
+<p>La clé privée est <strong>chiffrée</strong>, avec une passphrase que la commande génère au hasard et que seul
+votre secret détient. Le repository seul ne suffit pas à s'authentifier, et c'est ce qui rend
+acceptable de commiter la clé.</p>
+<h3 id="7-verifier-lautorisation-quelle-a-faite-pour-vous">7. Vérifier l'autorisation qu'elle a faite pour vous<a class="headerlink" href="#7-verifier-lautorisation-quelle-a-faite-pour-vous" title="Permanent link">&para;</a></h3>
+<p>L'étape contre laquelle tout le monde vous met en garde, pré-autoriser l'application, est celle que
+la commande a déjà faite : l'External Client App qu'elle déploie porte
+<code>Admin approved users are pre-authorized</code> et le profil que vous avez nommé à la dernière question.
+Regardez-la une fois, pour savoir où elle est le jour où cela compte.</p>
+<p>Dans <code>helios-preprod</code> : <strong>Setup &gt; External Client App Manager</strong>, ouvrez l'application, dont le
+nom par défaut était <code>sfdxhardispreprod</code>, puis <strong>Policies</strong>. Permitted Users affiche
+<em>Admin approved users are pre-authorized</em>, et le profil est listé.</p>
+<p>Cela compte à cause du seul chemin où ce n'est <strong>pas</strong> fait pour vous : si le déploiement de
+l'application échoue et que la commande retombe sur l'affichage d'instructions manuelles, ces
+instructions s'arrêtent au téléversement du certificat. Suivez-les à la lettre et la première
+connexion de CI échoue avec <code>user hasn't approved this consumer</code>, un message exact qui se lit comme
+un bug.</p>
+<h3 id="8-la-meme-chose-pour-main">8. La même chose pour main<a class="headerlink" href="#8-la-meme-chose-pour-main" title="Permanent link">&para;</a></h3>
+<p>Même engrenage, <strong>Add/Configure Org</strong>, une fois de plus, pour la production :</p>
+<table>
+<thead>
+<tr>
+<th>Branche</th>
+<th>Org</th>
+<th>Réponse pour l'URL de base</th>
+<th>Merge dans</th>
+<th>Secrets</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>main</code></td>
+<td><code>helios-prod</code></td>
+<td><strong>☢️ Other: Dev org, Production org or DevHub org (login.salesforce.com)</strong></td>
+<td>ne cochez rien</td>
+<td><code>SFDX_CLIENT_ID_MAIN</code>, <code>SFDX_CLIENT_KEY_MAIN</code></td>
+</tr>
+</tbody>
+</table>
+<p>Vérifiez l'org deux fois : pointer la production vers la mauvaise org est l'erreur la plus coûteuse
+disponible dans ce lab. Et stockez les deux secrets, l'ID et la clé, comme à l'étape 6.</p>
+<p>Quatre secrets, deux External Client Apps, deux clés. Fastidieux une fois, puis plus jamais.</p>
+<h3 id="9-laisser-les-contributeurs-demarrer-un-hotfix">9. Laisser les contributeurs démarrer un hotfix<a class="headerlink" href="#9-laisser-les-contributeurs-demarrer-un-hotfix" title="Permanent link">&para;</a></h3>
+<p>Les contributeurs choisissent où va une User Story dans une liste, et <code>preprod</code> n'y est pas encore.</p>
+<p>Ouvrez le panneau <strong>DevOps Pipeline</strong>, le menu engrenage, <strong>Pipeline Settings</strong>. Le titre de la page
+indique <strong>Global Pipeline Settings</strong>, et le sélecteur de portée <span class="pill-ref pill-ref-1">(1)</span> indique <strong>Global Settings</strong>.</p>
+<p><a class="glightbox" data-type="image" href="../../../_assets/annotated/vscode/pipeline-config--target-branches.png"><img alt="L'écran Global Pipeline Settings, avec le sélecteur de portée, le bouton Edit et l'onglet User Stories" src="../../../_assets/annotated/vscode/pipeline-config--target-branches.png" /></a></p>
+<p>Cliquez sur <strong>Edit</strong> <span class="pill-ref pill-ref-2">(2)</span>, puis sur l'onglet <strong>User Stories</strong> <span class="pill-ref pill-ref-3">(3)</span>.</p>
+<p>Deux champs comptent, et ce sont <strong>deux zones de texte distinctes, une valeur par ligne</strong> :
+<strong>Available PR/MR target branches</strong> <span class="pill-ref pill-ref-1">(1)</span> et <strong>Labels for available PR/MR target branches</strong> <span class="pill-ref pill-ref-2">(2)</span>. Rien
+ne les apparie sinon leur ordre : la ligne 2 de l'une appartient donc à la ligne 2 de l'autre.</p>
+<p><a class="glightbox" data-type="image" href="../../../_assets/annotated/vscode/pipeline-config-user-stories--target-branches.png"><img alt="Les deux listes de branches cibles de l'onglet User Stories, déverrouillées pour édition" src="../../../_assets/annotated/vscode/pipeline-config-user-stories--target-branches.png" /></a></p>
+<p>Aujourd'hui chacune contient une seule ligne, celle qu'un contributeur choisit depuis le Niveau 1.
+Ajoutez une deuxième ligne à chacune, à la même position :</p>
+<table>
+<thead>
+<tr>
+<th>Ligne</th>
+<th>Branche</th>
+<th>Libellé</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>integration</td>
+<td><code>The shared integration org, where every contributor merges</code></td>
+</tr>
+<tr>
+<td>2</td>
+<td>preprod</td>
+<td><code>Hotfixes on the production version, agreed with the release manager</code></td>
+</tr>
+</tbody>
+</table>
+<p><code>uat</code> et <code>main</code> ne sont pas dans cette liste, exprès. Personne ne construit une User Story contre
+elles : le travail atteint <code>uat</code> par promotion depuis <code>integration</code>, et <code>main</code> par promotion depuis
+<code>preprod</code>.</p>
+<p><strong>Save</strong> <span class="pill-ref pill-ref-3">(3)</span>.</p>
+<div class="admonition note">
+<p class="admonition-title">Vous cherchez la branche de production ?</p>
+<p><code>productionBranch</code> n'a pas de champ dans le panneau de réglages, et ce projet la porte déjà :
+<code>productionBranch: main</code>, dans le bloc Pipeline de <code>config/.sfdx-hardis.yml</code>. Qu'un panneau
+couvre l'essentiel d'une configuration et pas la totalité est normal, et c'est pourquoi les
+sections sous le capot de ce cours continuent de vous montrer le fichier.</p>
+</div>
+<h3 id="10-activer-les-promotion-branches-pour-une-semaine-que-vous-esperez-ne-pas-avoir">10. Activer les promotion branches, pour une semaine que vous espérez ne pas avoir<a class="headerlink" href="#10-activer-les-promotion-branches-pour-une-semaine-que-vous-esperez-ne-pas-avoir" title="Permanent link">&para;</a></h3>
+<p>Un réglage de plus, sur le même panneau, et c'est le seul de ce lab que vous activez pour quelque
+chose qui n'est pas encore arrivé.</p>
+<p>La plupart des semaines, un release manager promeut une branche entière : tout ce qui est dans <code>uat</code>
+part vers <code>preprod</code> ensemble, parce que c'est la version que les testeurs ont testée. Certaines
+semaines, le métier valide une story et pas celle d'à côté, et la date de livraison ne bouge pas.
+sfdx-hardis a une fonctionnalité en Beta pour cette semaine-là, les <strong>promotion branches</strong>, et le
+<a href="../3-10-promote-a-subset-with-promotion-branches/">Lab 3.10</a> est l'endroit où vous vous en servez.</p>
+<p>Toujours dans <strong>Pipeline Settings</strong>, portée <strong>Global Settings</strong>, ouvrez l'onglet <strong>Danger Zone</strong>.</p>
+<p><a class="glightbox" data-type="image" href="../../../_assets/annotated/vscode/pipeline-config-danger--promotion-branches.png"><img alt="La Danger Zone des Global Pipeline Settings, avec les deux réglages des promotion branches" src="../../../_assets/annotated/vscode/pipeline-config-danger--promotion-branches.png" /></a></p>
+<p>L'onglet s'ouvre sur un avertissement, <em>Use these settings with caution, be sure to understand their
+impact as they drift from DevOps best practices</em>, et il vaut pour chaque réglage qui s'y trouve,
+celui-ci compris.</p>
+<p>Cliquez sur <strong>Edit</strong>, activez <strong>Enable promotion branches (Beta)</strong> <span class="pill-ref pill-ref-1">(1)</span>, puis ajoutez une ligne à
+<strong>Allowed promotion steps (Beta)</strong> <span class="pill-ref pill-ref-2">(2)</span> avec <strong>Source branch</strong> <code>uat</code> et <strong>Target branch</strong>
+<code>preprod</code>. <strong>Save</strong>.</p>
+<p>Le second réglage est exigé par le premier, et c'est une vraie décision plutôt que de la paperasse :
+il dit qu'un release manager sur ce projet peut assembler un sous-ensemble en entrant dans <code>preprod</code>,
+l'étape juste avant la production, et nulle part ailleurs. <code>sf hardis:project:promotion:create</code>
+refuse de tourner tant que la liste est absente, au lieu de deviner que chaque branche majeure peut
+promouvoir vers toutes les autres.</p>
+<p><strong>Rien ne change aujourd'hui.</strong> Avec la fonctionnalité active et aucune branche <code>promotion/...</code> dans
+le repository, la pipeline se comporte exactement comme il y a une minute. Elle est activée
+maintenant à cause de l'endroit où le réglage doit se trouver au <a href="../3-10-promote-a-subset-with-promotion-branches/">Lab 3.10</a>, et le bloc ci-dessous
+explique pourquoi ce n'est pas évident.</p>
+<details>
+<summary>Sous le capot : pourquoi cela ne peut pas attendre le lab qui en a besoin</summary>
+<p><code>config/.sfdx-hardis.yml</code> a gagné :</p>
+<div class="highlight"><pre><span></span><code>enablePromotionBranches: true
+allowedPromotionSteps:
+  - source: uat
+    target: preprod
+</code></pre></div>
+<p>Une promotion branch est coupée depuis sa branche <strong>cible</strong>, et le job de déploiement de sa Pull
+Request lit donc la configuration que porte <code>preprod</code>, pas celle que porte <code>integration</code>. Une
+configuration de projet n'atteint <code>preprod</code> qu'en remontant la pipeline avec les promotions, ce qui
+sur ce cours arrive aux Labs 3.5 et 3.6.</p>
+<p>Activez la fonctionnalité ici et elle arrive toute seule dans <code>uat</code>, <code>preprod</code> et <code>main</code>, avec le
+reste de la configuration de la pipeline, à temps pour le <a href="../3-10-promote-a-subset-with-promotion-branches/">Lab 3.10</a>. Activez-la au <a href="../3-10-promote-a-subset-with-promotion-branches/">Lab 3.10</a> et vous vous
+devez trois merges avant de pouvoir vous en servir, ce qui est exactement le genre de détail qui fait
+passer une fonctionnalité Beta pour cassée alors qu'elle est seulement en retard.</p>
+</details>
+<h3 id="11-publier-la-configuration-par-une-pull-request">11. Publier la configuration par une Pull Request<a class="headerlink" href="#11-publier-la-configuration-par-une-pull-request" title="Permanent link">&para;</a></h3>
+<p>Tout ce que vous avez fait est constitué de fichiers sur votre disque, sur la branche de User Story
+de l'étape 4 : les deux nouveaux fichiers de branche, les deux clés, les branches cibles et les deux
+réglages des promotion branches. Ils atteignent <code>integration</code> comme toute modification, par une Pull
+Request aux contrôles verts. La protection de l'étape 3 refuserait tout le reste.</p>
+<p>Vous les publiez comme vous avez publié une User Story au Niveau 1, avec les mêmes boutons.</p>
+<p><strong>Commitez-les.</strong> Dans le panneau <strong>Source Control</strong>, stagez les fichiers de configuration et
+commitez-les sous <code>Configure the pipeline up to production</code>, exactement comme vous stagiez de la
+métadonnée au <a href="../../level-1-contributor-basics/1-5-retrieve-commit-and-publish-your-changes/">Lab 1.5</a>.</p>
+<p><strong>Publiez.</strong> Dans le panneau <strong>DevOps Pipeline</strong>, cliquez sur la carte <strong>Save / Publish</strong> <span class="pill-ref pill-ref-1">(1)</span>,
+celle par laquelle chaque story est passée depuis le <a href="../../level-1-contributor-basics/1-5-retrieve-commit-and-publish-your-changes/">Lab 1.5</a>. Elle ne demande pas la branche cible :
+New User Story a enregistré <code>integration</code> à l'étape 4. Répondez que votre commit est prêt et qu'elle
+peut pousser : elle commite ce qui reste, lance le nettoyage, et pousse la branche.</p>
+<p><a class="glightbox" data-type="image" href="../../../_assets/annotated/vscode/pipeline-cards--save-publish.png"><img alt="La carte Save / Publish du panneau DevOps Pipeline" src="../../../_assets/annotated/vscode/pipeline-cards--save-publish.png" /></a></p>
+<p><strong>Ouvrez la Pull Request.</strong> Quand elle se termine, la barre d'actions du bas commence par <strong>Create
+Pull Request</strong> <span class="pill-ref pill-ref-1">(1)</span>. Cliquez : l'extension ouvre GitHub sur la page de Pull Request de cette
+branche, déjà pointée sur <code>integration</code>.</p>
+<p><a class="glightbox" data-type="image" href="../../../_assets/annotated/vscode/work-save-completed.png"><img alt="La fin de la commande Save / Publish, avec sa barre d'actions" src="../../../_assets/annotated/vscode/work-save-completed.png" /></a></p>
+<p>La même barre porte le <code>package.xml</code> généré par la commande <span class="pill-ref pill-ref-2">(2)</span> et les deployment actions de
+cette Pull Request <span class="pill-ref pill-ref-3">(3)</span>, comme au <a href="../../level-1-contributor-basics/1-6-pull-request-deployment-check-and-merge/">Lab 1.6</a>. Cette branche ne change aucune métadonnée, les deux
+sont donc courts.</p>
+<div class="admonition tip">
+<p class="admonition-title">Le raccourci que ce cours garde pour plus tard</p>
+<p><strong>Training: Level 3</strong> &gt; <strong>Publish my pipeline configuration</strong> fait tout ce qui précède en un
+clic : branche, commit, push, Pull Request. Les Labs 3.5 et 3.8 s'en servent, maintenant que vous
+avez vu ce qu'il recouvre. Un vrai projet n'a pas une telle entrée de menu, et c'est pourquoi ce
+lab le fait à la main.</p>
+</div>
+<p>Le contrôle de cette Pull Request se connecte à <code>helios-integration</code>, et il le fait toujours avec
+<code>SFDX_AUTH_URL_INTEGRATION</code> : un contrôle vert ici ne dit donc rien de vos clés. Elles font leurs
+preuves la première fois qu'une Pull Request entre dans <code>preprod</code> puis dans <code>main</code>, au
+<a href="../3-6-release-to-production-and-read-dora-metrics/">Lab 3.6</a>, qui vous dit où regarder.</p>
+<p>Quand les deux contrôles sont verts, mergez comme le dit la ligne <strong>How to merge</strong> du commentaire
+du contrôle : <strong>Squash and merge</strong>, comme pour toute User Story. La configuration voyage quand même
+vers <code>uat</code>, <code>preprod</code> et <code>main</code> avec les promotions, sous la forme de ce commit unique. Revenez
+ensuite sur <code>integration</code>, depuis le nom de branche en bas à gauche de VS Code, et faites <strong>Pull</strong>
+dans le panneau <strong>Source Control</strong> : votre <code>integration</code> récupère la configuration, mergée.</p>
+<details>
+<summary>Sous le capot : ce que fait vraiment le flow JWT</summary>
+<p>La commande a lancé :</p>
+<div class="highlight"><pre><span></span><code>sf hardis:project:configure:auth
+</code></pre></div>
+<p>et chaque job de CI sur <code>preprod</code> ou <code>main</code> lance maintenant, avant toute chose :</p>
+<div class="highlight"><pre><span></span><code>sf org login jwt \
+  --client-id $SFDX_CLIENT_ID_PREPROD \
+  --jwt-key-file &lt;clé déchiffrée&gt; \
+  --username &lt;targetUsername de la config de branche&gt; \
+  --instance-url &lt;instanceUrl de la config de branche&gt; \
+  --alias preprod
+</code></pre></div>
+<p>La clé privée est déchiffrée au début du job avec <code>SFDX_CLIENT_KEY_PREPROD</code>, utilisée, et jamais
+écrite quelque part de durable.</p>
+<p><strong>Comment le hook d'authentification choisit.</strong> Pour une branche <code>&lt;B&gt;</code>, il cherche d'abord
+<code>SFDX_AUTH_URL_&lt;B&gt;</code>, dans cette orthographe puis en majuscules. S'il en trouve une, il s'en sert et
+s'arrête, avant même que les variables JWT soient lues. Ce n'est que s'il n'y en a aucune qu'il
+continue vers <code>SFDX_CLIENT_ID_&lt;B&gt;</code> plus la clé. Cet ordre est la raison pour laquelle <code>integration</code>
+et <code>uat</code> continuent de fonctionner sans rien changer : leur secret d'auth URL est trouvé en premier,
+et elles n'ont aucune clé à chercher.</p>
+<p>La recherche JWT accepte aussi un <code>SFDX_CLIENT_ID</code> tout court sans suffixe, en dernier recours et
+avec un avertissement dans le log : un secret unique sans suffixe resté d'une ancienne installation
+répond pour toutes les branches.</p>
+<p><code>config/.sfdx-hardis.yml</code> indique toujours <code>orgAuthenticationMode: secretsOnly</code>, et c'est voulu. Ce
+réglage dit seulement au panneau DevOps Pipeline quelle forme attendre, et aucune commande CLI ne le
+lit : <code>encryptedCert</code> ferait avertir le panneau des clés manquantes d'<code>integration</code> et d'<code>uat</code>, qui
+sur ce cours restent sur leur auth URL.</p>
+<!-- command-links:start -->
+<p>Documentation de la commande : <a href="https://sfdx-hardis.cloudity.com/hardis/project/configure/auth/">hardis:project:configure:auth</a></p>
+<!-- command-links:end -->
+</details>
+<details>
+<summary>Sous le capot : les fichiers que vous venez de publier</summary>
+<p><code>config/.sfdx-hardis.yml</code> a gagné :</p>
+<div class="highlight"><pre><span></span><code>availableTargetBranches:
+  - integration
+  - preprod
+availableTargetBranchesLabels:
+  - "The shared integration org, where every contributor merges"
+  - "Hotfixes on the production version, agreed with the release manager"
+enablePromotionBranches: true
+allowedPromotionSteps:
+  - source: uat
+    target: preprod
+</code></pre></div>
+<p>et <code>config/branches/</code> contient maintenant quatre fichiers, chacun avec <code>targetUsername</code>,
+<code>instanceUrl</code> et <code>mergeTargets</code>, plus un dossier <code>.jwt</code> avec deux clés chiffrées, <code>preprod.key</code> et
+<code>main.key</code>.</p>
+<p><strong>Une branche majeure n'est déclarée "majeure" nulle part.</strong> Elle le devient en ayant un fichier de
+configuration de branche avec une org dedans. C'est tout le mécanisme, et le savoir veut dire que
+vous pouvez lire n'importe quel projet sfdx-hardis en deux minutes en listant <code>config/branches/</code>.
+Chaque écran qui lit les branches majeures, le diagramme de la pipeline et le sélecteur de portée de
+Pipeline Settings compris, lit ce dossier.</p>
+<p><code>sf hardis:project:create</code> aurait généré le squelette d'un nouveau projet : les workflows de chaque
+fournisseur git, <code>.mega-linter.yml</code>, <code>projectName</code>, <code>developmentBranch</code> et <code>autoCleanTypes</code>. Il
+n'écrit aucun fichier <code>config/branches/</code> et ne demande aucune org à part le Dev Hub : les fichiers
+de branche sont le travail d'Add/Configure Org, comme ci-dessus. La commande qui prend une org
+existante sans aucun repository et produit le premier commit est <code>sf
+hardis:org:retrieve:sources:dx</code>, le vrai point de départ de la plupart des projets.</p>
+<!-- command-links:start -->
+<p>Documentation des commandes : <a href="https://sfdx-hardis.cloudity.com/hardis/project/create/">hardis:project:create</a>, <a href="https://sfdx-hardis.cloudity.com/hardis/org/retrieve/sources/dx/">hardis:org:retrieve:sources:dx</a></p>
+<!-- command-links:end -->
+</details>
+<h3 id="12-regarder-le-diagramme-a-nouveau">12. Regarder le diagramme à nouveau<a class="headerlink" href="#12-regarder-le-diagramme-a-nouveau" title="Permanent link">&para;</a></h3>
+<p>Ouvrez le panneau <strong>DevOps Pipeline</strong> et cliquez sur <strong>Refresh</strong>. Voici la pipeline que vous avez
+construit :</p>
+<p><a class="glightbox" data-type="image" href="../../../_assets/annotated/vscode/devops-pipeline-level3--four-stages.png"><img alt="Le panneau DevOps Pipeline avec quatre branches majeures, chacune déployant dans son org" src="../../../_assets/annotated/vscode/devops-pipeline-level3--four-stages.png" /></a></p>
+<ol>
+<li><strong><code>integration</code></strong> <span class="pill-ref pill-ref-1">(1)</span>, là où les contributeurs mergent, avec la flèche de promotion qui en
+   part</li>
+<li><strong><code>uat</code></strong> <span class="pill-ref pill-ref-2">(2)</span>, là où le métier valide</li>
+<li><strong><code>preprod</code></strong> <span class="pill-ref pill-ref-3">(3)</span>, la répétition de la production, et le point de départ des hotfixes</li>
+<li><strong><code>main</code></strong> <span class="pill-ref pill-ref-4">(4)</span>, la production</li>
+<li>Les quatre orgs <span class="pill-ref pill-ref-5">(5)</span>, une par branche, dans l'ordre où le travail les traverse</li>
+</ol>
+<p>Ce diagramme est désormais la vérité sur ce projet, et ce que vous montrez du doigt quand une partie
+prenante demande "alors, ça en est où ?". Les boutons <strong>+ PR</strong> sur les flèches sont les Pull Requests
+de promotion, et le <a href="../3-5-promote-to-uat-and-write-release-notes/">Lab 3.5</a> est la première fois que vous en cliquez un.</p>
+<h2 id="ce-que-vous-devez-voir">Ce que vous devez voir<a class="headerlink" href="#ce-que-vous-devez-voir" title="Permanent link">&para;</a></h2>
+<ul>
+<li>Quatre règles de protection de branche dans <strong>Settings</strong> &gt; <strong>Branches</strong> de votre fork,
+  <code>integration</code>, <code>uat</code>, <code>preprod</code> et <code>main</code>, chacune exigeant une Pull Request et les deux contrôles</li>
+<li><code>config/branches/</code> sur <code>integration</code> contenant quatre fichiers et deux fichiers <code>.jwt/*.key</code>,
+  <code>preprod.key</code> et <code>main.key</code></li>
+<li>Quatre nouveaux secrets dans votre fork, <code>SFDX_CLIENT_ID_PREPROD</code>, <code>SFDX_CLIENT_KEY_PREPROD</code>,
+  <code>SFDX_CLIENT_ID_MAIN</code> et <code>SFDX_CLIENT_KEY_MAIN</code>, à côté des deux secrets d'auth URL du Niveau 1</li>
+<li>Votre Pull Request de configuration mergée dans <code>integration</code></li>
+<li>Le panneau DevOps Pipeline avec quatre colonnes</li>
+<li><code>enablePromotionBranches</code> et une étape autorisée dans la Danger Zone de Pipeline Settings, qui ne
+  font rien jusqu'au <a href="../3-10-promote-a-subset-with-promotion-branches/">Lab 3.10</a></li>
+</ul>
+<details class="troubleshoot">
+<summary>En cas de problème</summary>
+<p><strong>preprod n'est pas dans la liste de branches d'Add/Configure Org.</strong>
+VS Code ne l'a pas récupérée. Panneau <strong>Source Control</strong>, menu <strong>...</strong>, <strong>Pull, Push</strong> &gt; <strong>Fetch</strong>,
+puis relancez la commande.</p>
+<p><strong>La liste d'orgs propose une org <code>helios-</code> qui n'existe plus.</strong>
+Cela arrive quand une scratch org a expiré et que <strong>Set up my training environment</strong> en a construit
+une nouvelle sous le même alias : la commande liste les orgs depuis un cache, et le cache contient
+encore l'ancienne. La choisir fait s'arrêter la commande juste après "Selected Org", sans qu'aucune
+question soit posée. La dernière réponse de la liste est la sortie :
+<strong>😱 I already authenticated my org but I don't see it !</strong> vide ce cache. Relancez ensuite
+<strong>Add/Configure Org</strong> et la liste est juste.</p>
+<p><strong>La colonne preprod apparaît sans org.</strong>
+Le fichier de branche a été écrit pour un autre nom de branche. Cherchez une faute de frappe dans
+<code>config/branches/</code> : le nom du fichier doit correspondre exactement à la branche.</p>
+<p><strong><code>user hasn't approved this consumer</code>.</strong>
+Étape 7 : l'External Client App existe mais l'utilisateur n'est pas pré-autorisé.</p>
+<p><strong><code>invalid_grant: audience is invalid</code>.</strong>
+L'URL d'instance ne correspond pas au type d'org : <code>https://test.salesforce.com</code> pour une scratch
+org ou une sandbox, <code>https://login.salesforce.com</code> pour une org Developer Edition. Vérifiez le
+fichier de branche du job qui a échoué.</p>
+<p><strong>Le job n'arrive pas à déchiffrer la clé.</strong>
+<code>SFDX_CLIENT_KEY_&lt;BRANCHE&gt;</code> manque, est fausse, ou a été copiée avec un saut de ligne à la fin.
+Recréez-la.</p>
+<p><strong><code>client identifier invalid</code>.</strong>
+L'External Client App derrière cette consumer key n'a jamais été créée : la commande s'est arrêtée
+après avoir affiché les deux valeurs. Relancez <strong>Add/Configure Org</strong> pour cette branche, stockez les
+deux nouvelles valeurs, et republiez.</p>
+<p><strong>Add/Configure Org s'arrête en demandant si vous avez supprimé l'External Client App.</strong>
+Vous lancez la commande une deuxième fois pour cette branche, et l'app qu'elle déploie est déjà dans
+l'org : elle vous demande donc de retirer l'ancienne d'abord (<em>External Client App named
+<code>sfdxhardis&lt;branche&gt;</code> already exists ... Have you deleted it?</em>). Dans l'org, <strong>Setup &gt; External
+Client App Manager</strong>, supprimez cette app, puis répondez oui. C'est le chemin normal dès que l'une
+des entrées ci-dessus vous renvoie dans <strong>Add/Configure Org</strong>.</p>
+<p><strong>Add/Configure Org s'arrête juste après "Selected Org", sans poser aucune question.</strong>
+La liste des orgs a proposé un org <code>helios-</code> qui n'existe plus, en général parce qu'un scratch org a
+été reconstruit sous le même alias. Voir l'entrée ci-dessus : la dernière réponse de la liste,
+<strong>I already authenticated my org but I don't see it !</strong>, vide ce cache.</p>
+<p><strong>Save / Publish est refusé, et vous êtes encore sur <code>integration</code>.</strong>
+L'étape 4 a été sautée : les fichiers ont donc été écrits sur <code>integration</code>, qui n'accepte rien
+directement. <strong>Ctrl+Shift+P</strong>, <strong>Git: Create Branch...</strong>, et nommez-la
+<code>features/US-050-pipeline-up-to-production</code> : la nouvelle branche part de là où vous êtes, avec votre
+commit et tout fichier pas encore commité. Puis relancez <strong>Save / Publish</strong>. Si au contraire un
+fichier de configuration que vous avez modifié a aussi été modifié sur GitHub, tirez dans le panneau
+<strong>Source Control</strong>, puis republiez.</p>
+<p><strong>Le contrôle que vous voulez exiger n'est pas proposé.</strong>
+GitHub ne liste que les contrôles qui ont rendu compte sur ce repository dans les sept derniers
+jours. Ouvrez une Pull Request vers <code>integration</code>, laissez ses contrôles tourner, et revenez à la
+règle.</p>
+<p><strong>Set up my training environment échoue avec <code>There is already a Child Relationship named
+Installations on Account</code>.</strong>
+Vous avez nettoyé cet org avec <strong>Clean up a training org</strong> et vous y remettez l'app. Supprimer un
+objet personnalisé ne l'efface pas : il reste dans <strong>Setup &gt; Objects and Fields &gt; Deleted Objects</strong>
+et garde ses noms de relation réservés, donc l'app ne peut pas être recréée à côté de lui. Effacez-le
+là, puis relancez <strong>Set up my training environment</strong>. Sur un scratch org, il est plus rapide de
+laisser <strong>Set up my training environment</strong> en construire un nouveau.</p>
+<p><strong>Set up one of my training orgs échoue sur <code>helios-prod</code>.</strong>
+La cause habituelle est une connexion expirée : reconnectez-la dans <strong>Orgs Manager</strong> sous le même
+alias, et relancez.</p>
+</details>
+<h2 id="verifiez-votre-travail">Vérifiez votre travail<a class="headerlink" href="#verifiez-votre-travail" title="Permanent link">&para;</a></h2>
+<p>Welcome page &gt; <strong>Training: Level 3</strong> &gt; <strong>Check my work</strong>, puis choisissez le <strong>Lab 3.1</strong>.</p>
+<h2 id="pour-aller-plus-loin">Pour aller plus loin<a class="headerlink" href="#pour-aller-plus-loin" title="Permanent link">&para;</a></h2>
+<ul>
+<li><a href="https://sfdx-hardis.cloudity.com/salesforce-devops-setup-home/">Guide d'installation</a></li>
+<li><a href="https://sfdx-hardis.cloudity.com/salesforce-devops-setup-auth/">Configurer l'authentification de la CI</a></li>
+<li><a href="https://sfdx-hardis.cloudity.com/salesforce-devops-setup-auth-github/">Authentification GitHub Actions</a></li>
+<li><a href="https://sfdx-hardis.cloudity.com/salesforce-devops-setup-existing-org/">Récupérer une org existante</a></li>
+</ul>
+<p><a class="md-button md-button--primary" href="../3-2-review-a-contributor-pull-request/">Suite : Lab 3.2 - Relire et merger la Pull Request d'un contributeur</a></p>
+
+
+
+
+
+
+
+
+
+  
+  
+
+
+
+  
+
+
+
+
+  <h2 id="__comments">Questions and comments</h2>
+  <script src="https://giscus.app/client.js"
+          data-repo="hardisgroupcom/sfdx-hardis-training"
+          data-repo-id="R_kgDOUcjgQw"
+          data-category="Q&amp;A"
+          data-category-id="DIC_kwDOUcjgQ84DF-lC"
+          data-mapping="pathname"
+          data-strict="1"
+          data-reactions-enabled="1"
+          data-emit-metadata="0"
+          data-input-position="top"
+          data-theme="preferred_color_scheme"
+          data-lang="en"
+          data-loading="lazy"
+          crossorigin="anonymous"
+          async>
+  </script>
+
+  <script>
+    // Keep the Giscus iframe in sync with the palette toggle. It is a
+    // cross-origin frame, so its theme can only be changed by postMessage.
+    (function () {
+      if (window.__giscusThemeSync) {
+        return;
+      }
+      window.__giscusThemeSync = true;
+      var giscusTheme = function () {
+        var scheme = document.body.getAttribute("data-md-color-scheme");
+        return scheme === "slate" ? "dark" : "light";
+      };
+      var apply = function () {
+        var frame = document.querySelector("iframe.giscus-frame");
+        if (frame && frame.contentWindow) {
+          frame.contentWindow.postMessage(
+            { giscus: { setConfig: { theme: giscusTheme() } } },
+            "https://giscus.app"
+          );
+        }
+      };
+      new MutationObserver(apply).observe(document.body, {
+        attributes: true,
+        attributeFilter: ["data-md-color-scheme"]
+      });
+      window.addEventListener("message", function (event) {
+        if (event.origin === "https://giscus.app") {
+          apply();
+        }
+      });
+    })();
+  </script>
+
+                
+              </article>
+            </div>
+          
+          
+  <script>var tabs=__md_get("__tabs");if(Array.isArray(tabs))e:for(var set of document.querySelectorAll(".tabbed-set")){var labels=set.querySelector(".tabbed-labels");for(var tab of tabs)for(var label of labels.getElementsByTagName("label"))if(label.innerText.trim()===tab){var input=document.getElementById(label.htmlFor);input.checked=!0;continue e}}</script>
+
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-circle-arrow-up" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="m16 12-4-4-4 4M12 16V8"/></svg>
+  Retour en haut de la page
+</button>
+        
+      </main>
+      
+        
+
+
+
+
+<footer class="md-footer">
+  
+    
+      
+      <nav class="md-footer__inner md-grid" aria-label="Pied de page" >
+        
+          
+          <a href="../" class="md-footer__link md-footer__link--prev" aria-label="Précédent: Commencer ici">
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-arrow-left" viewBox="0 0 24 24"><path d="m12 19-7-7 7-7M19 12H5"/></svg>
+            </div>
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Précédent
+              </span>
+              <div class="md-ellipsis">
+                Commencer ici
+              </div>
+            </div>
+          </a>
+        
+        
+          
+          <a href="../3-2-review-a-contributor-pull-request/" class="md-footer__link md-footer__link--next" aria-label="Suivant: Lab 3.2 - Relire et merger la Pull Request d&#x27;un contributeur">
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Suivant
+              </span>
+              <div class="md-ellipsis">
+                Lab 3.2 - Relire et merger la Pull Request d'un contributeur
+              </div>
+            </div>
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-arrow-right" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+            </div>
+          </a>
+        
+      </nav>
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      Cloudity and friends
+    </div>
+  
+  
+</div>
+      
+        
+<div class="md-social">
+  
+    
+    
+    
+    
+    <a href="https://github.com/hardisgroupcom/sfdx-hardis" target="_blank" rel="noopener" title="sfdx-hardis on GitHub" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.3.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2026 Fonticons, Inc.--><path fill="currentColor" d="M216.5 362.5c-66-8-112.5-55.5-112.5-117 0-25 9-52 24-70-6.5-16.5-5.5-51.5 2-66 20-2.5 47 8 63 22.5 19-6 39-9 63.5-9s44.5 3 62.5 8.5c15.5-14 43-24.5 63-22 7 13.5 8 48.5 1.5 65.5 16 19 24.5 44.5 24.5 70.5 0 61.5-46.5 108-113.5 116.5 17 11 28.5 35 28.5 62.5v52c0 15 12.5 23.5 27.5 17.5C441 459.5 512 369 512 257 512 115.5 397 0 255.5 0S0 115.5 0 257c0 111 70.5 203 165.5 237.5 13.5 5 26.5-4 26.5-17.5v-40c-7 3-16 5-24 5-33 0-52.5-18-66.5-51.5-5.5-13.5-11.5-21.5-23-23-6-.5-8-3-8-6 0-6 10-10.5 20-10.5 14.5 0 27 9 40 27.5 10 14.5 20.5 21 33 21s20.5-4.5 32-16c8.5-8.5 15-16 21-21"/></svg>
+    </a>
+  
+    
+    
+    
+    
+    <a href="https://sfdx-hardis.cloudity.com/" target="_blank" rel="noopener" title="sfdx-hardis documentation" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.3.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2026 Fonticons, Inc.--><path fill="currentColor" d="M384 512H96c-53 0-96-43-96-96V96C0 43 43 0 96 0h304c26.5 0 48 21.5 48 48v288c0 20.9-13.4 38.7-32 45.3V448c17.7 0 32 14.3 32 32s-14.3 32-32 32zM96 384c-17.7 0-32 14.3-32 32s14.3 32 32 32h256v-64zm32-232c0 13.3 10.7 24 24 24h176c13.3 0 24-10.7 24-24s-10.7-24-24-24H152c-13.3 0-24 10.7-24 24m24 72c-13.3 0-24 10.7-24 24s10.7 24 24 24h176c13.3 0 24-10.7 24-24s-10.7-24-24-24z"/></svg>
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog" role="status" aria-atomic="true">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      
+      
+        
+        
+      <script id="__config" type="application/json">{"annotate":null,"base":"../../..","features":["content.action.edit","content.code.copy","content.tabs.link","navigation.instant","navigation.tracking","navigation.top","navigation.footer","search.suggest","search.highlight","toc.follow"],"redirect":null,"search":"../../../assets/javascripts/workers/search.7d14d953.min.js","tags":null,"translations":{"clipboard.copied":"Copié dans le presse-papier","clipboard.copy":"Copier dans le presse-papier","clipboard.error":"Could not copy to clipboard","search.result.more.one":"1 de plus sur cette page","search.result.more.other":"# de plus sur cette page","search.result.none":"Aucun document trouvé","search.result.one":"1 document trouvé","search.result.other":"# documents trouvés","search.result.placeholder":"Taper pour démarrer la recherche","search.result.term.missing":"Non trouvé","select.version":"Sélectionner la version"},"version":null}</script>
+    
+    
+      <script src="../../../assets/javascripts/bundle.8b1c90bd.min.js"></script>
+      
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/tablesort/5.2.1/tablesort.min.js"></script>
+      
+        <script src="../../../theme/javascripts/tables.js"></script>
+      
+        <script src="../../../theme/javascripts/lightbox.js"></script>
+      
+        <script src="../../../theme/javascripts/after-footer.js"></script>
+      
+        <script src="../../../theme/javascripts/language-switch.js"></script>
+      
+    
+  </body>
+</html>

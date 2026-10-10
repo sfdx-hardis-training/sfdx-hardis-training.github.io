@@ -1,0 +1,8 @@
+{
+  "id": "US-034",
+  "subject": "Flat roofs need a crew of at least three",
+  "url": "https://sfdx-hardis-training.github.io/BACKLOG/US-034/",
+  "owner": "You",
+  "branch": "features/US-034-crew-override",
+  "lab": "2.7"
+}

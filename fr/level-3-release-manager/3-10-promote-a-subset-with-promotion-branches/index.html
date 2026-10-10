@@ -1,0 +1,2811 @@
+
+<!doctype html>
+<html lang="fr" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Transportez trois User Stories approuvées sur cinq de uat vers preprod avec une promotion branch sfdx-hardis, résolvez le conflit de cherry-pick qu'elle soulève, et mesurez ce que ce raccourci coûte.">
+      
+      
+      
+        <link rel="canonical" href="https://sfdx-hardis-training.github.io/fr/level-3-release-manager/3-10-promote-a-subset-with-promotion-branches/">
+      
+      
+        <link rel="prev" href="../3-9-generate-the-project-documentation/">
+      
+      
+        <link rel="next" href="../3-11-capstone-run-a-weekly-release-cycle/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../../theme/images/badge-mark.svg">
+      <meta name="generator" content="zensical-0.0.69">
+    
+    
+      
+        <title>Lab 3.10 - Promouvoir un sous-ensemble avec les promotion branches (Beta) - Salesforce DevOps with sfdx-hardis</title>
+      
+    
+    
+      
+        
+      
+      <link rel="stylesheet" href="../../../assets/stylesheets/modern/main.e15858d4.min.css">
+      
+        
+          
+        
+        <link rel="stylesheet" href="../../../assets/stylesheets/modern/palette.b27955a4.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+    
+    
+      <link rel="stylesheet" href="../../../theme/stylesheets/extra.css">
+    
+    <script>__md_scope=new URL("../../..",location),__md_scope.pathname.endsWith("/")||(__md_scope=new URL(__md_scope.pathname+"/",location)),__md_hash=e=>[...e].reduce(((e,t)=>(e<<5)-e+t.charCodeAt(0)),0),__md_get=(e,t=localStorage,_=__md_scope)=>JSON.parse(t.getItem(_.pathname+"."+e)),__md_set=(e,t,_=localStorage,a=__md_scope)=>{try{_.setItem(a.pathname+"."+e,JSON.stringify(t))}catch(e){}},document.documentElement.setAttribute("data-platform",navigator.platform)</script>
+    
+      
+  
+
+
+  
+  
+
+<script id="__analytics">function __md_analytics(){function e(){dataLayer.push(arguments)}window.dataLayer=window.dataLayer||[],e("js",new Date),e("config","G-SE20CZ58E1"),document.addEventListener("DOMContentLoaded",(function(){document.forms.search&&document.forms.search.query.addEventListener("blur",(function(){this.value&&e("event","search",{search_term:this.value})}));document$.subscribe((function(){var t=document.forms.feedback;if(void 0!==t)for(var a of t.querySelectorAll("[type=submit]"))a.addEventListener("click",(function(a){a.preventDefault();var n=document.location.pathname,d=this.getAttribute("data-md-value");e("event","feedback",{page:n,data:d}),t.firstElementChild.disabled=!0;var r=t.querySelector(".md-feedback__note [data-md-value='"+d+"']");r&&(r.hidden=!1)})),t.hidden=!1})),location$.subscribe((function(t){e("config","G-SE20CZ58E1",{page_path:t.pathname})}))}));var t=document.createElement("script");t.async=!0,t.src="https://www.googletagmanager.com/gtag/js?id=G-SE20CZ58E1",document.getElementById("__analytics").insertAdjacentElement("afterEnd",t)}</script>
+  
+    <script>"undefined"!=typeof __md_analytics&&__md_analytics()</script>
+  
+
+    
+    
+  
+  
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Salesforce DevOps with sfdx-hardis">
+  <meta property="og:locale" content="fr">
+  <meta property="og:title" content="Lab 3.10 - Promouvoir un sous-ensemble avec les promotion branches (Beta)">
+  <meta property="og:description" content="Transportez trois User Stories approuvées sur cinq de uat vers preprod avec une promotion branch sfdx-hardis, résolvez le conflit de cherry-pick qu'elle soulève, et mesurez ce que ce raccourci coûte.">
+  <meta property="og:url" content="https://sfdx-hardis-training.github.io/fr/level-3-release-manager/3-10-promote-a-subset-with-promotion-branches/">
+  <meta property="og:image" content="https://sfdx-hardis-training.github.io/_assets/social/course.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="Lab 3.10 - Promouvoir un sous-ensemble avec les promotion branches (Beta)">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Lab 3.10 - Promouvoir un sous-ensemble avec les promotion branches (Beta)">
+  <meta name="twitter:description" content="Transportez trois User Stories approuvées sur cinq de uat vers preprod avec une promotion branch sfdx-hardis, résolvez le conflit de cherry-pick qu'elle soulève, et mesurez ce que ce raccourci coûte.">
+  <meta name="twitter:image" content="https://sfdx-hardis-training.github.io/_assets/social/course.png">
+
+  <script>
+    (function () {
+      var here = "fr";
+      var alternates = {"en":"en/level-3-release-manager/3-10-promote-a-subset-with-promotion-branches/","fr":"fr/level-3-release-manager/3-10-promote-a-subset-with-promotion-branches/"};
+      var base = new URL("../../.." || ".", window.location.href).pathname;
+      try {
+        var asked = new URLSearchParams(window.location.search).get("lang");
+        if (asked) {
+          document.cookie =
+            "course-language=" + encodeURIComponent(asked) + "; path=" + base + "; max-age=31536000; samesite=lax";
+        }
+        var cookie = document.cookie.split("; ").filter(function (one) {
+          return one.indexOf("course-language=") === 0;
+        })[0];
+        if (!cookie) {
+          return;
+        }
+        var preferred = asked || decodeURIComponent(cookie.slice("course-language=".length));
+        if (!preferred || preferred === here) {
+          return;
+        }
+        var target = alternates[preferred];
+        if (typeof target !== "string") {
+          return;
+        }
+        var url = new URL(target, new URL(base, window.location.href)).pathname;
+        if (url !== window.location.pathname) {
+          window.location.replace(url + window.location.search + window.location.hash);
+        }
+      } catch (error) {
+        // A browser with no cookies stays where it is, which is the page asked for
+      }
+    })();
+  </script>
+
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="custom" data-md-color-accent="custom">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer" aria-hidden="true"></label>
+    <div data-md-component="skip">
+      <a href="#__skip" class="md-skip">
+        Aller au contenu
+      </a>
+    </div>
+    <div data-md-component="announce">
+      
+        <aside class="md-banner">
+          <div class="md-banner__inner md-grid md-typeset">
+            
+            
+      <strong>Ce niveau est en phase de relecture.</strong> Il est complet et a été déroulé de bout
+      en bout, et maintenant il a besoin de vous. Si une étape ne fonctionne pas, ou si l'écran ne
+      correspond pas à ce que dit la page, merci de
+      <a href="#__comments">laisser un commentaire en bas de cette page</a>. C'est le moyen le plus
+      rapide de faire corriger le problème, et cela aide la personne suivante.
+    
+          </div>
+          
+        </aside>
+      
+    </div>
+    
+    
+      
+
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="En-tête">
+    <a href="/fr/" title="Salesforce DevOps with sfdx-hardis" class="md-header__button md-logo" aria-label="Salesforce DevOps with sfdx-hardis" data-md-component="logo">
+      
+  <img src="../../../theme/images/cloudity-text-logo-white.svg" alt="Salesforce DevOps with sfdx-hardis">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer" aria-label="Navigation">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-menu" viewBox="0 0 24 24"><path d="M4 5h16M4 12h16M4 19h16"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Salesforce DevOps with sfdx-hardis
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Lab 3.10 - Promouvoir un sous-ensemble avec les promotion branches (Beta)
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="none" data-md-color-scheme="default" data-md-color-primary="custom" data-md-color-accent="custom"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="none" data-md-color-scheme="slate" data-md-color-primary="custom" data-md-color-accent="custom"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+      
+
+
+
+  
+
+  
+    
+    
+  
+
+<div class="md-header__option">
+  <div class="md-select md-select--language">
+    <button class="md-header__button md-header__button--flag" aria-label="Sélectionner la langue">
+      
+        <img src="../../../theme/images/flags/fr.svg" alt="Français" class="md-select__flag md-select__flag--current">
+      
+    </button>
+    <div class="md-select__inner">
+      <ul class="md-select__list">
+        
+          
+          <li class="md-select__item"><a href="../../../en/level-3-release-manager/3-10-promote-a-subset-with-promotion-branches/" hreflang="en" data-course-home="/" class="md-select__link">
+              
+                <img src="../../../theme/images/flags/gb.svg" alt="" class="md-select__flag">
+              
+              English
+            </a>
+          </li>
+        
+          
+          <li class="md-select__item"><a href="././" hreflang="fr" data-course-home="/fr/" class="md-select__link">
+              
+                <img src="../../../theme/images/flags/fr.svg" alt="" class="md-select__flag">
+              
+              Français
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</div>
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search" aria-label="Recherche">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-search" viewBox="0 0 24 24"><path d="m21 21-4.34-4.34"/><circle cx="11" cy="11" r="8"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog" aria-label="Recherche">
+  <button type="button" class="md-search__button">
+    Recherche
+  </button>
+</div>
+      
+    
+    <div class="md-header__source">
+      
+        <a href="https://github.com/hardisgroupcom/sfdx-hardis-training" title="Aller au dépôt" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.3.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2026 Fonticons, Inc.--><path fill="currentColor" d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    hardisgroupcom/sfdx-hardis-training
+  </div>
+</a>
+      
+    </div>
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0" data-course-lang="fr" data-course-base="../../.." data-course-alt-en="en/level-3-release-manager/3-10-promote-a-subset-with-promotion-branches/" data-course-alt-fr="fr/level-3-release-manager/3-10-promote-a-subset-with-promotion-branches/">
+  <label class="md-nav__title" for="__drawer">
+    <a href="/fr/" title="Salesforce DevOps with sfdx-hardis" class="md-nav__button md-logo" aria-label="Salesforce DevOps with sfdx-hardis" data-md-component="logo">
+      
+  <img src="../../../theme/images/cloudity-text-logo-white.svg" alt="Salesforce DevOps with sfdx-hardis">
+
+    </a>
+    Salesforce DevOps with sfdx-hardis
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/hardisgroupcom/sfdx-hardis-training" title="Aller au dépôt" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.3.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2026 Fonticons, Inc.--><path fill="currentColor" d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    hardisgroupcom/sfdx-hardis-training
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+      
+    
+      
+      
+      
+    
+      
+      
+      
+    
+      
+      
+      
+    
+      
+      
+      
+    
+      
+      
+      
+    
+      
+      
+      
+    
+      
+      
+      
+        
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Accueil
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+      
+    
+      
+      
+      
+        
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_9" >
+        
+          
+          <label class="md-nav__link" for="__nav_9" id="__nav_9_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Niveau 1 - Contributeur Salesforce DevOps, les bases
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        
+          <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_9_label" aria-expanded="false">
+            <label class="md-nav__title" for="__nav_9">
+              <span class="md-nav__icon md-icon"></span>
+              
+  
+  Niveau 1 - Contributeur Salesforce DevOps, les bases
+
+            </label>
+            <ul class="md-nav__list" data-md-scrollfix>
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../level-1-contributor-basics/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Commencer ici
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../level-1-contributor-basics/1-1-install-vs-code-and-sfdx-hardis/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Lab 1.1 - Installer VS Code, Git et sfdx-hardis
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../level-1-contributor-basics/1-2-create-your-dev-hub-scratch-orgs-and-pipeline/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Lab 1.2 - Créer votre Dev Hub, vos scratch orgs et votre pipeline CI/CD
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../level-1-contributor-basics/1-3-start-a-user-story-on-a-git-branch/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Lab 1.3 - Démarrer une User Story sur sa propre branche Git
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../level-1-contributor-basics/1-4-build-a-custom-field-in-your-org/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Lab 1.4 - Construire un champ personnalisé dans votre org Salesforce
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../level-1-contributor-basics/1-5-retrieve-commit-and-publish-your-changes/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Lab 1.5 - Récupérer, commiter et publier vos modifications Salesforce
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../level-1-contributor-basics/1-6-pull-request-deployment-check-and-merge/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Lab 1.6 - Ouvrir une Pull Request, passer le contrôle de déploiement, merger
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../level-1-contributor-basics/1-7-capstone-deliver-a-user-story-on-your-own/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Lab 1.7 - Épreuve finale : livrer une User Story tout seul
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+            </ul>
+          </nav>
+        
+      
+    </li>
+  
+
+      
+    
+      
+      
+      
+        
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_10" >
+        
+          
+          <label class="md-nav__link" for="__nav_10" id="__nav_10_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Niveau 2 - Contributeur Salesforce DevOps avancé
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        
+          <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_10_label" aria-expanded="false">
+            <label class="md-nav__title" for="__nav_10">
+              <span class="md-nav__icon md-icon"></span>
+              
+  
+  Niveau 2 - Contributeur Salesforce DevOps avancé
+
+            </label>
+            <ul class="md-nav__list" data-md-scrollfix>
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../level-2-contributor-advanced/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Commencer ici
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../level-2-contributor-advanced/2-1-backpromote-your-teammates-work/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Lab 2.1 - Backpromote : remettre votre org de dev au niveau de l'équipe
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../level-2-contributor-advanced/2-2-fix-a-missing-dependency-deployment-error/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Lab 2.2 - Corriger une erreur de déploiement due à une dépendance manquante
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../level-2-contributor-advanced/2-3-fix-broken-records-with-an-apex-deployment-action/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Lab 2.3 - Réparer des enregistrements cassés avec une deployment action Apex
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../level-2-contributor-advanced/2-4-ship-reference-data-and-a-batch-with-deployment-actions/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Lab 2.4 - Livrer des données de référence et un batch avec des deployment actions
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../level-2-contributor-advanced/2-5-pass-code-quality-and-apex-test-coverage/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Lab 2.5 - Passer la barrière de qualité de code et la couverture de tests Apex
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../level-2-contributor-advanced/2-6-permission-sets-and-profiles/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Lab 2.6 - Permission sets, profils, et pourquoi une autorisation disparaît
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../level-2-contributor-advanced/2-7-resolve-a-git-merge-conflict/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Lab 2.7 - Résoudre un conflit de merge Git avec un collègue
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../level-2-contributor-advanced/2-8-recover-from-committing-the-wrong-metadata/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Lab 2.8 - Se remettre d'avoir commité la mauvaise métadonnée
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../level-2-contributor-advanced/2-9-capstone-deliver-a-user-story-that-has-it-all/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Lab 2.9 - Épreuve finale : livrer une User Story qui a tout
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+            </ul>
+          </nav>
+        
+      
+    </li>
+  
+
+      
+    
+      
+      
+      
+        
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_11" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_11" id="__nav_11_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Niveau 3 - Release manager Salesforce DevOps
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        
+          <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_11_label" aria-expanded="true">
+            <label class="md-nav__title" for="__nav_11">
+              <span class="md-nav__icon md-icon"></span>
+              
+  
+  Niveau 3 - Release manager Salesforce DevOps
+
+            </label>
+            <ul class="md-nav__list" data-md-scrollfix>
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Commencer ici
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../3-1-configure-the-pipeline-up-to-production/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Lab 3.1 - Configurer la pipeline CI/CD jusqu'à la production
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../3-2-review-a-contributor-pull-request/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Lab 3.2 - Relire et merger la Pull Request d'un contributeur
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../3-3-deploy-to-integration-and-read-the-log/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Lab 3.3 - Lire le log de déploiement, et ce que .forceignore lui cache
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../3-4-merge-colliding-pull-requests/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Lab 3.4 - Trois Pull Requests se percutent : choisir l'ordre de merge
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../3-5-promote-to-uat-and-write-release-notes/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Lab 3.5 - Promouvoir en UAT et écrire les notes de version
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../3-6-release-to-production-and-read-dora-metrics/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Lab 3.6 - Livrer en production et lire vos métriques DORA
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../3-7-hotfix-and-retrofit/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Lab 3.7 - La production est cassée : hotfix et retrofit
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../3-8-monitor-your-production-org/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Lab 3.8 - Monitorer votre org de production
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../3-9-generate-the-project-documentation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Lab 3.9 - Générer la documentation du projet Salesforce
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Lab 3.10 - Promouvoir un sous-ensemble avec les promotion branches (Beta)
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="././" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Lab 3.10 - Promouvoir un sous-ensemble avec les promotion branches (Beta)
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+
+<nav class="md-nav md-nav--secondary" aria-label="Table des matières">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table des matières
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#la-situation" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        La situation
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#avant-de-commencer" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Avant de commencer
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#les-etapes" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Les étapes
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Les étapes">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-verifier-que-la-fonctionnalite-est-active-et-ou-elle-est-autorisee" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        1. Vérifier que la fonctionnalité est active, et où elle est autorisée
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-prendre-les-cinq-stories-dans-lordre-et-les-promouvoir-comme-dhabitude" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        2. Prendre les cinq stories, dans l'ordre, et les promouvoir comme d'habitude
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-decider-avant-de-toucher-a-quoi-que-ce-soit" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        3. Décider, avant de toucher à quoi que ce soit
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#4-choisir-ce-qui-part" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        4. Choisir ce qui part
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#5-lire-ce-quelle-a-cree" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        5. Lire ce qu'elle a créé
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#6-resoudre-le-conflit-sur-la-promotion-branch" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        6. Résoudre le conflit sur la promotion branch
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#7-ajouter-la-raison-merger-et-verifier-la-selectivite-dans-lorg" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        7. Ajouter la raison, merger, et vérifier la sélectivité dans l'org
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#8-compter-ce-que-cela-a-coute" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        8. Compter ce que cela a coûté
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#9-retrofiter-la-promotion-dans-integration-tout-de-suite" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        9. Retrofiter la promotion dans integration, tout de suite
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#ce-que-vous-devez-voir" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Ce que vous devez voir
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#verifiez-votre-travail" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Vérifiez votre travail
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#pour-aller-plus-loin" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Pour aller plus loin
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../3-11-capstone-run-a-weekly-release-cycle/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Lab 3.11 - Épreuve finale : mener un cycle de release hebdomadaire
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+            </ul>
+          </nav>
+        
+      
+    </li>
+  
+
+      
+    
+      
+      
+      
+        
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../help/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Aide
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+      
+    
+      
+      
+      
+        
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../BACKLOG/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Backlog
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+      
+    
+      
+      
+      
+        
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../badges/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Badges
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+      
+    
+      
+      
+      
+        
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="https://sfdx-hardis.cloudity.com/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  sfdx-hardis documentation
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+      
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  
+                    
+                    
+                    
+                      
+                    
+                    
+                      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+                      <div class="md-sidebar-button__wrapper">
+                        <label class="md-sidebar-button" for="__toc"></label>
+                      </div>
+                    
+                  
+                  <div class="md-sidebar__inner">
+                    
+
+
+<nav class="md-nav md-nav--secondary" aria-label="Table des matières">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table des matières
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#la-situation" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        La situation
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#avant-de-commencer" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Avant de commencer
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#les-etapes" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Les étapes
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Les étapes">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-verifier-que-la-fonctionnalite-est-active-et-ou-elle-est-autorisee" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        1. Vérifier que la fonctionnalité est active, et où elle est autorisée
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-prendre-les-cinq-stories-dans-lordre-et-les-promouvoir-comme-dhabitude" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        2. Prendre les cinq stories, dans l'ordre, et les promouvoir comme d'habitude
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-decider-avant-de-toucher-a-quoi-que-ce-soit" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        3. Décider, avant de toucher à quoi que ce soit
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#4-choisir-ce-qui-part" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        4. Choisir ce qui part
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#5-lire-ce-quelle-a-cree" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        5. Lire ce qu'elle a créé
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#6-resoudre-le-conflit-sur-la-promotion-branch" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        6. Résoudre le conflit sur la promotion branch
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#7-ajouter-la-raison-merger-et-verifier-la-selectivite-dans-lorg" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        7. Ajouter la raison, merger, et vérifier la sélectivité dans l'org
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#8-compter-ce-que-cela-a-coute" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        8. Compter ce que cela a coûté
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#9-retrofiter-la-promotion-dans-integration-tout-de-suite" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        9. Retrofiter la promotion dans integration, tout de suite
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#ce-que-vous-devez-voir" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Ce que vous devez voir
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#verifiez-votre-travail" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Vérifiez votre travail
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#pour-aller-plus-loin" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Pour aller plus loin
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                <a id="__skip" tabindex="-1"></a>
+                
+                  
+
+  
+    <a href="https://github.com/hardisgroupcom/sfdx-hardis-training/edit/main/labs/fr/level-3-release-manager/3-10-promote-a-subset-with-promotion-branches.md" title="Editer cette page" class="md-content__button md-icon" rel="edit">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-file-pen" viewBox="0 0 24 24"><path d="M12.659 22H18a2 2 0 0 0 2-2V8a2.4 2.4 0 0 0-.706-1.706l-3.588-3.588A2.4 2.4 0 0 0 14 2H6a2 2 0 0 0-2 2v9.34"/><path d="M14 2v5a1 1 0 0 0 1 1h5M10.378 12.622a1 1 0 0 1 3 3.003L8.36 20.637a2 2 0 0 1-.854.506l-2.867.837a.5.5 0 0 1-.62-.62l.836-2.869a2 2 0 0 1 .506-.853z"/></svg>
+    </a>
+  
+  
+
+
+<h1 id="lab-310-promouvoir-un-sous-ensemble-avec-les-promotion-branches-beta">Lab 3.10 - Promouvoir un sous-ensemble avec les promotion branches (Beta)<a class="headerlink" href="#lab-310-promouvoir-un-sous-ensemble-avec-les-promotion-branches-beta" title="Permanent link">&para;</a></h1>
+<p><strong>Niveau</strong> : 3 Release Manager</p>
+<p><strong>Durée</strong> : ~55 min</p>
+<p><strong>Vous allez</strong> : livrer en preprod trois User Stories approuvées pendant que deux autres restent en
+UAT, résoudre le conflit que l'une d'elles traîne avec elle, et remettre la pipeline d'aplomb
+ensuite, avec la seule fonctionnalité de sfdx-hardis dont vous devriez espérer ne jamais avoir
+besoin deux semaines de suite.</p>
+<h2 id="la-situation">La situation<a class="headerlink" href="#la-situation" title="Permanent link">&para;</a></h2>
+<p>Cinq stories sont arrivées cette semaine, et les cinq sont en UAT.</p>
+<p><strong>US-058</strong>, celle de Romain, stocke la durée de garantie sur un panel batch. Elle fonctionne.
+Personne n'a validé la formulation, parce que la personne qui valide les formulations est absente
+jusqu'au milieu de la semaine prochaine.</p>
+<p><strong>US-057</strong>, celle de Mariia, donne aux planificateurs un statut <em>Awaiting Parts</em> pour une
+installation bloquée par une pièce manquante. Le responsable des opérations l'a testée mardi et l'a
+validée par écrit.</p>
+<p><strong>US-059</strong>, encore Romain, stocke le fournisseur sur un panel batch. Il l'a écrite le lendemain
+d'US-058, et a placé le nouveau champ juste sous la durée de garantie sur la présentation de page,
+parce que les deux viennent de la même facture. L'acheteur l'a validée mercredi.</p>
+<p><strong>US-060</strong>, celle de Mariia, signale une installation qui a besoin d'un échafaudage. Elle fonctionne
+aussi, et le responsable des opérations la retient : les équipes n'ont pas été informées de ce
+qu'elles doivent faire d'un site signalé, et un signal que personne ne suit est pire que pas de
+signal.</p>
+<p><strong>US-061</strong>, celle de Mariia, met le code du portail du site sur l'installation. Les chefs d'équipe
+l'ont testée mardi et la veulent avant le week-end.</p>
+<p>La livraison est jeudi et la date ne bouge pas : la bascule de l'entrepôt a besoin du nouveau statut
+en production avant le week-end.</p>
+<p>Vous avez donc une fenêtre de promotion qui contient trois stories approuvées et deux stories
+auxquelles personne n'a dit oui, et la promotion ordinaire est tout ou rien. Elle transporte <code>uat</code>
+telle qu'elle est, US-058 et US-060 comprises.</p>
+<div class="admonition warning">
+<p class="admonition-title">C'est l'exception, et elle doit le rester</p>
+<p>Promouvoir des branches plutôt que des fonctionnalités est la manière recommandée, et tous les
+autres labs de ce niveau le font. Une version dont les stories ont été testées ensemble est la
+version qui a été testée.</p>
+<p>Une promotion branch casse cela volontairement. Après elle, <code>uat</code> et <code>preprod</code> ne contiennent
+plus la même chose, les orgs derrière divergent, et la production fait tourner une combinaison
+que personne n'a jamais testée dans son ensemble. C'est un coût réel, payé plus tard, en général
+par la personne d'astreinte.</p>
+<p>Utilisez-la quand une date ne peut pas bouger et qu'une validation n'est pas arrivée. N'en
+faites pas un processus : une équipe qui assemble une promotion branch toutes les semaines a un
+problème de validation, pas un problème d'outillage, et cela se corrige en amont.</p>
+</div>
+<h2 id="avant-de-commencer">Avant de commencer<a class="headerlink" href="#avant-de-commencer" title="Permanent link">&para;</a></h2>
+<ul class="task-list">
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <a href="../3-9-generate-the-project-documentation/">Lab 3.9</a> terminé</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> Les quatre branches déploient, et les quatre orgs sont connectées</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>enablePromotionBranches</code> et <code>allowedPromotionSteps</code> publiés au
+      <a href="../3-1-configure-the-pipeline-up-to-production/">Lab 3.1</a>, et remontés jusqu'à <code>preprod</code> par les promotions des Labs 3.5 et 3.6</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> Rien en attente dans le panneau <strong>Source Control</strong> qui vous tienne encore à cœur</li>
+</ul>
+<h2 id="les-etapes">Les étapes<a class="headerlink" href="#les-etapes" title="Permanent link">&para;</a></h2>
+<h3 id="1-verifier-que-la-fonctionnalite-est-active-et-ou-elle-est-autorisee">1. Vérifier que la fonctionnalité est active, et où elle est autorisée<a class="headerlink" href="#1-verifier-que-la-fonctionnalite-est-active-et-ou-elle-est-autorisee" title="Permanent link">&para;</a></h3>
+<p>Les deux réglages dont ce lab a besoin ont été publiés au <a href="../3-1-configure-the-pipeline-up-to-production/">Lab 3.1</a> et remontent la pipeline avec
+chaque promotion depuis. Regardez-les avant de compter dessus.</p>
+<p>Ouvrez le panneau <strong>DevOps Pipeline</strong>, le menu engrenage, <strong>Pipeline Settings</strong>, portée <strong>Global
+Settings</strong>, puis l'onglet <strong>Danger Zone</strong>.</p>
+<p><a class="glightbox" data-type="image" href="../../../_assets/annotated/vscode/pipeline-config-danger--promotion-branches.png"><img alt="La Danger Zone des Global Pipeline Settings, avec les deux réglages des promotion branches" src="../../../_assets/annotated/vscode/pipeline-config-danger--promotion-branches.png" /></a></p>
+<p>Lisez la ligne en haut de cet onglet avant tout le reste : <em>Use these settings with caution, be sure
+to understand their impact as they drift from DevOps best practices.</em> Le produit range cette
+fonctionnalité dans le même tiroir que les déploiements delta entre branches majeures, et pour la
+même raison.</p>
+<p><strong>Enable promotion branches (Beta)</strong> <span class="pill-ref pill-ref-1">(1)</span> affiche <strong>Enabled</strong> : la fonctionnalité est active pour
+tout le projet. <strong>Allowed promotion steps (Beta)</strong> <span class="pill-ref pill-ref-2">(2)</span> contient une ligne, source <code>uat</code> et cible
+<code>preprod</code>, et dit que c'est la seule étape sur laquelle un release manager peut ici assembler une
+promotion.</p>
+<p>Ce deuxième réglage n'est pas de la paperasse. C'est la raison pour laquelle le bouton que vous
+allez utiliser existe sur <code>uat</code> et pas sur <code>integration</code> : un sous-ensemble est une décision sur ce
+qui part vers l'étape juste avant la production, et personne n'a besoin de la prendre en entrant
+dans une org d'intégration qui est reconstruite depuis la branche de toute façon.
+<code>sf hardis:project:promotion:create</code> refuse purement et simplement de tourner tant que la liste est
+absente, plutôt que de deviner que chaque branche majeure peut promouvoir vers toutes les autres.</p>
+<details>
+<summary>Sous le capot : pourquoi un réglage publié au [Lab 3.1](3-1-configure-the-pipeline-up-to-production.md) compte maintenant</summary>
+<p>Les deux réglages sont au niveau projet, dans <code>config/.sfdx-hardis.yml</code> :</p>
+<div class="highlight"><pre><span></span><code>enablePromotionBranches: true
+allowedPromotionSteps:
+  - source: uat
+    target: preprod
+</code></pre></div>
+<p>Le job de déploiement d'une Pull Request de promotion tourne sur la promotion branch, et une
+promotion branch est coupée depuis sa <strong>cible</strong> : la configuration qu'il lit est donc celle que
+porte <code>preprod</code>. Un réglage activé aujourd'hui dans <code>integration</code> ne serait pas dans <code>preprod</code> avant
+qu'une promotion l'y porte, et d'ici là le job traiterait la Pull Request de promotion comme une
+branche de fonctionnalité ordinaire : il déploierait quand même, et il ignorerait silencieusement
+les stories que la branche déclare.</p>
+<p>C'est pour cela que le réglage a été publié au <a href="../3-1-configure-the-pipeline-up-to-production/">Lab 3.1</a> avec le reste de la configuration du
+pipeline, et pour cela qu'il est resté inerte depuis : sans aucune promotion branch dans le
+repository, un projet avec la fonctionnalité active se comporte exactement comme un projet sans.</p>
+</details>
+<h3 id="2-prendre-les-cinq-stories-dans-lordre-et-les-promouvoir-comme-dhabitude">2. Prendre les cinq stories, dans l'ordre, et les promouvoir comme d'habitude<a class="headerlink" href="#2-prendre-les-cinq-stories-dans-lordre-et-les-promouvoir-comme-dhabitude" title="Permanent link">&para;</a></h3>
+<p>Rien de nouveau ici, c'est donc écrit court. Si une étape ne vous dit rien, le lab qui l'a enseignée
+est en lien.</p>
+<p><strong>Welcome page</strong> &gt; <strong>Training: Level 3</strong> &gt; <strong>Simulate my teammates</strong>, et prenez les cinq <strong>une à la
+fois, dans cet ordre, en mergeant chacune dans <code>integration</code> avant de prendre la suivante</strong> :</p>
+<ol>
+<li><strong>US-058 Record the warranty term on a panel batch</strong></li>
+<li><strong>US-057 Park an installation that is waiting for parts</strong></li>
+<li><strong>US-059 Record the supplier of a panel batch</strong></li>
+<li><strong>US-060 Flag an installation that needs scaffolding</strong></li>
+<li><strong>US-061 Record the gate code of a site</strong></li>
+</ol>
+<p><a class="glightbox" data-type="image" href="../../../_assets/annotated/vscode/welcome-custom-menu-3.png"><img alt="Le menu Training Level 3 sur la Welcome page" src="../../../_assets/annotated/vscode/welcome-custom-menu-3.png" /></a></p>
+<p>L'ordre est la semaine telle qu'elle s'est passée, et il compte deux fois. US-059 a été écrite
+par-dessus US-058 : Romain a coupé sa branche après le merge de la durée de garantie, et a placé le
+champ fournisseur juste dessous. La simulation refuse de construire US-059 tant qu'US-058 n'est pas
+dans <code>integration</code>, et vous le dit. Et l'ordre dans lequel les stories ont été mergées est l'ordre
+dans lequel la fenêtre de <code>uat</code> les liste, que l'étape 4 lit de haut en bas.</p>
+<p>Relisez chacune avec les quatre questions du <a href="../3-2-review-a-contributor-pull-request/">Lab 3.2</a> et mergez-la avec <strong>Squash and merge</strong>, comme
+toute Pull Request de fonctionnalité de ce cours. Vous n'avez pas à attendre chaque déploiement
+avant de merger la suivante : ils se mettent en file sur <code>integration</code>. Quand le dernier est vert,
+promouvez <code>integration</code> vers <code>uat</code> comme au <a href="../3-5-promote-to-uat-and-write-release-notes/">Lab 3.5</a> : la pastille <strong>+ PR</strong> sur la flèche, un titre
+lisible par un humain, <strong>Merge pull request</strong> et jamais de squash.</p>
+<p>Les cinq stories sont maintenant dans <code>uat</code>, déployées dans <code>helios-uat</code>, et c'est le moment que
+toute vraie semaine finit par atteindre : tout est testable, et une partie seulement est approuvée.</p>
+<details>
+<summary>Sous le capot : comment la simulation sait qu'US-059 a besoin d'US-058</summary>
+<p>Chaque story de coéquipier est un scénario sous <code>scripts/simulate/</code>, et
+<code>us-059-supplier/scenario.json</code> porte une ligne que les autres n'ont pas :</p>
+<div class="highlight"><pre><span></span><code>"basedOn": "us-058-warranty-term"
+</code></pre></div>
+<p>Avant de couper la branche depuis votre <code>integration</code>, la commande vérifie que chaque changement
+d'US-058 y est : le fichier du champ, sa ligne sur la présentation de page, son droit sur le
+permission set. Sans eux, le patch d'US-059 n'a aucune ligne où s'accrocher, puisqu'il place
+<code>Supplier__c</code> après <code>Warranty_Years__c</code>. La vérification transforme un obscur « cannot be placed »
+en une phrase qui nomme la story à merger d'abord.</p>
+</details>
+<h3 id="3-decider-avant-de-toucher-a-quoi-que-ce-soit">3. Décider, avant de toucher à quoi que ce soit<a class="headerlink" href="#3-decider-avant-de-toucher-a-quoi-que-ce-soit" title="Permanent link">&para;</a></h3>
+<p>Vous avez trois options et l'outil n'en sert qu'une. Sachez pourquoi vous choisissez celle-là.</p>
+<table>
+<thead>
+<tr>
+<th>Option</th>
+<th>Ce qu'elle coûte</th>
+<th>Quand elle est la bonne</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Attendre les validations</strong></td>
+<td>La livraison glisse d'une semaine</td>
+<td>Presque toujours. C'est la seule option qui garde les orgs alignées</td>
+</tr>
+<tr>
+<td><strong>Sortir US-058 et US-060 de <code>uat</code></strong></td>
+<td>Deux reverts, chacun sur une feature branch à part qui passe par <code>integration</code> puis <code>uat</code> comme n'importe quelle story, jamais un commit directement sur <code>uat</code>, et les deux stories devront revenir plus tard, rebasées et retestées</td>
+<td>Quand une story est vraiment mauvaise, pas simplement non validée</td>
+</tr>
+<tr>
+<td><strong>Transporter US-057, US-059 et US-061 seules</strong></td>
+<td><code>uat</code> et <code>preprod</code> divergent jusqu'à la prochaine promotion complète, et il faut décrocher US-059 d'US-058</td>
+<td>Quand la date est fixe, que les validations n'arriveront pas, et que les stories laissées derrière sont bien là où elles sont</td>
+</tr>
+</tbody>
+</table>
+<p>Cette semaine, c'est la troisième, et la raison est écrite : la bascule de l'entrepôt.</p>
+<p>Écrivez cette raison quelque part où un successeur la trouvera. La Pull Request que vous allez créer
+est un bon endroit, et l'étape 7 y revient.</p>
+<h3 id="4-choisir-ce-qui-part">4. Choisir ce qui part<a class="headerlink" href="#4-choisir-ce-qui-part" title="Permanent link">&para;</a></h3>
+<p>Ouvrez le panneau <strong>DevOps Pipeline</strong> et cliquez sur le nœud <code>uat</code>. La fenêtre qui s'ouvre est celle
+que le <a href="../3-5-promote-to-uat-and-write-release-notes/">Lab 3.5</a> utilisait pour lire une fenêtre de promotion, avec deux choses dessus qui ne
+servaient à rien jusqu'ici.</p>
+<p><a class="glightbox" data-type="image" href="../../../_assets/annotated/vscode/pipeline-branch-modal-promotion--pick-what-goes.png"><img alt="La fenêtre de branche d'uat, avec les cases à cocher et le bouton Create promotion" src="../../../_assets/annotated/vscode/pipeline-branch-modal-promotion--pick-what-goes.png" /></a></p>
+<p>Une <strong>case à cocher</strong> sur chaque ligne de User Story <span class="pill-ref pill-ref-1">(1)</span>, et <strong>Create promotion from uat (Beta)</strong>
+dans le pied de la fenêtre <span class="pill-ref pill-ref-2">(2)</span>. Les deux apparaissent parce que <code>uat</code> est la source d'une étape
+de promotion autorisée et que <code>preprod</code> en est la cible.</p>
+<p>La fenêtre liste les cinq stories de la plus récente à la plus ancienne : US-061, US-060, US-059,
+US-057, US-058. Cochez la <strong>première, la troisième et la quatrième</strong>, US-061, US-059 et US-057, et
+laissez US-060 et US-058 tranquilles. Les Pull Requests en dessous, le retrofit du <a href="../3-7-hotfix-and-retrofit/">Lab 3.7</a> et la
+configuration du <a href="../3-8-monitor-your-production-org/">Lab 3.8</a>, sont plus anciennes : ne les cochez pas non plus. Le libellé du bouton compte ce que vous avez coché : <strong>Create
+promotion from uat (3 selected) (Beta)</strong>. Cliquez dessus.</p>
+<p>Un onglet d'exécution de commande s'ouvre. Il liste ce qui attend dans <code>uat</code>, puis pose une seule
+question, <strong>Select the Pull Requests to carry in the promotion branch</strong>, avec vos trois stories déjà
+cochées <span class="pill-ref pill-ref-1">(1)</span> : le panneau a passé votre choix à la commande, et la commande vous demande de le
+confirmer plutôt que de le prendre pour acquis. Relisez la liste une fois et confirmez <span class="pill-ref pill-ref-2">(2)</span>.</p>
+<p><a class="glightbox" data-type="image" href="../../../_assets/annotated/vscode/promotion-create-select--confirm.png"><img alt="Le panneau d'exécution de commande, arrêté sur la sélection à confirmer, avec les trois stories cochées" src="../../../_assets/annotated/vscode/promotion-create-select--confirm.png" /></a></p>
+<p>Lisez ensuite le log, parce qu'il fait quelque chose que vous feriez à la main sinon, et cette fois
+il ne va pas jusqu'au bout tout seul :</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>3 Pull Request(s) selected for the promotion
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>Creating promotion branch promotion/uat/preprod/2026-09-24-0930 from origin/preprod...
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>Cherry-picking #62 US-057 Park an installation that is waiting for parts (my-username) [7c41ab9]...
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>Cherry-picking #63 US-059 Record the supplier of a panel batch (my-username) [d1e90e9]...
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>Cherry-pick of #63 US-059 Record the supplier of a panel batch (my-username) [d1e90e9] conflicts.
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>This User Story probably depends on another one that is not part of the promotion. Conflicting files:
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>force-app/main/default/layouts/Panel_Batch__c-Panel Batch Layout.layout-meta.xml
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>force-app/main/default/permissionsets/Helios_Delivery_Manager.permissionset-meta.xml
+</code></pre></div>
+<p>Les numéros sont ceux du fork du cours ; les vôtres diffèrent, et ce sont les noms des stories
+qu'il faut lire. Les cherry-picks vont de la plus ancienne à la plus récente, donc US-057 est passée
+proprement, et US-059 s'est arrêtée : elle a été écrite par-dessus US-058, et <code>preprod</code> n'a jamais
+vu US-058. La commande demande quoi en faire, et propose quatre réponses <span class="pill-ref pill-ref-1">(1)</span> :</p>
+<p><a class="glightbox" data-type="image" href="../../../_assets/annotated/vscode/promotion-create-conflict--recommended.png"><img alt="Le panneau d'exécution de commande, arrêté sur la question du conflit, avec la réponse recommandée en premier" src="../../../_assets/annotated/vscode/promotion-create-conflict--recommended.png" /></a></p>
+<p>Prenez la première, <strong>Recommended: commit this User Story and every following conflict with their
+conflict markers, without asking again</strong>. La promotion est assemblée en entier, conflit compris, et
+vous le résolvez en une passe sur la branche ensuite, à l'étape 6. Les trois autres sont pour
+d'autres semaines : laisser la story de côté, committer celle-ci avec ses marqueurs mais redemander
+au prochain conflit, ou tout arrêter et tout défaire.</p>
+<p>Ne choisissez pas <strong>leave this User Story out</strong> parce que ça a l'air plus propre. L'acheteur a
+validé US-059, et une promotion qui laisse tomber en silence une story approuvée parce que git l'a
+trouvée encombrante est une promotion dont la Pull Request ment sur la semaine.</p>
+<p>Le log continue jusqu'au bout :</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>Conflict handling: commit-with-markers-all
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>#63 US-059 Record the supplier of a panel batch (my-username) [d1e90e9] committed with conflict markers in: force-app/main/default/layouts/Panel_Batch__c-Panel Batch Layout.layout-meta.xml, force-app/main/default/permissionsets/Helios_Delivery_Manager.permissionset-meta.xml. Solve them on the branch before merging
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>Cherry-picking #65 US-061 Record the gate code of a site (my-username) [5b7e2c1]...
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>Pushing promotion branch promotion/uat/preprod/2026-09-24-0930...
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>Creating the Pull Request from promotion/uat/preprod/2026-09-24-0930 to preprod...
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>Promotion Pull Request created: https://github.com/my-username/sfdx-hardis-training/pull/66
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>Promotion branch promotion/uat/preprod/2026-09-24-0930 assembled with 3 User Story(ies): #62, #63, #65
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>1 User Story(ies) carry conflict markers to solve before the Pull Request can be merged: force-app/main/default/layouts/Panel_Batch__c-Panel Batch Layout.layout-meta.xml, force-app/main/default/permissionsets/Helios_Delivery_Manager.permissionset-meta.xml
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>A prompt to solve the committed conflicts with a coding agent (Claude Code, Codex, Copilot...) is saved in hardis-report/promotion-conflicts-prompt-2026-09-24-0931.md and embedded in the Pull Request description
+</code></pre></div>
+<p>US-061 est passée proprement après le conflit, alors qu'elle touche la même présentation de page
+Installation qu'US-060, l'autre story laissée derrière : un conflit exige les deux changements sur
+les mêmes lignes du même fichier, et Mariia a mis le code du portail en haut de la présentation de
+page et le signal d'échafaudage plus bas.</p>
+<p>Quand l'exécution se termine, les deux derniers avertissements <span class="pill-ref pill-ref-1">(1)</span> disent ce qu'il reste à
+faire, et la barre du bas contient les deux choses dont vous avez besoin ensuite : le prompt pour un
+agent de code, enregistré comme fichier de rapport <span class="pill-ref pill-ref-2">(2)</span>, et <strong>Open the promotion Pull Request</strong>
+<span class="pill-ref pill-ref-3">(3)</span>.</p>
+<p><a class="glightbox" data-type="image" href="../../../_assets/annotated/vscode/promotion-create-completed--prompt.png"><img alt="La fin de l'exécution, avec les deux avertissements sur les marqueurs et le fichier du prompt à côté du bouton de la Pull Request" src="../../../_assets/annotated/vscode/promotion-create-completed--prompt.png" /></a></p>
+<details>
+<summary>Sous le capot : ce que le bouton a lancé, ce que le nom de la branche veut dire, et ce qu'est un conflit ici</summary>
+<p>Le bouton a lancé, dans le panneau d'exécution de commande :</p>
+<div class="highlight"><pre><span></span><code>sf hardis:project:promotion:create --source-branch uat --target-branch preprod --pull-requests 62,63,65
+</code></pre></div>
+<p><code>--target-branch</code> a été passé plutôt que demandé parce que <code>allowedPromotionSteps</code> ne laisse à <code>uat</code>
+qu'une seule cible. Avec plusieurs cibles autorisées, la commande aurait posé la question. La
+réponse que vous avez donnée à la question du conflit est ce que <code>--on-conflict commit-with-markers</code>
+fait pour chaque conflit d'une exécution, et c'est ainsi qu'un agent ou une pipeline la donne.</p>
+<p>La branche est nommée <code>promotion/&lt;source&gt;/&lt;cible&gt;/&lt;YYYY-MM-DD&gt;-&lt;HHMM&gt;</code>, en UTC, et un <code>-2</code>, <code>-3</code>
+n'est ajouté que si cette minute est déjà prise. La forme est fixe et non configurable : les jobs de
+déploiement, le diagramme de la pipeline et les notes de version reconnaissent tous une promotion à ça.</p>
+<p>Elle est coupée depuis <code>origin/preprod</code>, pas depuis <code>uat</code>. C'est toute l'astuce : une branche qui
+part de la cible et ne reçoit que les commits choisis ne peut pas transporter ce que vous n'avez pas
+choisi. Les commits sont copiés avec <code>git cherry-pick -x</code>, qui garde le message d'origine et ajoute
+une ligne <code>(cherry picked from commit ...)</code>, de sorte que la copie peut être remontée jusqu'au
+commit de <code>uat</code> dont elle vient.</p>
+<p>Un cherry-pick réécrit le SHA du commit, et c'est pour cela que la Pull Request doit déclarer en
+toutes lettres ce qu'elle transporte : plus rien dans git ne relie la copie à la Pull Request dont
+elle vient.</p>
+<p>Le conflit, c'est git qui est exact, pas git qui est difficile. Le commit d'US-059 dit « après la
+ligne Warranty Years de la présentation de page, ajoute une ligne Supplier », et « à côté du droit
+Warranty Years du permission set, ajoute un droit Supplier ». Sur <code>preprod</code> il n'y a ni ligne
+Warranty Years ni droit Warranty Years sur quoi s'appuyer, donc git s'arrête et écrit les deux
+versions dans le fichier, entre des marqueurs : ce que <code>preprod</code> a du côté <code>&lt;&lt;&lt;&lt;&lt;&lt;&lt; HEAD</code>, c'est à
+dire rien à cet endroit, et ce que la story apporte du côté <code>&gt;&gt;&gt;&gt;&gt;&gt;&gt;</code>, l'entrée Warranty Years et
+l'entrée Supplier ensemble. Git coupe le bloc là où les lignes cessent de coïncider, pas là où un
+élément XML commence : dans la présentation de page, les deux lignes qui ouvrent la ligne Warranty
+Years ouvrent aussi la ligne qui suit sur <code>preprod</code>, donc elles restent juste au-dessus des
+marqueurs, et le côté entrant va du champ Warranty Years aux lignes d'ouverture de la ligne qui
+suit Supplier. La réponse recommandée committe les fichiers exactement comme ça, pour que la
+branche puisse être poussée, la Pull Request ouverte, et la décision prise là où on peut la relire.</p>
+<!-- command-links:start -->
+<p>Documentation de la commande : <a href="https://sfdx-hardis.cloudity.com/hardis/project/promotion/create/">hardis:project:promotion:create</a></p>
+<!-- command-links:end -->
+</details>
+<h3 id="5-lire-ce-quelle-a-cree">5. Lire ce qu'elle a créé<a class="headerlink" href="#5-lire-ce-quelle-a-cree" title="Permanent link">&para;</a></h3>
+<p>Ouvrez la Pull Request. Elle s'intitule <code>Promotion uat to preprod (2026-09-24-0930)</code>, et sa
+description contient la seule chose qui fait marcher tout le reste, plus, cette semaine, un
+avertissement :</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>Promotion branch <span class="sb">`promotion/uat/preprod/2026-09-24-0930`</span> carrying 3 User Stories approved in <span class="sb">`uat`</span>,
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>cherry-picked for <span class="sb">`preprod`</span>.
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="k">&gt; </span><span class="ge">⚠️ **Conflicts to solve before merging.** 1 User Story was committed with git conflict markers</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="k">&gt; </span><span class="ge">(`&lt;&lt;&lt;&lt;&lt;&lt;&lt;`, `=======`, `&gt;&gt;&gt;&gt;&gt;&gt;&gt;`) left in the files listed below. Solve them on this branch, by hand</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="k">&gt; </span><span class="ge">or with a coding agent, and push: the validation job fails until they are gone.</span>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="sb">```yaml</span>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="nt">promotionPullRequests</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">62</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">63</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">65</span><span class="p p-Indicator">]</span>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="sb">```</span>
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a><span class="gu">## Carried Pull Requests</span>
+<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a>
+<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a>| Pull Request | Title                                                 | Author      | Source branch                         | Commit    |
+<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a>|--------------|-------------------------------------------------------|-------------|---------------------------------------|-----------|
+<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a>| <span class="ni">#62</span>          | US-057 Park an installation that is waiting for parts | my-username | <span class="sb">`training/mate-us-057-awaiting-parts`</span> | <span class="sb">`7c41ab9`</span> |
+<a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a>| <span class="ni">#63</span>          | US-059 Record the supplier of a panel batch           | my-username | <span class="sb">`training/mate-us-059-supplier`</span>       | <span class="sb">`d1e90e9`</span> |
+<a id="__codelineno-2-18" name="__codelineno-2-18" href="#__codelineno-2-18"></a>| <span class="ni">#65</span>          | US-061 Record the gate code of a site                 | my-username | <span class="sb">`training/mate-us-061-gate-code`</span>      | <span class="sb">`5b7e2c1`</span> |
+<a id="__codelineno-2-19" name="__codelineno-2-19" href="#__codelineno-2-19"></a>
+<a id="__codelineno-2-20" name="__codelineno-2-20" href="#__codelineno-2-20"></a>Tickets: US-057, US-059, US-061
+<a id="__codelineno-2-21" name="__codelineno-2-21" href="#__codelineno-2-21"></a>
+<a id="__codelineno-2-22" name="__codelineno-2-22" href="#__codelineno-2-22"></a><span class="gu">## Committed with conflict markers</span>
+<a id="__codelineno-2-23" name="__codelineno-2-23" href="#__codelineno-2-23"></a>
+<a id="__codelineno-2-24" name="__codelineno-2-24" href="#__codelineno-2-24"></a><span class="k">-</span><span class="w"> </span><span class="ni">#63</span> US-059 Record the supplier of a panel batch
+<a id="__codelineno-2-25" name="__codelineno-2-25" href="#__codelineno-2-25"></a><span class="w">  </span><span class="k">-</span><span class="w"> </span><span class="sb">`force-app/main/default/layouts/Panel_Batch__c-Panel Batch Layout.layout-meta.xml`</span>
+<a id="__codelineno-2-26" name="__codelineno-2-26" href="#__codelineno-2-26"></a><span class="w">  </span><span class="k">-</span><span class="w"> </span><span class="sb">`force-app/main/default/permissionsets/Helios_Delivery_Manager.permissionset-meta.xml`</span>
+<a id="__codelineno-2-27" name="__codelineno-2-27" href="#__codelineno-2-27"></a>
+<a id="__codelineno-2-28" name="__codelineno-2-28" href="#__codelineno-2-28"></a>&lt;details&gt;
+<a id="__codelineno-2-29" name="__codelineno-2-29" href="#__codelineno-2-29"></a>&lt;summary&gt;Prompt for a coding agent (Claude Code, Codex, Copilot...) to solve the conflicts&lt;/summary&gt;
+<a id="__codelineno-2-30" name="__codelineno-2-30" href="#__codelineno-2-30"></a>...
+<a id="__codelineno-2-31" name="__codelineno-2-31" href="#__codelineno-2-31"></a>&lt;/details&gt;
+<a id="__codelineno-2-32" name="__codelineno-2-32" href="#__codelineno-2-32"></a>
+<a id="__codelineno-2-33" name="__codelineno-2-33" href="#__codelineno-2-33"></a><span class="ge">_Created with `sf hardis:project:promotion:create`. Do not squash this Pull Request when merging it._</span>
+</code></pre></div>
+<p><a class="glightbox" data-type="image" href="../../../_assets/annotated/web/github-pr-promotion-description.png"><img alt="La description de la promotion Pull Request sur GitHub, avec l'avertissement, le bloc de déclaration, le tableau des Pull Requests portées et le prompt replié" src="../../../_assets/annotated/web/github-pr-promotion-description.png" /></a></p>
+<p>La colonne <strong>Author</strong> est le compte GitHub qui a ouvert la Pull Request : sur cette formation,
+c'est donc votre propre identifiant et non celui de Mariia ou de Romain. Le coéquipier a écrit le
+commit, <strong>Simulate my teammates</strong> a ouvert la Pull Request avec votre compte. La fenêtre de branche
+du panneau affiche l'auteur du commit, et c'est pour cela que les deux ne disent pas la même chose.</p>
+<p>La colonne <strong>Title</strong> vient de la Pull Request, lue via l'API du git provider. La commande exige
+cette connexion et refuse de démarrer sans elle : une promotion se comporte ainsi de la même façon
+sur GitHub, GitLab, Bitbucket et Azure DevOps, et chaque ligne portée nomme sa vraie story. Ici
+vous ne voyez jamais ce refus : l'extension transmet sa propre connexion GitHub, ouverte depuis le
+<a href="../../level-1-contributor-basics/1-2-create-your-dev-hub-scratch-orgs-and-pipeline/">Lab 1.2</a>. Hors de VS Code, un agent ou un job doit recevoir le token
+(<code>GITHUB_TOKEN</code>, dans l'environnement ou dans un fichier <code>.env</code> à la racine du repository).</p>
+<p><strong>Ce bloc yaml est la déclaration</strong>, et chaque job qui tourne sur cette Pull Request le lit. C'est
+ainsi que les trois stories gardent, dans <code>preprod</code>, tout ce qu'elles auraient eu dans une promotion
+ordinaire : leurs deployment actions s'exécutent, leurs classes de test Apex sont sélectionnées,
+leurs tickets sont mis à jour, et les notes de version de <code>preprod</code> nomment les stories plutôt que
+la promotion qui les a transportées.</p>
+<p>Supprimez ce bloc et il vous reste une branche avec des commits dessus et aucune idée de ce à quoi
+ils servent. Gardez-le, et ne retouchez pas les numéros à la main : la commande a écrit ce qu'elle a
+réellement cherry-pické.</p>
+<p><strong>Le prompt replié</strong> à la fin, c'est tout le conflit, rédigé pour un agent de code : la branche à
+récupérer, la story et son commit d'origine, les deux fichiers, et les règles d'un merge de
+métadonnées Salesforce. Le même texte se trouve dans
+<code>hardis-report/promotion-conflicts-prompt-&lt;date&gt;.md</code>, le fichier de rapport que le panneau de
+commande vous a proposé. L'étape 6 utilise l'un ou l'autre.</p>
+<p>Regardez maintenant les <strong>Checks</strong> de la Pull Request. L'exécution <strong>Check deployment</strong> est rouge,
+et le commentaire sfdx-hardis dit pourquoi : son verdict indique <strong>❌ Cannot merge into <code>preprod</code>: Git
+conflict markers in the promotion branch</strong>, et un paragraphe en dessous nomme les fichiers :</p>
+<blockquote>
+<p>Nothing was deployed: the promotion branch <code>promotion/uat/preprod/2026-09-24-0930</code> still
+contains git conflict markers (<code>&lt;&lt;&lt;&lt;&lt;&lt;&lt;</code>, <code>=======</code>, <code>&gt;&gt;&gt;&gt;&gt;&gt;&gt;</code>) in 2 file(s). Solve them on the
+branch, by hand or with the prompt for a coding agent embedded in this Pull Request description
+(also saved in <code>hardis-report/</code>), then commit and push: the job runs again from there.</p>
+<ul>
+<li><code>force-app/main/default/layouts/Panel_Batch__c-Panel Batch Layout.layout-meta.xml</code></li>
+<li><code>force-app/main/default/permissionsets/Helios_Delivery_Manager.permissionset-meta.xml</code></li>
+</ul>
+</blockquote>
+<p><a class="glightbox" data-type="image" href="../../../_assets/annotated/web/github-pr-promotion-markers.png"><img alt="Le commentaire sfdx-hardis du check rouge, qui nomme les deux fichiers contenant encore des marqueurs de conflit" src="../../../_assets/annotated/web/github-pr-promotion-markers.png" /></a></p>
+<p>C'est le filet de sécurité : un marqueur dans un fichier XML est parfois toléré par git et toujours
+fatal pour Salesforce, donc le job s'arrête avant de déployer quoi que ce soit, et le dit là où vous
+regardez plutôt que d'échouer en silence dans un log.</p>
+<p>Retournez ensuite dans le panneau <strong>DevOps Pipeline</strong> et regardez le diagramme.</p>
+<p><a class="glightbox" data-type="image" href="../../../_assets/annotated/vscode/devops-pipeline-promotion--in-flight.png"><img alt="La promotion ouverte dessinée sur la flèche de uat vers preprod" src="../../../_assets/annotated/vscode/devops-pipeline-promotion--in-flight.png" /></a></p>
+<p>La promotion en vol est dessinée sur la flèche entre <code>uat</code> et <code>preprod</code> <span class="pill-ref pill-ref-1">(1)</span>, avec son numéro de
+Pull Request et son contrôle rouge, là où se trouvait la pastille <strong>+ PR</strong> : ce n'est pas une
+branche de votre pipeline, c'est quelque chose qui se déplace entre deux d'entre elles, et cela vit
+exactement le temps de sa Pull Request.</p>
+<p>Le compteur sur le nœud <code>uat</code> <span class="pill-ref pill-ref-2">(2)</span> affiche toujours cinq User Stories en attente, et c'est
+correct : rien n'a encore bougé. Une promotion ouverte est une proposition. Mergez-la, revenez, et
+le compteur affiche deux, parce qu'<strong>une Pull Request n'apparaît qu'à un seul endroit</strong> : à partir
+de là US-057, US-059 et US-061 sont listées dans la fenêtre de <code>preprod</code>, la branche qu'elles ont
+atteinte, et plus dans celle de <code>uat</code>, la branche qu'elles ont quittée.</p>
+<h3 id="6-resoudre-le-conflit-sur-la-promotion-branch">6. Résoudre le conflit sur la promotion branch<a class="headerlink" href="#6-resoudre-le-conflit-sur-la-promotion-branch" title="Permanent link">&para;</a></h3>
+<p>La commande vous a laissé sur la promotion branch : la barre d'état, en bas à gauche de VS Code,
+affiche <code>promotion/uat/preprod/2026-09-24-0930</code>. C'est là que va la correction.</p>
+<p>Décidez d'abord de ce qu'est la correction, parce qu'aucune des deux voies ci-dessous ne la décide
+pour vous. La règle que le prompt donne à un agent de code est la règle que vous appliquez à la
+main :</p>
+<blockquote>
+<p>Keep the intent of the story while preserving everything else that exists in <code>preprod</code>. A conflict
+usually means the story depends on another story that is not part of this promotion: in that case,
+bring in only the minimum the promoted story needs, never the whole other story.</p>
+</blockquote>
+<p>L'intention d'US-059, c'est un champ Supplier, sur la présentation de page et accordé aux managers.
+Ce dont elle a besoin d'US-058 : rien. Une ligne fournisseur n'a pas besoin d'une ligne garantie
+au-dessus d'elle pour fonctionner. Dans les deux fichiers, la réponse est donc la même : <strong>garder
+l'entrée Supplier, et laisser l'entrée Warranty Years dehors</strong>. Reprendre les entrées Warranty Years
+serait pire qu'un mauvais merge : <code>preprod</code> n'a pas de champ <code>Warranty_Years__c</code>, donc une
+présentation de page ou un permission set qui le nomme échoue au déploiement.</p>
+<p>Deux façons de le faire. La première est celle que le produit recommande, la seconde marche sur
+n'importe quelle machine.</p>
+<p><strong>Avec un agent de code.</strong> Cliquez sur le fichier de rapport <strong>Prompt for a coding agent to solve
+the promotion conflicts</strong> dans la barre du panneau de commande : il ouvre
+<code>hardis-report/promotion-conflicts-prompt-2026-09-24-0931.md</code>. Sélectionnez tout son contenu et
+copiez-le. Ouvrez le chat de votre agent de code dans VS Code, Claude Code, GitHub Copilot Chat en
+mode agent, Codex ou un autre, collez le prompt, et envoyez-le. Il récupère la branche, lit le
+commit d'origine de la story, modifie les deux fichiers, lance la recherche de marqueurs que le
+prompt demande, committe avec un message qui dit ce qu'il a gardé, et pousse. Lisez son
+compte-rendu, puis ouvrez le commit sur la Pull Request et vérifiez qu'il a fait ce que dit le
+paragraphe ci-dessus : Supplier dedans, Warranty Years dehors, rien d'autre touché. Un agent qui a
+repris Warranty Years, ou gardé les deux côtés, se corrige comme on corrigerait un coéquipier :
+dites-le lui, et relisez.</p>
+<p><strong>À la main, dans l'éditeur.</strong> Ouvrez la présentation de page : dans l'<strong>Explorer</strong>, <code>force-app</code> &gt;
+<code>main</code> &gt; <code>default</code> &gt; <code>layouts</code> &gt; <code>Panel_Batch__c-Panel Batch Layout.layout-meta.xml</code>. VS Code colore
+le bloc de conflit et dessine quatre petits liens au-dessus : <strong>Accept Current Change</strong>, <strong>Accept
+Incoming Change</strong>, <strong>Accept Both Changes</strong>, <strong>Compare Changes</strong>.</p>
+<p><a class="glightbox" data-type="image" href="../../../_assets/annotated/vscode/promotion-conflict-editor--accept-incoming.png"><img alt="La présentation de page Panel Batch ouverte dans l'éditeur, avec le bloc de conflit et ses liens Accept" src="../../../_assets/annotated/vscode/promotion-conflict-editor--accept-incoming.png" /></a></p>
+<p>Cliquez sur <strong>Accept Incoming Change</strong> <span class="pill-ref pill-ref-1">(1)</span> : le côté courant, <code>preprod</code>, n'avait rien à cet
+endroit, et le côté entrant est la story. Il reste deux lignes là où il y avait un conflit, Warranty
+Years puis Supplier. Supprimez les quatre lignes de la ligne Warranty Years <span class="pill-ref pill-ref-2">(2)</span>, pour que le bloc
+se lise :</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="w">            </span><span class="nt">&lt;layoutItems&gt;</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="w">                </span><span class="nt">&lt;behavior&gt;</span>Edit<span class="nt">&lt;/behavior&gt;</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="w">                </span><span class="nt">&lt;field&gt;</span>Cost__c<span class="nt">&lt;/field&gt;</span>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="w">            </span><span class="nt">&lt;/layoutItems&gt;</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="w">            </span><span class="nt">&lt;layoutItems&gt;</span>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="w">                </span><span class="nt">&lt;behavior&gt;</span>Edit<span class="nt">&lt;/behavior&gt;</span>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="w">                </span><span class="nt">&lt;field&gt;</span>Supplier__c<span class="nt">&lt;/field&gt;</span>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="w">            </span><span class="nt">&lt;/layoutItems&gt;</span>
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="w">            </span><span class="nt">&lt;layoutItems&gt;</span>
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="w">                </span><span class="nt">&lt;behavior&gt;</span>Edit<span class="nt">&lt;/behavior&gt;</span>
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a><span class="w">                </span><span class="nt">&lt;field&gt;</span>External_Id__c<span class="nt">&lt;/field&gt;</span>
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a><span class="w">            </span><span class="nt">&lt;/layoutItems&gt;</span>
+</code></pre></div>
+<p>Enregistrez, et faites de même dans <code>permissionsets</code> &gt; <code>Helios_Delivery_Manager.permissionset-meta.xml</code> :
+<strong>Accept Incoming Change</strong>, puis supprimez les cinq lignes du droit <code>Panel_Batch__c.Warranty_Years__c</code>,
+pour que le droit Supplier suive celui de Serial Prefix :</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="w">    </span><span class="nt">&lt;fieldPermissions&gt;</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="w">        </span><span class="nt">&lt;editable&gt;</span>true<span class="nt">&lt;/editable&gt;</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="w">        </span><span class="nt">&lt;field&gt;</span>Panel_Batch__c.Serial_Prefix__c<span class="nt">&lt;/field&gt;</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="w">        </span><span class="nt">&lt;readable&gt;</span>true<span class="nt">&lt;/readable&gt;</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="w">    </span><span class="nt">&lt;/fieldPermissions&gt;</span>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="w">    </span><span class="nt">&lt;fieldPermissions&gt;</span>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="w">        </span><span class="nt">&lt;editable&gt;</span>true<span class="nt">&lt;/editable&gt;</span>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="w">        </span><span class="nt">&lt;field&gt;</span>Panel_Batch__c.Supplier__c<span class="nt">&lt;/field&gt;</span>
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="w">        </span><span class="nt">&lt;readable&gt;</span>true<span class="nt">&lt;/readable&gt;</span>
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="w">    </span><span class="nt">&lt;/fieldPermissions&gt;</span>
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a><span class="w">    </span><span class="nt">&lt;hasActivationRequired&gt;</span>false<span class="nt">&lt;/hasActivationRequired&gt;</span>
+</code></pre></div>
+<p>Copiez les deux blocs d'ici plutôt que de les taper : personne ne demande d'écrire du XML de
+mémoire. Cherchez ensuite <code>&lt;&lt;&lt;&lt;&lt;&lt;&lt;</code> une dernière fois dans les deux fichiers, et committez depuis le
+panneau <strong>Source Control</strong>, comme le <a href="../../level-1-contributor-basics/1-5-retrieve-commit-and-publish-your-changes/">Lab 1.5</a> l'a appris : mettez les deux fichiers en
+attente avec leur <strong>+</strong>, et écrivez un message qui dit ce que vous avez gardé, parce que la personne
+qui relit cette Pull Request lit la résolution dans le commit, pas dans le diff :</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>fix: solve cherry-pick conflicts of promotion/uat/preprod/2026-09-24-0930
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>Panel Batch layout (#63): preprod had no Warranty Years row; the story added Supplier under it; kept Supplier after Cost, left Warranty Years out
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>Helios_Delivery_Manager (#63): preprod had no Warranty Years grant; the story added the Supplier grant next to it; kept Supplier, left Warranty Years out
+</code></pre></div>
+<p><strong>Commit</strong>, puis <strong>Sync Changes</strong> pour pousser.</p>
+<p>Quelle que soit la voie prise, le push relance le contrôle. Il est vert cette fois. Ouvrez la section
+repliée <strong>ℹ️ Where the deployment actions and test classes come from</strong> en bas du commentaire
+sfdx-hardis : sa première ligne est celle d'une promotion ordinaire,</p>
+<blockquote>
+<p>ℹ️ <code>promotion/uat/preprod/2026-09-24-0930</code> is a promotion branch carrying 3 Pull Request(s)
+declared in its description.</p>
+</blockquote>
+<p>suivie de ce que le job a rassemblé depuis elles. La section repliée <strong>🎫</strong> à côté liste les trois
+Pull Requests, #62, #63 et #65.</p>
+<p>Si cette ligne manque, ou si elle dit qu'aucune des Pull Requests déclarées n'a pu être utilisée,
+<strong>arrêtez-vous et corrigez avant de merger</strong>. Cela veut dire que le job n'a pas lu la déclaration, et
+que le déploiement sur le point de partir, ce sont les métadonnées sans rien de ce qui va avec.</p>
+<details>
+<summary>Sous le capot : ce que font les liens, ce que le job cherche, et ce que le prompt demande à un agent</summary>
+<p>Les quatre liens viennent de VS Code, pas de sfdx-hardis. Ils sont dessinés sur tout fichier qui
+contient les trois marqueurs, que git pense ou non qu'un merge est en cours, et c'est pour cela
+qu'ils marchent sur un conflit que quelqu'un a committé exprès. <strong>Accept Current Change</strong> garde le
+côté <code>&lt;&lt;&lt;&lt;&lt;&lt;&lt; HEAD</code>, <strong>Accept Incoming Change</strong> le côté <code>&gt;&gt;&gt;&gt;&gt;&gt;&gt;</code>, <strong>Accept Both Changes</strong> les deux,
+l'un après l'autre, et chacun d'eux retire les marqueurs. Aucun ne sait que le côté entrant contient
+deux entrées et qu'une seule a sa place, et c'est la partie que vous avez faite.</p>
+<p>Le job de contrôle lance <code>git grep</code> sur les marqueurs d'ouverture et de fermeture (<code>&lt;&lt;&lt;&lt;&lt;&lt;&lt;</code> et
+<code>&gt;&gt;&gt;&gt;&gt;&gt;&gt;</code>, puisqu'une ligne de <code>=======</code> est légitime en markdown), sur tous les fichiers suivis de
+la branch, et arrête le déploiement avec le commentaire que vous avez lu à l'étape 5. Il lit les
+fichiers tels qu'ils sont extraits, jamais l'historique git, donc il fonctionne sur le clone
+superficiel qu'un job de CI fait. Les deux fichiers du <a href="../../level-2-contributor-advanced/2-7-resolve-a-git-merge-conflict/">Lab 2.7</a> contiennent des marqueurs comme matériel
+pédagogique, donc ce projet les liste dans <code>promotionConflictMarkersIgnoredFiles</code> de
+<code>config/.sfdx-hardis.yml</code> et le job les laisse tranquilles.</p>
+<p>Le prompt demande à l'agent quatre choses qu'un relecteur peut vérifier : ne toucher que les
+fichiers avec marqueurs, garder un XML bien formé avec une entrée par nom d'API, prouver qu'il ne
+reste aucun marqueur avec le même <code>git grep</code>, et committer avec une ligne par fichier disant ce que
+le côté cible avait, ce que la story a ajouté et ce qui a été gardé. « Solved conflicts » n'est pas
+une ligne qu'il a le droit d'écrire. Le message de commit ci-dessus a cette forme, écrit à la main.</p>
+</details>
+<h3 id="7-ajouter-la-raison-merger-et-verifier-la-selectivite-dans-lorg">7. Ajouter la raison, merger, et vérifier la sélectivité dans l'org<a class="headerlink" href="#7-ajouter-la-raison-merger-et-verifier-la-selectivite-dans-lorg" title="Permanent link">&para;</a></h3>
+<p><strong>Éditez la description</strong> et mettez votre raison au-dessus du texte généré, dans une phrase
+utilisable par la personne qui lira ça dans six mois :</p>
+<blockquote>
+<p>Warehouse cutover on Monday needs the Awaiting Parts status in production. US-058 stays in UAT
+until the wording is approved, expected Wednesday next week, and US-060 until the crews have
+been briefed.</p>
+</blockquote>
+<p>Mergez ensuite avec <strong>Merge pull request</strong>. Jamais de squash : les commits cherry-pickés et leurs
+lignes de traçabilité sont ce que la prochaine promotion, le retrofit et les notes de version lisent
+tous. La ligne <strong>How to merge</strong> du commentaire vert du contrôle le dit aussi.</p>
+<p>L'exécution <strong>Process Deployment (sfdx-hardis)</strong> démarre sur <code>preprod</code>. Quand elle est verte, ouvrez
+<code>helios-preprod</code> et vérifiez les deux moitiés de ce que vous avez fait :</p>
+<ul>
+<li><strong>Setup &gt; Object Manager &gt; Installation &gt; Fields &amp; Relationships</strong> : <strong>Status</strong> propose <strong>Awaiting
+  Parts</strong>, et il y a un champ <strong>Gate Code</strong>. US-057 et US-061 sont là. Il n'y a pas de champ
+  <strong>Scaffolding Required</strong> : US-060 n'y est pas</li>
+<li><strong>Setup &gt; Object Manager &gt; Panel Batch &gt; Fields &amp; Relationships</strong> : il y a un champ <strong>Supplier</strong>.
+  US-059 est là. Il n'y a pas de champ <strong>Warranty Years</strong> : US-058 n'y est pas, et c'est tout l'objet
+  du lab</li>
+<li><strong>Setup &gt; Object Manager &gt; Panel Batch &gt; Page Layouts &gt; Panel Batch Layout</strong> : Supplier est juste
+  après Cost, là où vous l'avez mis</li>
+</ul>
+<p>Déployé et <em>seulement</em> ce que vous avez choisi est déployé sont deux vérifications différentes, et
+ce lab est celui où la seconde compte.</p>
+<h3 id="8-compter-ce-que-cela-a-coute">8. Compter ce que cela a coûté<a class="headerlink" href="#8-compter-ce-que-cela-a-coute" title="Permanent link">&para;</a></h3>
+<p>Regardez la pipeline maintenant, et dites à voix haute ce qui est vrai :</p>
+<ul>
+<li><code>uat</code> contient cinq stories. <code>preprod</code> en contient trois</li>
+<li><code>helios-uat</code> et <code>helios-preprod</code> ne sont plus la même org, et elles resteront différentes jusqu'à
+  la prochaine promotion complète</li>
+<li>La production est sur le point de faire tourner une combinaison de métadonnées qui n'a jamais été
+  testée dans son ensemble nulle part : ce que <code>preprod</code> contient aujourd'hui n'existait dans aucune
+  org ce matin</li>
+<li>Les deux fichiers que vous avez résolus à l'étape 6 disent maintenant des choses différentes sur
+  <code>preprod</code> et sur <code>uat</code>, et git le remarquera de nouveau</li>
+</ul>
+<p>Rien de tout cela n'est un bug. C'est le prix, et vous l'avez payé délibérément pour une date fixe.
+Le mode de défaillance n'est pas de le payer une fois : c'est de le payer toutes les semaines, sans
+bruit, jusqu'à ce que plus personne ne sache ce que contient chacune des quatre orgs.</p>
+<p>Trois habitudes gardent cela honnête :</p>
+<ol>
+<li><strong>La Pull Request de promotion dit pourquoi.</strong> Vous l'avez fait à l'étape 7</li>
+<li><strong>La promotion est retrofitée tout de suite.</strong> L'étape 9, et elle n'est pas facultative cette
+   semaine</li>
+<li><strong>L'exception se termine.</strong> La prochaine promotion ordinaire de <code>uat</code> fait remonter US-058 et
+   US-060, et la pipeline est alignée de nouveau. Le <a href="../3-11-capstone-run-a-weekly-release-cycle/">Lab 3.11</a> est cette promotion : les deux
+   stories attendent encore dans <code>uat</code> lundi matin, et elles partent avec tout le reste</li>
+</ol>
+<h3 id="9-retrofiter-la-promotion-dans-integration-tout-de-suite">9. Retrofiter la promotion dans integration, tout de suite<a class="headerlink" href="#9-retrofiter-la-promotion-dans-integration-tout-de-suite" title="Permanent link">&para;</a></h3>
+<p>Le dernier point de l'étape 8 est la raison de cette étape. Sur <code>uat</code>, la présentation de page dit
+« Cost, Warranty Years, Supplier ». Sur <code>preprod</code>, depuis votre correction, elle dit « Cost,
+Supplier ». Quand le <a href="../3-11-capstone-run-a-weekly-release-cycle/">Lab 3.11</a> promeut <code>uat</code> vers <code>preprod</code> en entier, git retrouve ces deux
+lignes et signale les deux mêmes fichiers en conflit, sur une Pull Request entre deux branches
+majeures sur lesquelles personne n'a le droit de pousser. La sortie est celle que la documentation
+des promotion branches prescrit après chaque promotion, et celle que le <a href="../3-7-hotfix-and-retrofit/">Lab 3.7</a> a apprise après
+le hotfix : redescendre <code>preprod</code> dans <code>integration</code> maintenant, tant que le conflit est petit et
+que vous vous souvenez encore de ce que vous avez décidé.</p>
+<p><strong>New User Story</strong>, comme au <a href="../3-7-hotfix-and-retrofit/">Lab 3.7</a> étape 7 : type <strong>Retrofit</strong>, nom <code>US-059-retrofit</code>, cible
+<code>integration</code>, org <code>helios-dev</code>. Puis <strong>Git: Fetch</strong> et <strong>Git: Merge...</strong> depuis la Command Palette,
+comme au <a href="../3-7-hotfix-and-retrofit/">Lab 3.7</a> étape 8, et choisissez <strong>origin/preprod</strong> cette fois, sous <strong>remote branches</strong>.</p>
+<p>Le merge s'arrête sur les deux mêmes fichiers, qui apparaissent sous <strong>Merge Changes</strong> dans le
+panneau <strong>Source Control</strong>. Ouvrez chacun avec <strong>Resolve in Merge Editor</strong>, l'éditeur du <a href="../../level-2-contributor-advanced/2-7-resolve-a-git-merge-conflict/">Lab 2.7</a>,
+et lisez les deux volets : <strong>Current</strong>, c'est <code>integration</code>, avec l'entrée Warranty Years,
+<strong>Incoming</strong>, c'est <code>preprod</code>, sans rien à cet endroit. Cette fois la réponse est l'inverse de
+l'étape 6 : cliquez sur <strong>Accept Current</strong> sur le bloc, dans les deux fichiers, puis <strong>Complete
+Merge</strong>. <code>integration</code> est là où vit US-058 et d'où elle sera validée, donc ses lignes restent. Rien
+d'autre n'entre en conflit, parce que les trois stories promues sont le même contenu des deux
+côtés.</p>
+<p>Les deux fichiers atterrissent sous <strong>Staged Changes</strong> avec le message <code>Merge remote-tracking branch
+'origin/preprod'</code> déjà écrit. <strong>Commit</strong>, puis <strong>Save / Publish User Story</strong> comme au <a href="../3-7-hotfix-and-retrofit/">Lab 3.7</a>
+étape 9, et ouvrez la Pull Request vers <code>integration</code>, intitulée <code>Retrofit: the promotion of US-057,
+US-059 and US-061 back down into integration</code>. Son onglet <strong>Files changed</strong> est vide, et c'est
+normal : lisez le bloc ci-dessous. Attendez son contrôle, et mergez-la avec <strong>Merge pull request</strong>,
+comme le demande la ligne <strong>How to merge</strong> de son commentaire.</p>
+<details>
+<summary>Sous le capot : une Pull Request qui ne change aucun fichier, et pourquoi elle compte quand même</summary>
+<div class="highlight"><pre><span></span><code>git checkout -b retrofit/US-059-retrofit origin/integration
+git fetch origin
+git merge origin/preprod
+# garder le côté integration des deux fichiers, puis committer
+git push -u origin retrofit/US-059-retrofit
+</code></pre></div>
+<p>Le retrofit n'apporte rien de nouveau en contenu : chaque ligne que <code>preprod</code> contient,
+<code>integration</code> l'avait déjà, et les deux lignes qui lui manquent sont celles que vous avez choisi de
+laisser dehors. Ce que le commit de merge enregistre, c'est que <code>preprod</code>, telle qu'elle est après
+la promotion, a été regardée et réconciliée. À partir de là, git a pour les deux branches un point
+commun plus récent que la promotion, et le prochain merge entre elles part de ce point plutôt que de
+la semaine d'avant, quand aucune des deux branches n'avait aucune des cinq stories.</p>
+<p>Sans lui, la promotion de <code>uat</code> vers <code>preprod</code> au <a href="../3-11-capstone-run-a-weekly-release-cycle/">Lab 3.11</a> entre en conflit sur la présentation
+de page et le permission set : <code>preprod</code> dit « ajoute Supplier après Cost », <code>uat</code> dit « ajoute
+Warranty Years puis Supplier après Cost », et git ne sait pas que l'un des deux était une décision.
+Avec lui, cette promotion merge proprement et fait remonter US-058 et US-060 de manière ordinaire.</p>
+<p>La règle du pouce est celle du <a href="../3-7-hotfix-and-retrofit/">Lab 3.7</a> : le travail monte, et la seule chose qui descend est un
+retrofit, fait le jour même de ce qu'il retrofite.</p>
+</details>
+<details>
+<summary>Sous le capot : ce qui arrive à US-058 et US-060 ensuite, et à quoi ressemble une promotion vue d'en haut</summary>
+<p>Rien de spécial. US-058 et US-060 sont des User Stories mergées dans <code>uat</code> qui n'ont pas été
+promues, exactement comme n'importe quelle autre story la veille d'une livraison, et la prochaine
+Pull Request de <code>uat</code> vers <code>preprod</code> les transporte de manière ordinaire.</p>
+<p>Ce sur quoi sfdx-hardis doit faire attention, ce sont les trois autres, qui sont dans les <strong>deux</strong>
+branches par des chemins différents : mergées dans <code>uat</code>, cherry-pickées dans <code>preprod</code>. La
+prochaine promotion de <code>uat</code> fera aussi remonter les commits d'origine, et git mergera proprement
+parce que le contenu y est déjà, et parce que le retrofit de l'étape 9 lui a dit où les deux
+branches étaient d'accord pour la dernière fois. Le diagramme de la pipeline et les notes de version
+savent tous les deux qu'elles ont déjà été promues (<code>promotedAway</code>), chacune est donc listée une
+seule fois, sur la branche qu'elle a réellement atteinte, et les notes de la livraison suivante ne
+les annoncent pas deux fois.</p>
+<p>La même expansion fonctionne un niveau plus haut : quand <code>preprod</code> est promue vers <code>main</code>, le commit
+de merge qui arrive transporte la promotion, pas les stories en dessous. sfdx-hardis lit la
+déclaration de la promotion et remet les trois stories dans le périmètre par leur nom, pour que
+leurs deployment actions s'exécutent en production aussi.</p>
+</details>
+<h2 id="ce-que-vous-devez-voir">Ce que vous devez voir<a class="headerlink" href="#ce-que-vous-devez-voir" title="Permanent link">&para;</a></h2>
+<ul>
+<li>Une Pull Request mergée intitulée <code>Promotion uat to preprod (&lt;date&gt;-&lt;heure&gt;)</code>, depuis une branche
+  nommée <code>promotion/uat/preprod/&lt;date&gt;-&lt;heure&gt;</code>, avec un contrôle rouge passé au vert par un commit</li>
+<li>Un bloc <code>promotionPullRequests</code> dans sa description qui nomme US-057, US-059 et US-061 et rien
+  d'autre, avec votre raison écrite au-dessus</li>
+<li>Une exécution <strong>Process Deployment (sfdx-hardis)</strong> verte sur <code>preprod</code></li>
+<li><strong>Awaiting Parts</strong> dans la liste de sélection Status, un champ <strong>Gate Code</strong> sur Installation et
+  un champ <strong>Supplier</strong> sur Panel Batch dans <code>helios-preprod</code>, et ni <strong>Warranty Years</strong> ni
+  <strong>Scaffolding Required</strong> là-bas</li>
+<li>Aucun <code>&lt;&lt;&lt;&lt;&lt;&lt;&lt;</code> restant dans les deux fichiers sur <code>preprod</code></li>
+<li>Une Pull Request de retrofit mergée dans <code>integration</code> sans aucun fichier modifié</li>
+<li>Le nœud <code>uat</code> du diagramme qui compte deux User Stories encore en attente</li>
+</ul>
+<details class="troubleshoot">
+<summary>En cas de problème</summary>
+<p><strong>Simulate my teammates refuse US-059 et nomme US-058.</strong>
+US-059 a été écrite par-dessus US-058, et votre <code>integration</code> ne la contient pas encore. Mergez
+d'abord la Pull Request d'US-058, puis reprenez US-059. L'étape 2 donne l'ordre exactement pour
+cette raison.</p>
+<p><strong>La fenêtre d'uat n'a ni cases à cocher ni bouton Create promotion.</strong>
+Soit la fonctionnalité est inactive dans la configuration que lit votre workspace, soit
+<code>allowedPromotionSteps</code> ne nomme pas <code>uat</code> comme source avec <code>preprod</code> comme cible. L'étape 1 montre
+les deux. Une étape qui pointe vers une branche dans laquelle la pipeline ne merge pas n'ouvre rien,
+et c'est volontaire.</p>
+<p><strong>La commande s'arrête en disant que les étapes autorisées manquent.</strong>
+<code>allowedPromotionSteps</code> est obligatoire dès que <code>enablePromotionBranches</code> est actif. Ce n'est pas une
+valeur par défaut que sfdx-hardis accepte d'inventer : entre quelles branches un release manager peut
+promouvoir est une décision sur votre pipeline.</p>
+<p><strong>Le cherry-pick d'US-059 n'est pas entré en conflit.</strong>
+Quelque chose l'a résolu pour vous, en général le plugin <code>sf-git-merge-driver</code> s'il est installé sur
+votre machine. Ouvrez l'onglet <strong>Files changed</strong> de la Pull Request et cherchez <code>Warranty_Years__c</code>
+dans la présentation de page et le permission set. S'il a voyagé, le déploiement échoue sur un champ
+que <code>preprod</code> n'a pas : retirez-le sur la promotion branch comme l'étape 6 le fait, et poussez.</p>
+<p><strong>Il n'y a pas de liens Accept au-dessus du bloc de conflit.</strong>
+Le fichier est ouvert en aperçu ou le bloc est hors de vue. Cliquez dans le fichier, allez à la
+ligne <code>&lt;&lt;&lt;&lt;&lt;&lt;&lt; HEAD</code> : les liens sont juste au-dessus. Ils viennent de l'extension intégrée <strong>Merge
+Conflict</strong> de VS Code, qui est active sauf si quelqu'un l'a désactivée.</p>
+<p><strong>Le contrôle est toujours rouge après votre push.</strong>
+Cherchez <code>&lt;&lt;&lt;&lt;&lt;&lt;&lt;</code>, <code>=======</code> et <code>&gt;&gt;&gt;&gt;&gt;&gt;&gt;</code> dans les deux fichiers, et lisez le commentaire
+sfdx-hardis : il nomme le fichier qui en contient encore un. S'il nomme les deux fichiers du
+<a href="../../level-2-contributor-advanced/2-7-resolve-a-git-merge-conflict/">Lab 2.7</a> à la place, le job a fait tourner un sfdx-hardis plus ancien que celui qui lit
+<code>promotionConflictMarkersIgnoredFiles</code> : ces fichiers contiennent des marqueurs comme matériel
+pédagogique, et une version à jour les laisse tranquilles.</p>
+<p><strong>Le commentaire sfdx-hardis ne parle pas de promotion branch.</strong>
+Le job de déploiement a lu une configuration avec la fonctionnalité inactive. Vérifiez que <code>preprod</code>
+porte bien <code>enablePromotionBranches: true</code> dans <code>config/.sfdx-hardis.yml</code> : la branche que le job lit
+est la promotion branch, qui a été coupée depuis <code>preprod</code>.</p>
+<p><strong>La commande s'arrête en disant qu'elle a besoin de la connexion au git provider.</strong>
+La promotion est assemblée à partir des Pull Requests de <code>uat</code>, et seul le git provider les nomme
+de façon fiable, donc la commande refuse de deviner sans lui. Dans VS Code, cette connexion est la
+session GitHub du <a href="../../level-1-contributor-basics/1-2-create-your-dev-hub-scratch-orgs-and-pipeline/">Lab 1.2</a>, et l'extension la transmet toute seule : reconnectez-vous si
+elle a été révoquée. Un agent ou un job reçoit <code>GITHUB_TOKEN</code>, dans l'environnement ou dans un
+fichier <code>.env</code> à la racine du repository, gardé hors de git.</p>
+<p><strong>Le déploiement est beaucoup plus gros que trois stories.</strong>
+Regardez depuis quoi la branche a été coupée. Une promotion branch construite alors que <code>preprod</code>
+était en retard emporte l'écart avec elle. C'est une raison de promouvoir normalement plus souvent,
+pas une raison de construire une plus grosse promotion.</p>
+<p><strong>Le merge du retrofit entre en conflit sur plus que les deux fichiers.</strong>
+Quelqu'un a changé autre chose sur <code>integration</code> depuis la promotion, et la réponse est celle du
+<a href="../../level-2-contributor-advanced/2-7-resolve-a-git-merge-conflict/">Lab 2.7</a> : garder les deux intentions, fichier par fichier. Sur les deux fichiers de ce lab,
+<strong>Accept Current</strong> est toute la réponse.</p>
+<p><strong>Check my work dit qu'integration et preprod ne sont toujours pas d'accord.</strong>
+Le retrofit de l'étape 9 manque, ou il a été mergé en gardant le côté <code>preprod</code>. Refaites-le depuis
+<strong>New User Story</strong>, et prenez le côté <strong>Current</strong> dans l'éditeur de merge.</p>
+</details>
+<h2 id="verifiez-votre-travail">Vérifiez votre travail<a class="headerlink" href="#verifiez-votre-travail" title="Permanent link">&para;</a></h2>
+<p>Welcome page &gt; <strong>Training: Level 3</strong> &gt; <strong>Check my work</strong>, puis choisissez le Lab 3.10.</p>
+<p>Il cherche les trois stories promues sur <code>preprod</code>, une promotion branch dans son historique, aucun
+marqueur de conflit restant dans ses métadonnées, et une <code>integration</code> capable de reprendre
+<code>preprod</code> sans conflit. Quelle que soit la façon dont vous avez résolu le conflit, à la main, avec
+un agent, ou dans un autre éditeur, ça passe.</p>
+<h2 id="pour-aller-plus-loin">Pour aller plus loin<a class="headerlink" href="#pour-aller-plus-loin" title="Permanent link">&para;</a></h2>
+<ul>
+<li><a href="https://sfdx-hardis.cloudity.com/salesforce-devops-promotion-branches/">Promotion branches (Beta)</a></li>
+<li><a href="https://sfdx-hardis.cloudity.com/hardis/project/promotion/create/">hardis:project:promotion:create</a></li>
+<li><a href="https://sfdx-hardis.cloudity.com/salesforce-devops-retrofit/">Retrofit</a>, l'étape qui suit chaque
+  promotion branch</li>
+<li><a href="https://sfdx-hardis.cloudity.com/salesforce-devops-hotfixes/">Hotfixes</a>, qui est le bon outil pour
+  un correctif urgent qui n'est jamais passé par <code>uat</code></li>
+</ul>
+<p><a class="md-button md-button--primary" href="../3-11-capstone-run-a-weekly-release-cycle/">Suite : Lab 3.11 - Épreuve finale : mener un cycle de release hebdomadaire</a></p>
+
+
+
+
+
+
+
+
+
+  
+  
+
+
+
+  
+
+
+
+
+  <h2 id="__comments">Questions and comments</h2>
+  <script src="https://giscus.app/client.js"
+          data-repo="hardisgroupcom/sfdx-hardis-training"
+          data-repo-id="R_kgDOUcjgQw"
+          data-category="Q&amp;A"
+          data-category-id="DIC_kwDOUcjgQ84DF-lC"
+          data-mapping="pathname"
+          data-strict="1"
+          data-reactions-enabled="1"
+          data-emit-metadata="0"
+          data-input-position="top"
+          data-theme="preferred_color_scheme"
+          data-lang="en"
+          data-loading="lazy"
+          crossorigin="anonymous"
+          async>
+  </script>
+
+  <script>
+    // Keep the Giscus iframe in sync with the palette toggle. It is a
+    // cross-origin frame, so its theme can only be changed by postMessage.
+    (function () {
+      if (window.__giscusThemeSync) {
+        return;
+      }
+      window.__giscusThemeSync = true;
+      var giscusTheme = function () {
+        var scheme = document.body.getAttribute("data-md-color-scheme");
+        return scheme === "slate" ? "dark" : "light";
+      };
+      var apply = function () {
+        var frame = document.querySelector("iframe.giscus-frame");
+        if (frame && frame.contentWindow) {
+          frame.contentWindow.postMessage(
+            { giscus: { setConfig: { theme: giscusTheme() } } },
+            "https://giscus.app"
+          );
+        }
+      };
+      new MutationObserver(apply).observe(document.body, {
+        attributes: true,
+        attributeFilter: ["data-md-color-scheme"]
+      });
+      window.addEventListener("message", function (event) {
+        if (event.origin === "https://giscus.app") {
+          apply();
+        }
+      });
+    })();
+  </script>
+
+                
+              </article>
+            </div>
+          
+          
+  <script>var tabs=__md_get("__tabs");if(Array.isArray(tabs))e:for(var set of document.querySelectorAll(".tabbed-set")){var labels=set.querySelector(".tabbed-labels");for(var tab of tabs)for(var label of labels.getElementsByTagName("label"))if(label.innerText.trim()===tab){var input=document.getElementById(label.htmlFor);input.checked=!0;continue e}}</script>
+
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-circle-arrow-up" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="m16 12-4-4-4 4M12 16V8"/></svg>
+  Retour en haut de la page
+</button>
+        
+      </main>
+      
+        
+
+
+
+
+<footer class="md-footer">
+  
+    
+      
+      <nav class="md-footer__inner md-grid" aria-label="Pied de page" >
+        
+          
+          <a href="../3-9-generate-the-project-documentation/" class="md-footer__link md-footer__link--prev" aria-label="Précédent: Lab 3.9 - Générer la documentation du projet Salesforce">
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-arrow-left" viewBox="0 0 24 24"><path d="m12 19-7-7 7-7M19 12H5"/></svg>
+            </div>
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Précédent
+              </span>
+              <div class="md-ellipsis">
+                Lab 3.9 - Générer la documentation du projet Salesforce
+              </div>
+            </div>
+          </a>
+        
+        
+          
+          <a href="../3-11-capstone-run-a-weekly-release-cycle/" class="md-footer__link md-footer__link--next" aria-label="Suivant: Lab 3.11 - Épreuve finale : mener un cycle de release hebdomadaire">
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Suivant
+              </span>
+              <div class="md-ellipsis">
+                Lab 3.11 - Épreuve finale : mener un cycle de release hebdomadaire
+              </div>
+            </div>
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-arrow-right" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+            </div>
+          </a>
+        
+      </nav>
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      Cloudity and friends
+    </div>
+  
+  
+</div>
+      
+        
+<div class="md-social">
+  
+    
+    
+    
+    
+    <a href="https://github.com/hardisgroupcom/sfdx-hardis" target="_blank" rel="noopener" title="sfdx-hardis on GitHub" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.3.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2026 Fonticons, Inc.--><path fill="currentColor" d="M216.5 362.5c-66-8-112.5-55.5-112.5-117 0-25 9-52 24-70-6.5-16.5-5.5-51.5 2-66 20-2.5 47 8 63 22.5 19-6 39-9 63.5-9s44.5 3 62.5 8.5c15.5-14 43-24.5 63-22 7 13.5 8 48.5 1.5 65.5 16 19 24.5 44.5 24.5 70.5 0 61.5-46.5 108-113.5 116.5 17 11 28.5 35 28.5 62.5v52c0 15 12.5 23.5 27.5 17.5C441 459.5 512 369 512 257 512 115.5 397 0 255.5 0S0 115.5 0 257c0 111 70.5 203 165.5 237.5 13.5 5 26.5-4 26.5-17.5v-40c-7 3-16 5-24 5-33 0-52.5-18-66.5-51.5-5.5-13.5-11.5-21.5-23-23-6-.5-8-3-8-6 0-6 10-10.5 20-10.5 14.5 0 27 9 40 27.5 10 14.5 20.5 21 33 21s20.5-4.5 32-16c8.5-8.5 15-16 21-21"/></svg>
+    </a>
+  
+    
+    
+    
+    
+    <a href="https://sfdx-hardis.cloudity.com/" target="_blank" rel="noopener" title="sfdx-hardis documentation" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.3.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2026 Fonticons, Inc.--><path fill="currentColor" d="M384 512H96c-53 0-96-43-96-96V96C0 43 43 0 96 0h304c26.5 0 48 21.5 48 48v288c0 20.9-13.4 38.7-32 45.3V448c17.7 0 32 14.3 32 32s-14.3 32-32 32zM96 384c-17.7 0-32 14.3-32 32s14.3 32 32 32h256v-64zm32-232c0 13.3 10.7 24 24 24h176c13.3 0 24-10.7 24-24s-10.7-24-24-24H152c-13.3 0-24 10.7-24 24m24 72c-13.3 0-24 10.7-24 24s10.7 24 24 24h176c13.3 0 24-10.7 24-24s-10.7-24-24-24z"/></svg>
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog" role="status" aria-atomic="true">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      
+      
+        
+        
+      <script id="__config" type="application/json">{"annotate":null,"base":"../../..","features":["content.action.edit","content.code.copy","content.tabs.link","navigation.instant","navigation.tracking","navigation.top","navigation.footer","search.suggest","search.highlight","toc.follow"],"redirect":null,"search":"../../../assets/javascripts/workers/search.7d14d953.min.js","tags":null,"translations":{"clipboard.copied":"Copié dans le presse-papier","clipboard.copy":"Copier dans le presse-papier","clipboard.error":"Could not copy to clipboard","search.result.more.one":"1 de plus sur cette page","search.result.more.other":"# de plus sur cette page","search.result.none":"Aucun document trouvé","search.result.one":"1 document trouvé","search.result.other":"# documents trouvés","search.result.placeholder":"Taper pour démarrer la recherche","search.result.term.missing":"Non trouvé","select.version":"Sélectionner la version"},"version":null}</script>
+    
+    
+      <script src="../../../assets/javascripts/bundle.8b1c90bd.min.js"></script>
+      
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/tablesort/5.2.1/tablesort.min.js"></script>
+      
+        <script src="../../../theme/javascripts/tables.js"></script>
+      
+        <script src="../../../theme/javascripts/lightbox.js"></script>
+      
+        <script src="../../../theme/javascripts/after-footer.js"></script>
+      
+        <script src="../../../theme/javascripts/language-switch.js"></script>
+      
+    
+  </body>
+</html>

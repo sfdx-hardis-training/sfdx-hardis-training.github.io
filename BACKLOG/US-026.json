@@ -1,0 +1,8 @@
+{
+  "id": "US-026",
+  "subject": "Crew capacity reference data and nightly recalculation",
+  "url": "https://sfdx-hardis-training.github.io/BACKLOG/US-026/",
+  "owner": "You",
+  "branch": "features/US-026-crew-capacity-data",
+  "lab": "2.4"
+}

@@ -1,0 +1,8 @@
+{
+  "id": "US-024",
+  "subject": "Crew size becomes mandatory",
+  "url": "https://sfdx-hardis-training.github.io/BACKLOG/US-024/",
+  "owner": "You",
+  "branch": "features/US-024-crew-size-required",
+  "lab": "2.3"
+}

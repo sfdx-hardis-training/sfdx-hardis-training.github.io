@@ -1,0 +1,511 @@
+/* stylelint-disable SelectorFormat */
+
+/*
+ * Theme of the sfdx-hardis training site.
+ *
+ * It is the same family as the product documentation (https://sfdx-hardis.cloudity.com):
+ * same Cloudity palette, same self-hosted fonts, same table and link treatment. One thing
+ * is deliberately different so the two sites are never confused: the product leads with
+ * Cloudity blue and uses purple as its accent, the course swaps them and leads with
+ * Cloudity purple. Same brand colours, different lead, in both light and dark.
+ */
+
+/*
+ * Self-hosted web fonts. The theme's own font setting is disabled in mkdocs.yml, so nothing is
+ * fetched from fonts.googleapis.com or fonts.gstatic.com and no learner data leaves the site.
+ * Open Sans is the body font of cloudity.com. Its headings use Singolare, which is proprietary
+ * and not distributable, so headings fall back to Open Sans too.
+ * Both files are variable fonts: one file covers the whole weight range.
+ */
+@font-face {
+  font-family: "Open Sans";
+  font-style: normal;
+  font-weight: 300 800;
+  font-display: swap;
+  src: url("./fonts/open-sans-latin.woff2") format("woff2");
+}
+
+@font-face {
+  font-family: "Open Sans";
+  font-style: italic;
+  font-weight: 300 800;
+  font-display: swap;
+  src: url("./fonts/open-sans-latin-italic.woff2") format("woff2");
+}
+
+@font-face {
+  font-family: "JetBrains Mono";
+  font-style: normal;
+  font-weight: 100 800;
+  font-display: swap;
+  src: url("./fonts/jetbrains-mono-latin.woff2") format("woff2");
+}
+
+/*
+ * Cloudity brand palette, sampled from cloudity.com.
+ *   purple      #660FF2  primary / links / header, on the course site
+ *   blue        #0053FF  accent, on the course site
+ *   navy        #001135  headings and footer on the product site
+ *   plum        #1B0A3F  the purple-side counterpart of navy, header and footer here
+ *   surface     #F3F3F3  alternating section bands on cloudity.com
+ *   grey        #646E73  muted text
+ * White on #660FF2 measures 7.2:1, well above the 4.5:1 the WCAG AA text rule asks for.
+ * Dark mode lifts purple and blue so they keep contrast on plum.
+ *
+ * The light tokens are declared on the scheme attribute as well as on :root. The theme sets its
+ * own light values in a [data-md-color-scheme="default"] rule, which sits on <body>; a :root rule
+ * only reaches <html>, and body's own declaration would win over the inherited one. The dark block
+ * below needs no such pairing, it already targets the same element.
+ */
+:root,
+[data-md-color-scheme="default"] {
+  --cloudity-purple: #660FF2;
+  --cloudity-blue: #0053FF;
+  --cloudity-navy: #001135;
+  --cloudity-plum: #1B0A3F;
+  --cloudity-surface: #F3F3F3;
+  --cloudity-grey: #646E73;
+  --md-text-font: "Open Sans";
+  --md-code-font: "JetBrains Mono";
+  --md-text-font-family: "Open Sans", -apple-system, blinkmacsystemfont, "Segoe UI", roboto, "Helvetica Neue", arial, sans-serif;
+  --md-code-font-family: "JetBrains Mono", ui-monospace, sfmono-regular, menlo, consolas, monospace;
+  --md-primary-fg-color: var(--cloudity-purple);
+  --md-primary-fg-color--light: #8A46F5;
+  --md-primary-fg-color--dark: #4A0BB0;
+  --md-primary-bg-color: #FFF;
+  --md-primary-bg-color--light: rgb(255 255 255 / 70%);
+  --md-accent-fg-color: var(--cloudity-blue);
+  --md-accent-fg-color--transparent: rgb(0 83 255 / 10%);
+  --md-accent-bg-color: #FFF;
+  --md-default-bg-color: #FFF;
+  --md-default-fg-color: var(--cloudity-navy);
+  --md-default-fg-color--light: var(--cloudity-grey);
+  --md-default-fg-color--lighter: rgb(0 17 53 / 32%);
+  --md-default-fg-color--lightest: rgb(0 17 53 / 7%);
+  --md-typeset-a-color: var(--cloudity-purple);
+  --md-typeset-mark-color: rgb(0 83 255 / 18%);
+  --md-code-bg-color: var(--cloudity-surface);
+  --md-footer-bg-color: var(--cloudity-plum);
+  --md-footer-bg-color--dark: #120628;
+  --md-footer-fg-color: #FFF;
+  --md-footer-fg-color--light: rgb(255 255 255 / 76%);
+  --md-header-bg-color: var(--cloudity-purple);
+  --md-header-fg-color: #FFF;
+}
+
+[data-md-color-scheme="slate"] {
+  --md-hue: 265;
+  --md-primary-fg-color: #A87BFF;
+  --md-primary-fg-color--light: #C4A4FF;
+  --md-primary-fg-color--dark: var(--cloudity-purple);
+  --md-primary-bg-color: #FFF;
+  --md-primary-bg-color--light: rgb(255 255 255 / 70%);
+  --md-accent-fg-color: #4D8BFF;
+  --md-accent-fg-color--transparent: rgb(77 139 255 / 14%);
+  --md-default-bg-color: #0A0620;
+  --md-default-fg-color: #FFF;
+  --md-default-fg-color--light: #C2B8D9;
+  --md-default-fg-color--lighter: rgb(255 255 255 / 45%);
+  --md-default-fg-color--lightest: rgb(255 255 255 / 12%);
+  --md-typeset-a-color: #A87BFF;
+  --md-code-bg-color: #170C33;
+  --md-footer-bg-color: var(--cloudity-plum);
+  --md-footer-bg-color--dark: #120628;
+  --md-footer-fg-color: #FFF;
+  --md-footer-fg-color--light: rgb(255 255 255 / 76%);
+  --md-header-bg-color: var(--cloudity-plum);
+  --md-header-fg-color: #FFF;
+}
+
+/* Cloudity purple header in the light scheme, plum in the dark one so the bar stays comfortable
+   against a dark page. Both grounds are dark enough for white text, so the white wordmark serves
+   both and the footer keeps its plum. */
+.md-header,
+.md-tabs {
+  background-color: var(--cloudity-purple);
+  color: #FFF;
+}
+
+[data-md-color-scheme="slate"] .md-header,
+[data-md-color-scheme="slate"] .md-tabs {
+  background-color: var(--cloudity-plum);
+}
+
+.md-footer {
+  background-color: var(--cloudity-plum);
+}
+
+/* The header is dark in both schemes, so the search trigger keeps one light-on-dark treatment.
+   Zensical colors it from the default foreground tokens, which resolve to near-black in the
+   light scheme and would vanish against the purple bar. */
+.md-header .md-search__button {
+  color: #FFF;
+  background-color: rgb(255 255 255 / 14%);
+}
+
+.md-header .md-search__button:hover,
+.md-header .md-search__button:focus-visible {
+  background-color: rgb(255 255 255 / 24%);
+}
+
+/* Deliberately no background on .md-sidebar: the element is only as tall as its sticky
+   wrapper (44px), so painting it draws a stray band instead of a full column. */
+
+/* Force all sidebar/menu links in dark mode to be white for consistency */
+[data-md-color-scheme="slate"] .md-nav__link,
+[data-md-color-scheme="slate"] .md-nav__link--active,
+[data-md-color-scheme="slate"] .md-nav__item--active>.md-nav__link,
+[data-md-color-scheme="slate"] .md-nav__item--nested>.md-nav__link,
+[data-md-color-scheme="slate"] .md-nav__link:visited,
+[data-md-color-scheme="slate"] .md-nav__link:focus,
+[data-md-color-scheme="slate"] .md-nav__link:hover {
+  color: #fff !important;
+}
+
+.md-typeset__table {
+  min-width: 100%;
+}
+
+.md-typeset table:not([class]) {
+  display: table;
+}
+
+/* Tables on a phone.
+ *
+ * Several tables in this course carry five columns of prose, and at portrait
+ * width the browser answers by making every column one word wide, which is how
+ * the levels table on the home page ended up unreadable. Below the theme's
+ * medium breakpoint the wrapper scrolls instead, and each cell keeps enough
+ * width to hold a phrase, so a reader swipes a readable table rather than
+ * squinting at a column of single words. */
+@media screen and (max-width: 76.1875em) {
+  .md-typeset__table {
+    display: block;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .md-typeset__table > table {
+    min-width: 34rem;
+  }
+
+  .md-typeset__table th,
+  .md-typeset__table td {
+    min-width: 7rem;
+  }
+
+  /* The first column is the one you navigate by, so it gets more room */
+  .md-typeset__table th:first-child,
+  .md-typeset__table td:first-child {
+    min-width: 9rem;
+  }
+}
+
+/* light mode table header bgcolor */
+.md-typeset__table th {
+  background-color: #F0E8FF;
+}
+
+/* dark mode table header bgcolor */
+[data-md-color-scheme="slate"] .md-typeset__table th {
+  background-color: #170C33;
+}
+
+/* light mode alternating table bg colors */
+.md-typeset__table tr:nth-child(2n) {
+  background-color: var(--cloudity-surface);
+}
+
+/* dark mode alternating table bg colors */
+[data-md-color-scheme="slate"] .md-typeset__table tr:nth-child(2n) {
+  background-color: #170C33;
+}
+
+/* Improve link readability in dark mode */
+[data-md-color-scheme="slate"] a,
+[data-md-color-scheme="slate"] .md-typeset a {
+  color: #A87BFF;
+}
+
+[data-md-color-scheme="slate"] .md-typeset a:hover {
+  color: #4D8BFF;
+}
+
+/* Labs are read with a browser on one side and an IDE on the other, so screenshots are the
+   bulk of a page. Keeping them inside a frame stops a full-width capture from swamping the
+   text it illustrates. */
+.md-typeset img {
+  border-radius: 4px;
+  box-shadow: 0 1px 4px rgb(0 17 53 / 18%);
+}
+
+[data-md-color-scheme="slate"] .md-typeset img {
+  box-shadow: 0 1px 4px rgb(0 0 0 / 55%);
+}
+
+/* The "work in progress" banner above the header.
+
+   It has to read as a warning rather than as more chrome, so it takes the amber
+   the admonitions use for a caution instead of the header purple. Remove this
+   block together with site-overrides/main.html when the course is released. */
+.md-banner {
+  background-color: #ffb400;
+  color: #2b1a00;
+}
+
+.md-banner a,
+.md-banner a:hover {
+  color: #2b1a00;
+  text-decoration: underline;
+}
+
+[data-md-color-scheme="slate"] .md-banner {
+  background-color: #6b4a00;
+  color: #ffe9b0;
+}
+
+[data-md-color-scheme="slate"] .md-banner a,
+[data-md-color-scheme="slate"] .md-banner a:hover {
+  color: #ffe9b0;
+}
+
+.md-banner__inner {
+  font-size: 0.72rem;
+  margin: 0.6rem auto;
+}
+
+/* The footer band is plum in both schemes, but the theme paints the text inside it from the
+   page foreground token rather than from --md-footer-fg-color. In the light scheme that
+   resolves to navy on plum: about 1.1:1, so the previous and next links, the copyright and
+   the social icons were all there and none of them could be read. */
+.md-footer,
+.md-footer a,
+.md-footer .md-footer__title,
+.md-footer .md-ellipsis,
+.md-footer .md-copyright__highlight,
+.md-footer .md-social__link,
+.md-footer .md-footer__button {
+  color: var(--md-footer-fg-color);
+}
+
+.md-footer .md-footer__direction,
+.md-footer .md-copyright {
+  color: var(--md-footer-fg-color--light);
+}
+
+/* The theme pins the links in the bottom band to the page foreground with a selector
+   specific enough to win on its own, so this one has to match it shape for shape. */
+html .md-footer-meta.md-typeset a:not(:focus, :hover) {
+  color: var(--md-footer-fg-color);
+}
+
+.md-footer a:hover,
+.md-footer a:focus-visible,
+.md-footer .md-social__link:hover {
+  color: #FFF;
+}
+
+.md-footer .md-footer__link:hover .md-footer__direction,
+.md-footer .md-footer__link:focus-visible .md-footer__direction {
+  color: var(--md-footer-fg-color);
+}
+
+.md-footer-meta {
+  background-color: var(--md-footer-bg-color--dark);
+}
+
+/* Full screen viewer for the screenshots, driven by theme/javascripts/lightbox.js.
+   The pictures carry small text, so a click has to be able to blow one up. */
+.md-typeset a.glightbox,
+.md-typeset a.glightbox img {
+  cursor: zoom-in;
+}
+
+.sfh-lightbox {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 2.4rem 1.2rem 1.2rem;
+  background-color: rgb(0 8 26 / 88%);
+  cursor: zoom-out;
+  overscroll-behavior: contain;
+}
+
+.sfh-lightbox[hidden] {
+  display: none;
+}
+
+body.sfh-lightbox-open {
+  overflow: hidden;
+}
+
+.sfh-lightbox__figure {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.6rem;
+  max-width: 100%;
+  max-height: 100%;
+  margin: 0;
+}
+
+.sfh-lightbox__image {
+  max-width: 100%;
+  max-height: calc(100vh - 6rem);
+  object-fit: contain;
+  border-radius: 4px;
+  box-shadow: 0 4px 24px rgb(0 0 0 / 55%);
+  cursor: default;
+}
+
+.sfh-lightbox__caption {
+  max-width: 40rem;
+  color: rgb(255 255 255 / 82%);
+  font-size: 0.68rem;
+  line-height: 1.5;
+  text-align: center;
+}
+
+.sfh-lightbox__close {
+  position: absolute;
+  top: 0.8rem;
+  right: 0.8rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.9rem;
+  height: 1.9rem;
+  padding: 0;
+  color: #FFF;
+  background-color: rgb(255 255 255 / 14%);
+  border: 0;
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+.sfh-lightbox__close svg {
+  width: 1rem;
+  height: 1rem;
+}
+
+.sfh-lightbox__close:hover,
+.sfh-lightbox__close:focus-visible {
+  background-color: rgb(255 255 255 / 28%);
+}
+
+/* The "If it goes wrong" block.
+
+   scripts/build/site.mjs turns that section of every lab into a collapsed
+   admonition of this type. It is the one part of a lab nobody should read in
+   order: it lists the ways the step above it fails, and a reader whose step
+   worked wants the next instruction, not four paragraphs of symptoms. So it is
+   deliberately quiet, grey rather than a colour, and shut until it is needed. */
+:root {
+  --md-admonition-icon--troubleshoot: url('data:image/svg+xml;charset=utf-8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="4"/><path d="m4.93 4.93 4.24 4.24"/><path d="m14.83 9.17 4.24-4.24"/><path d="m14.83 14.83 4.24 4.24"/><path d="m9.17 14.83-4.24 4.24"/></svg>');
+}
+
+.md-typeset .admonition.troubleshoot,
+.md-typeset details.troubleshoot {
+  border-color: var(--cloudity-grey);
+  background-color: rgb(100 110 115 / 6%);
+}
+
+.md-typeset .troubleshoot > .admonition-title,
+.md-typeset .troubleshoot > summary {
+  background-color: rgb(100 110 115 / 12%);
+}
+
+.md-typeset .troubleshoot > .admonition-title::before,
+.md-typeset .troubleshoot > summary::before {
+  background-color: var(--cloudity-grey);
+  -webkit-mask-image: var(--md-admonition-icon--troubleshoot);
+  mask-image: var(--md-admonition-icon--troubleshoot);
+}
+
+.md-typeset .troubleshoot > .admonition-title::after,
+.md-typeset .troubleshoot > summary::after {
+  color: var(--cloudity-grey);
+}
+
+[data-md-color-scheme="slate"] .md-typeset .admonition.troubleshoot,
+[data-md-color-scheme="slate"] .md-typeset details.troubleshoot {
+  border-color: #8B96A0;
+  background-color: rgb(255 255 255 / 6%);
+}
+
+[data-md-color-scheme="slate"] .md-typeset .troubleshoot > summary,
+[data-md-color-scheme="slate"] .md-typeset .troubleshoot > .admonition-title {
+  background-color: rgb(255 255 255 / 10%);
+}
+
+[data-md-color-scheme="slate"] .md-typeset .troubleshoot > summary::before,
+[data-md-color-scheme="slate"] .md-typeset .troubleshoot > .admonition-title::before,
+[data-md-color-scheme="slate"] .md-typeset .troubleshoot > summary::after {
+  background-color: #C2B8D9;
+  color: #C2B8D9;
+}
+
+/* The language picker, on flags.
+ *
+ * The header button carries the flag of the page being read, and each entry of
+ * the list carries its own, so a reader recognises the language before reading
+ * the name. The button is the theme's, minus the icon sizing it applies to an
+ * SVG glyph, because what sits in it here is a picture.
+ */
+.md-header__button--flag {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0.2rem;
+  padding: 0.4rem;
+  border: none;
+  background: none;
+  cursor: pointer;
+}
+
+.md-select__flag {
+  width: 1.2rem;
+  height: 0.6rem;
+  border-radius: 0.05rem;
+  box-shadow: 0 0 0 1px rgb(0 0 0 / 15%);
+  object-fit: cover;
+}
+
+.md-select__flag--current {
+  width: 1.1rem;
+  height: 0.55rem;
+}
+
+.md-select__link .md-select__flag {
+  margin-right: 0.5rem;
+  vertical-align: middle;
+}
+
+/*
+ * The post a badge page offers to copy. It is prose in a code block, for the
+ * copy button, so it wraps like prose instead of scrolling sideways.
+ */
+.badge-post pre code {
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+/* Generated by scripts/build/site.mjs from the annotate.mjs palette. */
+.pill-ref { font-weight: 700; white-space: nowrap; }
+.pill-ref-1 { color: #e5322d; }
+.pill-ref-2 { color: #0b72d9; }
+.pill-ref-3 { color: #e08800; }
+.pill-ref-4 { color: #128a4a; }
+.pill-ref-5 { color: #8a37c9; }
+.pill-ref-6 { color: #c2185b; }
+.pill-ref-7 { color: #00838f; }
+.pill-ref-8 { color: #5d4037; }
+.pill-ref-9 { color: #3949ab; }
+.pill-ref-10 { color: #455a64; }
+[data-md-color-scheme="slate"] .pill-ref {
+  filter: brightness(1.7) saturate(0.85);
+}

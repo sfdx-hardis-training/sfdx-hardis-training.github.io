@@ -1,0 +1,35 @@
+{
+  "recipient": "clemfernandez",
+  "badges": [
+    {
+      "type": "Achievement",
+      "level": 1,
+      "name": "sfdx-hardis Contributor Basics",
+      "description": "Delivers a User Story through a Pull Request, end to end.",
+      "issuer": {
+        "name": "Cloudity",
+        "url": "https://cloudity.com",
+        "course": "https://sfdx-hardis-training.github.io"
+      },
+      "issuedOn": "2026-10-05",
+      "evidence": [
+        {
+          "type": "Repository",
+          "url": "https://github.com/clemfernandez/sfdx-hardis-training.git"
+        },
+        {
+          "type": "ClaimIssue",
+          "url": "https://github.com/hardisgroupcom/sfdx-hardis-training/issues/81"
+        }
+      ],
+      "image": "https://sfdx-hardis-training.github.io/badges/img/clementfernandez-level-1.svg",
+      "bannerImage": "https://sfdx-hardis-training.github.io/badges/img/banner-level-1.svg",
+      "superbadge": false,
+      "checksPassed": 6,
+      "checksTotal": 6
+    }
+  ],
+  "trailblazer": "clementfernandez",
+  "name": "Clément Fernandez",
+  "trailblazerName": "Clément Fernandez"
+}
