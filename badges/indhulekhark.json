@@ -1,0 +1,36 @@
+{
+  "recipient": "indhu111",
+  "badges": [
+    {
+      "type": "Achievement",
+      "level": 1,
+      "name": "sfdx-hardis Contributor Basics",
+      "description": "Delivers a User Story through a Pull Request, end to end.",
+      "issuer": {
+        "name": "Cloudity",
+        "url": "https://cloudity.com",
+        "course": "https://sfdx-hardis-training.cloudity.com"
+      },
+      "issuedOn": "2026-10-17",
+      "issuedAt": "2026-10-17T09:19:30Z",
+      "evidence": [
+        {
+          "type": "Repository",
+          "url": "https://github.com/indhu111/sfdx-hardis-training.git"
+        },
+        {
+          "type": "ClaimIssue",
+          "url": "https://github.com/hardisgroupcom/sfdx-hardis-training/issues/181"
+        }
+      ],
+      "image": "https://sfdx-hardis-training.cloudity.com/badges/img/indhulekhark-level-1.svg",
+      "bannerImage": "https://sfdx-hardis-training.cloudity.com/badges/img/banner-level-1.svg",
+      "superbadge": false,
+      "checksPassed": 6,
+      "checksTotal": 6
+    }
+  ],
+  "trailblazer": "indhulekhark",
+  "name": "Indhulekha R Krishnan",
+  "trailblazerName": "Indhulekha R Krishnan"
+}
