@@ -1,0 +1,106 @@
+{
+  "version": 1,
+  "updatedAt": "2026-10-23T13:40:29.000Z",
+  "banned": [],
+  "players": {
+    "nvuillam": {
+      "handle": "nvuillam",
+      "badge": 3,
+      "firstSubmittedAt": "2026-10-22T19:27:29.000Z",
+      "submittedAt": "2026-10-23T13:40:29.000Z",
+      "issue": 269,
+      "worlds": {
+        "0": {
+          "score": 16592,
+          "stars": 1,
+          "bossMs": 66108,
+          "mode": "hard",
+          "legacy": false,
+          "at": "2026-10-22T21:20:29.421Z"
+        },
+        "1": {
+          "score": 14790,
+          "stars": 1,
+          "bossMs": 5789,
+          "mode": "hard",
+          "legacy": false,
+          "at": "2026-10-23T05:22:10.507Z"
+        },
+        "2": {
+          "score": 9540,
+          "stars": 3,
+          "bossMs": null,
+          "mode": "easy",
+          "legacy": true,
+          "at": "2026-10-22T19:27:29.000Z"
+        },
+        "3": {
+          "score": 3230,
+          "stars": 1,
+          "bossMs": null,
+          "mode": "easy",
+          "legacy": true,
+          "at": "2026-10-22T19:27:29.000Z"
+        },
+        "4": {
+          "score": 32890,
+          "stars": 2,
+          "bossMs": 96390,
+          "mode": "hard",
+          "legacy": false,
+          "at": "2026-10-23T05:24:25.498Z"
+        },
+        "5": {
+          "score": 2812,
+          "stars": 2,
+          "bossMs": null,
+          "mode": "easy",
+          "legacy": true,
+          "at": "2026-10-22T19:27:29.000Z"
+        },
+        "6": {
+          "score": 8936,
+          "stars": 2,
+          "bossMs": null,
+          "mode": "easy",
+          "legacy": true,
+          "at": "2026-10-22T19:27:29.000Z"
+        },
+        "7": {
+          "score": 10504,
+          "stars": 1,
+          "bossMs": 86750,
+          "mode": "hard",
+          "legacy": false,
+          "at": "2026-10-23T05:27:02.761Z"
+        },
+        "8": {
+          "score": 5123,
+          "stars": 3,
+          "bossMs": null,
+          "mode": "easy",
+          "legacy": true,
+          "at": "2026-10-22T19:27:29.000Z"
+        },
+        "9": {
+          "score": 8810,
+          "stars": 1,
+          "bossMs": null,
+          "mode": "easy",
+          "legacy": true,
+          "at": "2026-10-22T19:27:29.000Z"
+        }
+      },
+      "total": 113227,
+      "stars": 17,
+      "pinball": {
+        "score": 15247350,
+        "ms": 343002,
+        "level": 1,
+        "missions": 1,
+        "notes": 1,
+        "at": "2026-10-23T13:40:20.610Z"
+      }
+    }
+  }
+}

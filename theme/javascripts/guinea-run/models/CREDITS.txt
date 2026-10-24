@@ -1,0 +1,28 @@
+Guinea Run models
+
+guinea-pig.glb
+  Built from code in Blender by scripts/blender/guinea-pig.py. Part of this repository.
+
+vegetables.glb
+  Fennel, carrot, bell pepper, cucumber, romaine and parsley, the bonus
+  pickups, and the mushroom that makes the guinea pig giant in world 1, built
+  from code in Blender by scripts/blender/vegetables.py. Part of this
+  repository.
+
+data-cloud.glb
+  The Data Cloud rabbit, the boss at the end of world 8, built from code in
+  Blender by scripts/blender/data-cloud.py after the Data Cloud mascot. Part
+  of this repository.
+
+salesforce.glb
+  The Salesforce and sfdx-hardis items of the game (org cloud, custom field,
+  permission set, Flow, Apex, package.xml, checks...), built from code in
+  Blender by scripts/blender/salesforce-items.py, with the Cloudity logo and
+  the sfdx-hardis badge mark extruded from site-theme/images. Part of this
+  repository.
+
+office.glb, platform.glb, nature.glb
+  Models from Kenney's Furniture Kit, Platformer Kit and Nature Kit
+  (https://kenney.nl), released under Creative Commons Zero (CC0), see
+  KENNEY-LICENSE.txt. Merged into one file per theme by
+  scripts/blender/kenney-packs.py.

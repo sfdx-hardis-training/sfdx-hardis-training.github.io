@@ -1,0 +1,2901 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Release through preprod to your production org, verify it, then read deployment frequency, lead time and failure rate in the DORA metrics panel.">
+      
+      
+      
+        <link rel="canonical" href="https://sfdx-hardis-training.cloudity.com/en/level-3-release-manager/3-6-release-to-production-and-read-dora-metrics/">
+      
+      
+      
+        <link rel="prev" href="../3-5-promote-to-uat-and-write-release-notes/">
+      
+      
+        <link rel="next" href="../3-7-hotfix-and-retrofit/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../../theme/images/badge-mark.svg">
+      <meta name="generator" content="zensical-0.0.72">
+    
+    
+      
+        <title>Lab 3.6 - Release to production and read your DORA metrics - Salesforce DevOps with sfdx-hardis</title>
+      
+    
+    
+      
+        
+      
+      <link rel="stylesheet" href="../../../assets/stylesheets/modern/main.4ab2de0c.min.css">
+      
+        
+          
+        
+        <link rel="stylesheet" href="../../../assets/stylesheets/modern/palette.b60ce83d.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+    
+    
+      <link rel="stylesheet" href="../../../theme/stylesheets/extra.css">
+    
+    <script>__md_scope=new URL("../../..",location),__md_scope.pathname.endsWith("/")||(__md_scope=new URL(__md_scope.pathname+"/",location)),__md_hash=e=>[...e].reduce(((e,t)=>(e<<5)-e+t.charCodeAt(0)),0),__md_get=(e,t=localStorage,_=__md_scope)=>JSON.parse(t.getItem(_.pathname+"."+e)),__md_set=(e,t,_=localStorage,a=__md_scope)=>{try{_.setItem(a.pathname+"."+e,JSON.stringify(t))}catch(e){}},document.documentElement.setAttribute("data-platform",navigator.platform)</script>
+    
+      
+  
+
+
+  
+  
+
+<script id="__analytics">function __md_analytics(){function e(){dataLayer.push(arguments)}window.dataLayer=window.dataLayer||[],e("js",new Date),e("config","G-SE20CZ58E1"),document.addEventListener("DOMContentLoaded",(function(){document.forms.search&&document.forms.search.query.addEventListener("blur",(function(){this.value&&e("event","search",{search_term:this.value})}));document$.subscribe((function(){var t=document.forms.feedback;if(void 0!==t)for(var a of t.querySelectorAll("[type=submit]"))a.addEventListener("click",(function(a){a.preventDefault();var n=document.location.pathname,d=this.getAttribute("data-md-value");e("event","feedback",{page:n,data:d}),t.firstElementChild.disabled=!0;var r=t.querySelector(".md-feedback__note [data-md-value='"+d+"']");r&&(r.hidden=!1)})),t.hidden=!1})),location$.subscribe((function(t){e("config","G-SE20CZ58E1",{page_path:t.pathname})}))}));var t=document.createElement("script");t.async=!0,t.src="https://www.googletagmanager.com/gtag/js?id=G-SE20CZ58E1",document.getElementById("__analytics").insertAdjacentElement("afterEnd",t)}</script>
+  
+    <script>"undefined"!=typeof __md_analytics&&__md_analytics()</script>
+  
+
+    
+    
+  
+  
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Salesforce DevOps with sfdx-hardis">
+  <meta property="og:locale" content="en">
+  <meta property="og:title" content="Lab 3.6 - Release to production and read your DORA metrics">
+  <meta property="og:description" content="Release through preprod to your production org, verify it, then read deployment frequency, lead time and failure rate in the DORA metrics panel.">
+  <meta property="og:url" content="https://sfdx-hardis-training.cloudity.com/en/level-3-release-manager/3-6-release-to-production-and-read-dora-metrics/">
+  <meta property="og:image" content="https://sfdx-hardis-training.cloudity.com/_assets/social/course.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="Lab 3.6 - Release to production and read your DORA metrics">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Lab 3.6 - Release to production and read your DORA metrics">
+  <meta name="twitter:description" content="Release through preprod to your production org, verify it, then read deployment frequency, lead time and failure rate in the DORA metrics panel.">
+  <meta name="twitter:image" content="https://sfdx-hardis-training.cloudity.com/_assets/social/course.png">
+
+  <script>
+    (function () {
+      var here = "en";
+      var alternates = {"en":"en/level-3-release-manager/3-6-release-to-production-and-read-dora-metrics/","fr":"fr/level-3-release-manager/3-6-release-to-production-and-read-dora-metrics/"};
+      var base = new URL("../../.." || ".", window.location.href).pathname;
+      try {
+        var asked = new URLSearchParams(window.location.search).get("lang");
+        if (asked) {
+          document.cookie =
+            "course-language=" + encodeURIComponent(asked) + "; path=" + base + "; max-age=31536000; samesite=lax";
+        }
+        var cookie = document.cookie.split("; ").filter(function (one) {
+          return one.indexOf("course-language=") === 0;
+        })[0];
+        if (!cookie) {
+          return;
+        }
+        var preferred = asked || decodeURIComponent(cookie.slice("course-language=".length));
+        if (!preferred || preferred === here) {
+          return;
+        }
+        var target = alternates[preferred];
+        if (typeof target !== "string") {
+          return;
+        }
+        var url = new URL(target, new URL(base, window.location.href)).pathname;
+        if (url !== window.location.pathname) {
+          window.location.replace(url + window.location.search + window.location.hash);
+        }
+      } catch (error) {
+        // A browser with no cookies stays where it is, which is the page asked for
+      }
+    })();
+  </script>
+
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="custom" data-md-color-accent="custom">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer" aria-hidden="true"></label>
+    <div data-md-component="skip">
+      <a href="#__skip" class="md-skip">
+        Skip to content
+      </a>
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="/" title="Salesforce DevOps with sfdx-hardis" class="md-header__button md-logo" aria-label="Salesforce DevOps with sfdx-hardis" data-md-component="logo">
+      
+  <img src="../../../theme/images/cloudity-text-logo-white.svg" alt="Salesforce DevOps with sfdx-hardis">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer" aria-label="Navigation">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-menu" viewBox="0 0 24 24"><path d="M4 5h16M4 12h16M4 19h16"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Salesforce DevOps with sfdx-hardis
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Lab 3.6 - Release to production and read your DORA metrics
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="none" data-md-color-scheme="default" data-md-color-primary="custom" data-md-color-accent="custom"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="none" data-md-color-scheme="slate" data-md-color-primary="custom" data-md-color-accent="custom"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+      
+
+
+
+  
+    
+    
+  
+
+  
+
+<div class="md-header__option">
+  <div class="md-select md-select--language">
+    <button class="md-header__button md-header__button--flag" aria-label="Select language">
+      
+        <img src="../../../theme/images/flags/gb.svg" alt="English" class="md-select__flag md-select__flag--current">
+      
+    </button>
+    <div class="md-select__inner">
+      <ul class="md-select__list">
+        
+          
+          <li class="md-select__item"><a href="././" hreflang="en" data-course-home="/" class="md-select__link">
+              
+                <img src="../../../theme/images/flags/gb.svg" alt="" class="md-select__flag">
+              
+              English
+            </a>
+          </li>
+        
+          
+          <li class="md-select__item"><a href="../../../fr/level-3-release-manager/3-6-release-to-production-and-read-dora-metrics/" hreflang="fr" data-course-home="/fr/" class="md-select__link">
+              
+                <img src="../../../theme/images/flags/fr.svg" alt="" class="md-select__flag">
+              
+              Français
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</div>
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search" aria-label="Search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-search" viewBox="0 0 24 24"><path d="m21 21-4.34-4.34"/><circle cx="11" cy="11" r="8"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog" aria-label="Search">
+  <button type="button" class="md-search__button">
+    Search
+  </button>
+</div>
+      
+    
+    <div class="md-header__source">
+      
+        <a href="https://github.com/hardisgroupcom/sfdx-hardis-training" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.3.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2026 Fonticons, Inc.--><path fill="currentColor" d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    hardisgroupcom/sfdx-hardis-training
+  </div>
+</a>
+      
+    </div>
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0" data-course-lang="en" data-course-base="../../.." data-course-alt-en="en/level-3-release-manager/3-6-release-to-production-and-read-dora-metrics/" data-course-alt-fr="fr/level-3-release-manager/3-6-release-to-production-and-read-dora-metrics/">
+  <label class="md-nav__title" for="__drawer">
+    <a href="/" title="Salesforce DevOps with sfdx-hardis" class="md-nav__button md-logo" aria-label="Salesforce DevOps with sfdx-hardis" data-md-component="logo">
+      
+  <img src="../../../theme/images/cloudity-text-logo-white.svg" alt="Salesforce DevOps with sfdx-hardis">
+
+    </a>
+    Salesforce DevOps with sfdx-hardis
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/hardisgroupcom/sfdx-hardis-training" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.3.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2026 Fonticons, Inc.--><path fill="currentColor" d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    hardisgroupcom/sfdx-hardis-training
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+      
+      
+        
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Home
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+      
+    
+      
+      
+      
+      
+        
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Level 1 - Contributor basics
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        
+          <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+            <label class="md-nav__title" for="__nav_2">
+              <span class="md-nav__icon md-icon"></span>
+              
+  
+  Level 1 - Contributor basics
+
+            </label>
+            <ul class="md-nav__list" data-md-scrollfix>
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../level-1-contributor-basics/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Start here
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../level-1-contributor-basics/1-1-install-vs-code-and-sfdx-hardis/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Lab 1.1 - Install VS Code, Git and sfdx-hardis
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../level-1-contributor-basics/1-2-create-your-dev-hub-scratch-orgs-and-pipeline/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Lab 1.2 - Create your Dev Hub, scratch orgs and CI/CD pipeline
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../level-1-contributor-basics/1-3-start-a-user-story-on-a-git-branch/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Lab 1.3 - Start a User Story on its own Git branch
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../level-1-contributor-basics/1-4-build-a-custom-field-in-your-org/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Lab 1.4 - Build a custom field in your Salesforce org
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../level-1-contributor-basics/1-5-retrieve-commit-and-publish-your-changes/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Lab 1.5 - Retrieve, commit and publish your Salesforce changes
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../level-1-contributor-basics/1-6-pull-request-deployment-check-and-merge/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Lab 1.6 - Open a Pull Request, pass the deployment check, merge
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../level-1-contributor-basics/1-7-capstone-deliver-a-user-story-on-your-own/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Lab 1.7 - Capstone: deliver a User Story on your own
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+            </ul>
+          </nav>
+        
+      
+    </li>
+  
+
+      
+    
+      
+      
+      
+      
+        
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Level 2 - Contributor advanced
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        
+          <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+            <label class="md-nav__title" for="__nav_3">
+              <span class="md-nav__icon md-icon"></span>
+              
+  
+  Level 2 - Contributor advanced
+
+            </label>
+            <ul class="md-nav__list" data-md-scrollfix>
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../level-2-contributor-advanced/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Start here
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../level-2-contributor-advanced/2-1-backpromote-your-teammates-work/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Lab 2.1 - Backpromote: catch your dev org up with the team
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../level-2-contributor-advanced/2-2-fix-a-missing-dependency-deployment-error/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Lab 2.2 - Fix a deployment error caused by a missing dependency
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../level-2-contributor-advanced/2-3-fix-broken-records-with-an-apex-deployment-action/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Lab 2.3 - Fix broken records with an Apex deployment action
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../level-2-contributor-advanced/2-4-ship-reference-data-and-a-batch-with-deployment-actions/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Lab 2.4 - Ship reference data and a batch with deployment actions
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../level-2-contributor-advanced/2-5-pass-code-quality-and-apex-test-coverage/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Lab 2.5 - Pass the code quality gate and Apex test coverage
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../level-2-contributor-advanced/2-6-permission-sets-and-profiles/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Lab 2.6 - Permission sets, profiles and why a grant disappears
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../level-2-contributor-advanced/2-7-resolve-a-git-merge-conflict/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Lab 2.7 - Resolve a Git merge conflict with a teammate
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../level-2-contributor-advanced/2-8-recover-from-committing-the-wrong-metadata/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Lab 2.8 - Recover from committing the wrong metadata
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../level-2-contributor-advanced/2-9-capstone-deliver-a-user-story-that-has-it-all/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Lab 2.9 - Capstone: deliver a User Story that has it all
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+            </ul>
+          </nav>
+        
+      
+    </li>
+  
+
+      
+    
+      
+      
+      
+      
+        
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Level 3 - Release Manager
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        
+          <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="true">
+            <label class="md-nav__title" for="__nav_4">
+              <span class="md-nav__icon md-icon"></span>
+              
+  
+  Level 3 - Release Manager
+
+            </label>
+            <ul class="md-nav__list" data-md-scrollfix>
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Start here
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../3-1-configure-the-pipeline-up-to-production/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Lab 3.1 - Configure the CI/CD pipeline up to production
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../3-2-review-a-contributor-pull-request/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Lab 3.2 - Review and merge a contributor Pull Request
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../3-3-deploy-to-integration-and-read-the-log/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Lab 3.3 - Read the deployment log, and what .forceignore hides from it
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../3-4-merge-colliding-pull-requests/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Lab 3.4 - Three Pull Requests in one release: review the merge order
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../3-5-promote-to-uat-and-write-release-notes/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Lab 3.5 - Promote to UAT and write the release notes
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Lab 3.6 - Release to production and read your DORA metrics
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="././" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Lab 3.6 - Release to production and read your DORA metrics
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+
+<nav class="md-nav md-nav--secondary" aria-label="On this page">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      On this page
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#the-situation" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        The situation
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#before-you-start" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Before you start
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#steps" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Steps
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Steps">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-check-the-three-things-that-are-worth-checking" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        1. Check the three things that are worth checking
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-rehearse-in-preprod" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        2. Rehearse in preprod
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-create-the-production-pull-request" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        3. Create the production Pull Request
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#4-read-the-check-like-it-matters" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        4. Read the check like it matters
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#5-merge-and-stay" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        5. Merge, and stay
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#6-verify-in-production" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        6. Verify in production
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#7-now-measure-the-pipeline" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        7. Now measure the pipeline
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#8-read-what-is-there-and-know-what-is-missing" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        8. Read what is there, and know what is missing
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#9-keep-the-baseline" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        9. Keep the baseline
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#what-you-should-see" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        What you should see
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#check-your-work" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Check your work
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#go-deeper" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Go deeper
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../3-7-hotfix-and-retrofit/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Lab 3.7 - Production is broken: hotfix and retrofit
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../3-8-monitor-your-production-org/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Lab 3.8 - Monitor your production org
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../3-9-generate-the-project-documentation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Lab 3.9 - Generate the Salesforce project documentation
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../3-10-promote-a-subset-with-promotion-branches/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Lab 3.10 - Promote a subset with promotion branches (Beta)
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+                
+                  
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../3-11-capstone-run-a-weekly-release-cycle/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Lab 3.11 - Capstone: run a weekly release cycle
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+                
+              
+            </ul>
+          </nav>
+        
+      
+    </li>
+  
+
+      
+    
+      
+      
+      
+      
+        
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../help/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Help
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+      
+    
+      
+      
+      
+      
+        
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../BACKLOG/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Backlog
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+      
+    
+      
+      
+      
+      
+        
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../badges/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Badges
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+      
+    
+      
+      
+      
+      
+        
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../stats/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Statistics
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+      
+    
+      
+      
+      
+      
+        
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../hall-of-fame/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Hall of Fame
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+      
+    
+      
+      
+      
+        
+      
+      
+        
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="https://cloudity.com/?utm_source=sfdx-hardis-training&utm_medium=referral&utm_campaign=menu" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Cloudity
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+      
+    
+      
+      
+      
+      
+    
+      
+      
+      
+      
+    
+      
+      
+      
+      
+    
+      
+      
+      
+      
+    
+      
+      
+      
+      
+    
+      
+      
+      
+      
+    
+      
+      
+      
+      
+    
+      
+      
+      
+      
+    
+      
+      
+      
+      
+    
+      
+      
+      
+        
+      
+      
+    
+      
+      
+      
+      
+        
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="https://sfdx-hardis.cloudity.com/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  sfdx-hardis documentation
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+      
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  
+                    
+                    
+                    
+                      
+                    
+                    
+                      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+                      <div class="md-sidebar-button__wrapper">
+                        <label class="md-sidebar-button" for="__toc"></label>
+                      </div>
+                    
+                  
+                  <div class="md-sidebar__inner">
+                    
+
+
+<nav class="md-nav md-nav--secondary" aria-label="On this page">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      On this page
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#the-situation" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        The situation
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#before-you-start" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Before you start
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#steps" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Steps
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Steps">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-check-the-three-things-that-are-worth-checking" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        1. Check the three things that are worth checking
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-rehearse-in-preprod" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        2. Rehearse in preprod
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-create-the-production-pull-request" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        3. Create the production Pull Request
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#4-read-the-check-like-it-matters" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        4. Read the check like it matters
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#5-merge-and-stay" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        5. Merge, and stay
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#6-verify-in-production" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        6. Verify in production
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#7-now-measure-the-pipeline" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        7. Now measure the pipeline
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#8-read-what-is-there-and-know-what-is-missing" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        8. Read what is there, and know what is missing
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#9-keep-the-baseline" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        9. Keep the baseline
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#what-you-should-see" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        What you should see
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#check-your-work" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Check your work
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#go-deeper" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Go deeper
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                <a id="__skip" tabindex="-1"></a>
+                
+                  
+
+  
+    <a href="https://github.com/hardisgroupcom/sfdx-hardis-training/edit/main/labs/en/level-3-release-manager/3-6-release-to-production-and-read-dora-metrics.md" title="Edit this page" class="md-content__button md-icon" rel="edit">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-file-pen" viewBox="0 0 24 24"><path d="M12.659 22H18a2 2 0 0 0 2-2V8a2.4 2.4 0 0 0-.706-1.706l-3.588-3.588A2.4 2.4 0 0 0 14 2H6a2 2 0 0 0-2 2v9.34"/><path d="M14 2v5a1 1 0 0 0 1 1h5M10.378 12.622a1 1 0 0 1 3 3.003L8.36 20.637a2 2 0 0 1-.854.506l-2.867.837a.5.5 0 0 1-.62-.62l.836-2.869a2 2 0 0 1 .506-.853z"/></svg>
+    </a>
+  
+  
+
+
+<h1 id="lab-36-release-to-production-and-read-your-dora-metrics">Lab 3.6 - Release to production and read your DORA metrics<a class="headerlink" href="#lab-36-release-to-production-and-read-your-dora-metrics" title="Permanent link">&para;</a></h1>
+<div class="lab-meta">
+<p><strong>Level</strong>: 3 Release Manager</p>
+<p><strong>Time</strong>: ~1 h<!-- observed --> (observed: median 1 h 01, 7 learners, fastest 20 min)<!-- /observed --></p>
+<p><strong>You will</strong>: release to production, and then measure whether your pipeline is any good.</p>
+</div>
+<h2 id="the-situation">The situation<a class="headerlink" href="#the-situation" title="Permanent link">&para;</a></h2>
+<p>UAT signed off. The release goes to production this evening.</p>
+<p>This is the same mechanism as <a href="../3-5-promote-to-uat-and-write-release-notes/">Lab 3.5</a>, twice: <code>uat</code> into <code>preprod</code>, then <code>preprod</code> into <code>main</code>. With one
+difference that is not technical: if you get it wrong, real people cannot do their jobs tomorrow.
+Everything in this lab that looks like ceremony is there because somebody skipped it once.</p>
+<h2 id="before-you-start">Before you start<a class="headerlink" href="#before-you-start" title="Permanent link">&para;</a></h2>
+<ul class="task-list">
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <a href="../3-5-promote-to-uat-and-write-release-notes/">Lab 3.5</a> finished: <code>uat</code> carries the release and the testers signed it off</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>helios-preprod</code> and <code>helios-prod</code> connected, seeded, and configured as the <code>preprod</code> and
+      <code>main</code> orgs in Lab 3.1</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> JWT authentication working for <code>preprod</code> and <code>main</code></li>
+</ul>
+<h2 id="steps">Steps<a class="headerlink" href="#steps" title="Permanent link">&para;</a></h2>
+<h3 id="1-check-the-three-things-that-are-worth-checking">1. Check the three things that are worth checking<a class="headerlink" href="#1-check-the-three-things-that-are-worth-checking" title="Permanent link">&para;</a></h3>
+<div class="step-head">
+<p class="step-head-line step-head-goal"><span class="step-head-key">Goal</span> <span class="step-head-text">three answers before you create anything: UAT signed off, the manual steps known, production where you think it is.</span></p>
+<p class="step-head-line step-head-refresher"><span class="step-head-key">Refresher</span> <span class="step-head-text"><a href="../3-5-promote-to-uat-and-write-release-notes/">Lab 3.5</a></span></p>
+</div>
+<p>Before creating anything:</p>
+<div class="blk blk-do">
+<p class="blk-label">Do</p>
+<ol>
+<li>One: is UAT genuinely signed off? Not "the deployment was green". Somebody tested it and said
+   yes. On this project that person is you, and you did it in <a href="../3-5-promote-to-uat-and-write-release-notes/#6-verify-with-a-testers-eyes">Lab 3.5 step 6</a></li>
+<li>Two: what manual steps will this carry? Look at the deployment actions of the stories going out</li>
+<li>Three: is production where you think it is? Open <code>helios-prod</code> and look</li>
+</ol>
+</div>
+<div class="blk blk-why">
+<p class="blk-label">Why</p>
+<p>A manual step in production is something you will do, live, in front of nobody, at whatever time the
+release is. Know about it now.</p>
+<p>On a real project, admins change production by hand between two releases, and <a href="../3-7-hotfix-and-retrofit/">Lab 3.7</a> is about
+exactly that. Assume nothing.</p>
+</div>
+<div class="blk blk-check">
+<p class="blk-label">You should now see</p>
+<ul>
+<li>The manual steps of the release, known before you create anything</li>
+<li><code>helios-prod</code> carrying what the course seeded into it and nothing else yet</li>
+</ul>
+</div>
+<h3 id="2-rehearse-in-preprod">2. Rehearse in preprod<a class="headerlink" href="#2-rehearse-in-preprod" title="Permanent link">&para;</a></h3>
+<div class="step-head">
+<p class="step-head-line step-head-goal"><span class="step-head-key">Goal</span> <span class="step-head-text">the release deployed to <code>helios-preprod</code> and checked there, before production.</span></p>
+<p class="step-head-line step-head-refresher"><span class="step-head-key">Refresher</span> <span class="step-head-text"><a href="../3-5-promote-to-uat-and-write-release-notes/">Lab 3.5</a> <a href="../3-1-configure-the-pipeline-up-to-production/">Lab 3.1</a></span></p>
+</div>
+<div class="blk blk-do">
+<p class="blk-label">Do</p>
+<ol>
+<li>Click the <strong>+ PR</strong> chip on the arrow from <code>uat</code> to <code>preprod</code>, in the DevOps Pipeline diagram, the
+   same way you created the promotion in <a href="../3-5-promote-to-uat-and-write-release-notes/">Lab 3.5</a>. GitHub opens on the Pull Request from <code>uat</code> into
+   <code>preprod</code></li>
+<li>
+<p>Title it plainly:</p>
+<blockquote>
+<p>Promotion 2026-09 to preprod</p>
+</blockquote>
+</li>
+<li>
+<p>Look at the first JWT login of the course once: open the check from <strong>Checks</strong>, expand <strong>Login &amp;
+   Simulate deployment</strong>, and look for <code>sf org login jwt</code></p>
+</li>
+<li>Its first check stops red, on purpose. Do the click of the deliverability step of US-026 in
+   <code>helios-preprod</code></li>
+<li>Tick its box in the sfdx-hardis comment (or <strong>Mark as done in preprod</strong> in the VS Code
+   <strong>Deployment Actions</strong> tab), then <strong>Re-run all jobs</strong> on the check. It goes green</li>
+<li>Read the check, merge, and watch the <strong>Process Deployment (sfdx-hardis)</strong> run on <code>preprod</code></li>
+<li>Open <code>helios-preprod</code> and do the checks of step 6 there first</li>
+</ol>
+</div>
+<div class="blk blk-why">
+<p class="blk-label">Why</p>
+<p>Its check job is the first one to log into <code>helios-preprod</code>, and it does so with the key and the
+secrets of <a href="../3-1-configure-the-pipeline-up-to-production/">Lab 3.1</a>. The <code>sf org login jwt</code> line, and the job carrying on past it, are your
+<code>preprod</code> key working, even on the first run, which stops red further down for another reason.</p>
+<p>That reason is the one of the promotion to <code>uat</code> in <a href="../3-5-promote-to-uat-and-write-release-notes/">Lab 3.5 step 4</a>: the deliverability step of US-026
+runs before the deployment, and nobody has done it in <code>helios-preprod</code>.</p>
+<p>This is what <code>preprod</code> is for. It holds what production holds, nobody works in it, and a release
+that deploys there cleanly and behaves has very little left to surprise you with in production. A
+release that fails here has cost you nothing.</p>
+</div>
+<div class="blk blk-check">
+<p class="blk-label">You should now see</p>
+<ul>
+<li><code>sf org login jwt</code> in the log of the check, and the job carrying on past it</li>
+<li>A green <strong>Process Deployment (sfdx-hardis)</strong> run on <code>preprod</code>, and the release behaving in
+  <code>helios-preprod</code></li>
+</ul>
+</div>
+<h3 id="3-create-the-production-pull-request">3. Create the production Pull Request<a class="headerlink" href="#3-create-the-production-pull-request" title="Permanent link">&para;</a></h3>
+<div class="step-head">
+<p class="step-head-line step-head-goal"><span class="step-head-key">Goal</span> <span class="step-head-text">the production Pull Request from <code>preprod</code> into <code>main</code>, with a green check to read.</span></p>
+</div>
+<div class="blk blk-do">
+<p class="blk-label">Do</p>
+<ol>
+<li>Click the <strong>+ PR</strong> chip on the arrow from <code>preprod</code> to <code>main</code>, from <code>preprod</code> into <code>main</code></li>
+<li>
+<p>Title it plainly:</p>
+<blockquote>
+<p>Release 2026-09 to production</p>
+</blockquote>
+</li>
+<li>
+<p>In the log of its check job, look for <code>sf org login jwt</code>, as in step 2</p>
+</li>
+<li>Its first check stops red for the same reason as in step 2. Do the click in production, tick the
+   box, and click <strong>Re-run all jobs</strong></li>
+</ol>
+</div>
+<div class="blk blk-why">
+<p class="blk-label">Why</p>
+<p>Its check job is the first JWT login into <code>helios-prod</code>. And <code>helios-prod</code> is the last org where
+nobody has done the deliverability step.</p>
+</div>
+<div class="blk blk-check">
+<p class="blk-label">You should now see</p>
+<ul>
+<li>The green check that follows the re-run, ready to read</li>
+</ul>
+</div>
+<h3 id="4-read-the-check-like-it-matters">4. Read the check like it matters<a class="headerlink" href="#4-read-the-check-like-it-matters" title="Permanent link">&para;</a></h3>
+<div class="step-head">
+<p class="step-head-line step-head-goal"><span class="step-head-key">Goal</span> <span class="step-head-text">you know whether this release deletes anything in production, and how long it will take.</span></p>
+<p class="step-head-line step-head-refresher"><span class="step-head-key">Refresher</span> <span class="step-head-text"><a href="../3-2-review-a-contributor-pull-request/">Lab 3.2</a></span></p>
+</div>
+<div class="blk blk-do">
+<p class="blk-label">Do</p>
+<ol>
+<li>When the check finishes, read the sfdx-hardis comment the way <a href="../3-2-review-a-contributor-pull-request/">Lab 3.2</a> taught</li>
+<li>Add the two questions of the table below, which only apply to production</li>
+</ol>
+<table>
+<thead>
+<tr>
+<th>Question</th>
+<th>Where to look</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Does it delete anything?</td>
+<td>The <code>deleted</code> figure in the <strong>Metadata</strong> row, shown only when something goes. A deletion in production is permanent and takes data with it</td>
+</tr>
+<tr>
+<td>How long will it take?</td>
+<td>The check duration is a reasonable estimate. If it is 40 minutes, that is 40 minutes during which the org is being modified</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="admonition warning">
+<p class="admonition-title">Careful</p>
+<p>If that <code>deleted</code> figure is there and you were not expecting it, stop. The comment will not tell
+you what is going: <code>manifest/destructiveChanges.xml</code> and the diff will. Find out what it is and
+who intended it.</p>
+</div>
+<div class="blk blk-why">
+<p class="blk-label">Why</p>
+<p>Stopping on an unexpected deletion is not being careful, that is the job.</p>
+</div>
+<div class="blk blk-check">
+<p class="blk-label">You should now see</p>
+<ul>
+<li>Your answer to both questions: a <code>deleted</code> figure or none, and the duration of the check</li>
+</ul>
+</div>
+<h3 id="5-merge-and-stay">5. Merge, and stay<a class="headerlink" href="#5-merge-and-stay" title="Permanent link">&para;</a></h3>
+<div class="step-head">
+<p class="step-head-line step-head-goal"><span class="step-head-key">Goal</span> <span class="step-head-text">a green deployment on <code>main</code>, watched to its end, and its post-deployment manual steps done.</span></p>
+<p class="step-head-line step-head-refresher"><span class="step-head-key">Refresher</span> <span class="step-head-text"><a href="../3-5-promote-to-uat-and-write-release-notes/">Lab 3.5</a></span></p>
+</div>
+<div class="blk blk-do">
+<p class="blk-label">Do</p>
+<ol>
+<li>Merge. The <strong>Process Deployment (sfdx-hardis)</strong> run starts, this time on <code>main</code></li>
+<li>Watch it</li>
+<li>When it finishes, do the post-deployment manual steps, if any, then check the org</li>
+</ol>
+</div>
+<div class="blk blk-why">
+<p class="blk-label">Why</p>
+<p>Not because you can do anything while it runs, but because knowing whether it failed at
+minute two or minute thirty-five changes what you do next.</p>
+<p>The pre-deployment ones belong before the merge: do them, tick their boxes in the check comment,
+then merge, and the deployment job records them, as in <a href="../3-5-promote-to-uat-and-write-release-notes/">Lab 3.5</a>.</p>
+</div>
+<div class="blk blk-check">
+<p class="blk-label">You should now see</p>
+<ul>
+<li>A green <strong>Process Deployment (sfdx-hardis)</strong> run on <code>main</code></li>
+</ul>
+</div>
+<h3 id="6-verify-in-production">6. Verify in production<a class="headerlink" href="#6-verify-in-production" title="Permanent link">&para;</a></h3>
+<div class="step-head">
+<p class="step-head-line step-head-goal"><span class="step-head-key">Goal</span> <span class="step-head-text">the two stories working in <code>helios-prod</code>, and something that already worked still working.</span></p>
+</div>
+<div class="blk blk-do">
+<p class="blk-label">Do</p>
+<ol>
+<li>Open <strong>Orgs Manager</strong> and find <code>helios-prod</code> by its alias <span class="pill-ref pill-ref-2">(2)</span></li>
+<li>
+<p>Check it says <strong>Connected</strong> <span class="pill-ref pill-ref-3">(3)</span>, then <strong>Open</strong> from the actions menu at the end of its row. A
+   disconnected row offers <strong>Reconnect</strong> in that same menu; <strong>Add Org</strong> <span class="pill-ref pill-ref-1">(1)</span> is for an org the
+   table does not have</p>
+<p><a class="glightbox" data-type="image" href="../../../_assets/annotated/vscode/orgs-manager.png"><img alt="The Orgs Manager table, with the alias and connection state of each org" src="../../../_assets/annotated/vscode/orgs-manager.png" /></a></p>
+</li>
+<li>
+<p>Then check, the same as UAT and with more care, that the two stories work</p>
+</li>
+<li>Check something that was already working still works: open an installation, check the timeline
+   component, save a record</li>
+</ol>
+</div>
+<div class="blk blk-why">
+<p class="blk-label">Why</p>
+<p>That last check exists because the most common production incident after a release is not the new
+feature failing. It is an old one.</p>
+</div>
+<div class="blk blk-check">
+<p class="blk-label">You should now see</p>
+<ul>
+<li>The two stories working in <code>helios-prod</code></li>
+<li>An installation that opens, its timeline component, and a record that saves</li>
+</ul>
+</div>
+<h3 id="7-now-measure-the-pipeline">7. Now measure the pipeline<a class="headerlink" href="#7-now-measure-the-pipeline" title="Permanent link">&para;</a></h3>
+<div class="step-head">
+<p class="step-head-line step-head-goal"><span class="step-head-key">Goal</span> <span class="step-head-text">the DORA metrics of your pipeline on screen, and their frame, flow and five numbers read.</span></p>
+<p class="step-head-line step-head-refresher"><span class="step-head-key">Refresher</span> <span class="step-head-text"><a href="../3-1-configure-the-pipeline-up-to-production/">Lab 3.1</a> <a href="../../level-1-contributor-basics/1-2-create-your-dev-hub-scratch-orgs-and-pipeline/">Lab 1.2</a></span></p>
+</div>
+<p>You have shipped. The question a release manager gets asked next is "how are we doing", and it
+deserves a better answer than a feeling.</p>
+<div class="blk blk-do">
+<p class="blk-label">Do</p>
+<ol>
+<li>
+<p>Open the <strong>DevOps Pipeline</strong> panel, click the gear <span class="pill-ref pill-ref-1">(1)</span> at the top right, and choose
+   <strong>Generate DORA Metrics</strong> <span class="pill-ref pill-ref-2">(2)</span></p>
+<p><a class="glightbox" data-type="image" href="../../../_assets/annotated/vscode/pipeline-settings-menu-level3--dora.png"><img alt="The gear menu of the DevOps Pipeline panel, open on Generate DORA Metrics" src="../../../_assets/annotated/vscode/pipeline-settings-menu-level3--dora.png" /></a></p>
+</li>
+<li>
+<p>A <strong>DORA metrics</strong> tab opens and says, for a few seconds, that it is reading deployment jobs and
+   Pull Requests from GitHub. It lands on its <strong>Overview</strong> tab</p>
+<p><a class="glightbox" data-type="image" href="../../../_assets/annotated/vscode/dora-metrics.png"><img alt="The Overview tab of the DORA metrics panel, with the pipeline flow and one row per major org" src="../../../_assets/annotated/vscode/dora-metrics.png" /></a></p>
+</li>
+<li>
+<p>Read the frame before the numbers:</p>
+<ul>
+<li>The period <span class="pill-ref pill-ref-1">(1)</span> is <strong>Last 90 days</strong> unless you pick 30, 180 or 365</li>
+<li>The line under the title <span class="pill-ref pill-ref-2">(2)</span> names the repository and the dates of the period, then says
+   where the data of a branch starts when that is more than a week after the period does. Here it
+   says so for all four branches: your pipeline is younger than the period it is measured over</li>
+<li><strong>Pipeline flow</strong> <span class="pill-ref pill-ref-3">(3)</span> follows your User Stories from one org to the next. You read it in
+   a moment, below</li>
+<li><strong>Needs attention</strong> <span class="pill-ref pill-ref-4">(4)</span> is there only when sfdx-hardis has something to point at, each line
+   with the branch it is about and, when there is something to open, an <strong>Open</strong> button. It knows
+   five cases: the last deployment job of a branch failed, Pull Requests have been open for more
+   than 7 days, the failure rate is above 10 % and rose by 5 points since the period before, nothing
+   was deployed for 30 days, User Stories have been waiting in an org for more than 30 days. If you
+   sent US-020 back more than a week ago, it is on that list, and rightly so: a Pull Request nobody
+   merges and nobody closes is a decision somebody is not making</li>
+<li>The table <span class="pill-ref pill-ref-5">(5)</span> holds one row per major org, in the order of the pipeline, with <code>main</code> marked
+   <strong>production</strong>. A row opens the tab of its branch, the one of <code>main</code> being <span class="pill-ref pill-ref-6">(6)</span></li>
+</ul>
+</li>
+<li>
+<p>Read <strong>Pipeline flow</strong> from left to right:</p>
+<ul>
+<li>Each box is an org of the pipeline. It says how many User Stories are in that org and went no
+   further, and how long the oldest has been there. Yours all read <strong>Nothing waiting</strong>: you have
+   just released everything. On a real project this is where a release manager looks first, and a
+   click on a box lists the User Stories waiting in it</li>
+<li>Between two boxes, the arrow carries the median wait: the days between the deployment of a User
+   Story in one org and its deployment in the next. Yours waited <strong>4 d</strong> in <code>integration</code>,
+   <strong>0.8 d</strong> in <code>uat</code> and <strong>0.2 d</strong> in <code>preprod</code>. The longest of them is marked <strong>Longest wait</strong></li>
+<li><strong>Time to production (median)</strong>, on the right, is the whole trip: from the creation of the Pull
+   Request of a User Story to the end of the job that deployed it to production. <strong>5.7 d, High</strong>,
+   over the ten User Stories you delivered</li>
+<li><strong>Slowest changes to reach production</strong> opens the list behind that number, each User Story with
+   the day it reached each org. The slowest is the first one you ever merged: it waited for the
+   pipeline to exist</li>
+</ul>
+</li>
+<li>
+<p>Read the five numbers each row carries, with the table below. Each one is rated <strong>Elite</strong>,
+   <strong>High</strong>, <strong>Medium</strong> or <strong>Low</strong>, on the same scale for every branch, or reads <strong>No data</strong></p>
+</li>
+</ol>
+<table>
+<thead>
+<tr>
+<th>Column</th>
+<th>What it actually counts</th>
+<th>What good looks like</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Deployments per week</strong></td>
+<td>Successful runs of the deployment job of the branch, divided by the length of the period</td>
+<td>Weekly is fine. Quarterly means every release is enormous</td>
+</tr>
+<tr>
+<td><strong>Lead time (median)</strong></td>
+<td>Per User Story that reached the org: the creation of its Pull Request, to its deployment there</td>
+<td>Days, not weeks. A long lead time means work is sitting somewhere</td>
+</tr>
+<tr>
+<td><strong>Failure rate</strong></td>
+<td>Failed deployment jobs, divided by failed plus succeeded. A cancelled job is in neither</td>
+<td>Below 15 %. Above that, the check is not catching what it should</td>
+</tr>
+<tr>
+<td><strong>Recovery (median)</strong></td>
+<td>Hours from a failed deployment job to the next one that succeeds on the same branch</td>
+<td>Hours</td>
+</tr>
+<tr>
+<td><strong>Rework</strong></td>
+<td>Pull Requests from a fix branch, or successes within a day of a failure, whichever is the larger</td>
+<td>Low. Read the note below before you expect <a href="../3-7-hotfix-and-retrofit/">Lab 3.7</a> to move it</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="blk blk-why">
+<p class="blk-label">Why</p>
+<p>You used <strong>Configure Pipeline Settings</strong> and <strong>Add or Reconnect a Major Org</strong> of the same menu in
+<a href="../3-1-configure-the-pipeline-up-to-production/">Lab 3.1</a>. <strong>Configure Org Initialization</strong> and <strong>Configure Replacement Rules</strong> are two settings this
+course does not use: <a href="../3-1-configure-the-pipeline-up-to-production/#three-settings-this-course-does-not-use">Lab 3.1</a> says what
+they are for.</p>
+<p>The sentence the tab shows while it loads is the whole design. Nothing is asked of any org, so there
+is no default org to set first, and two people on the same project read the same numbers. What the
+panel needs is the connection to GitHub you gave the extension in <a href="../../level-1-contributor-basics/1-2-create-your-dev-hub-scratch-orgs-and-pipeline/">Lab 1.2</a>.</p>
+<p>Pipeline flow answers the question the table cannot: how long does a User Story take to reach
+production, and where does it wait. The figures quoted above are the ones of the picture, a learner
+who spread the course over a week: yours follow the days your own course took and the number of
+User Stories you delivered, and a course done in one sitting reads hours, not days.</p>
+<p>A User Story is followed from the Pull Requests alone. Merging <code>integration</code> into <code>uat</code> carries
+every User Story that was in <code>integration</code> at that moment, and the days are counted from there.</p>
+<p>The column between the first two, named after the number of weeks in the period, draws the
+deployments of the branch week by week.</p>
+<p>Two of those are not what the names suggest, and it is worth knowing which. Failure rate is the
+failure rate of a job: a release that deployed green and broke production on Tuesday does not
+appear in it. Recovery is the gap between a red deployment job and the next green one, not
+between an incident and its fix. They measure your pipeline, not your org. And the pipeline is all
+they see: a deployment made around it, a change set or the seeding <strong class="ui-text">Set up one of my training
+orgs</strong> did, is counted nowhere.</p>
+</div>
+<div class="blk blk-check">
+<p class="blk-label">You should now see</p>
+<ul>
+<li>The <strong>Overview</strong> tab with the <strong>Pipeline flow</strong>, every box reading <strong>Nothing waiting</strong></li>
+<li>One row per major org, <code>main</code> marked <strong>production</strong></li>
+</ul>
+</div>
+<h3 id="8-read-what-is-there-and-know-what-is-missing">8. Read what is there, and know what is missing<a class="headerlink" href="#8-read-what-is-there-and-know-what-is-missing" title="Permanent link">&para;</a></h3>
+<div class="step-head">
+<p class="step-head-line step-head-goal"><span class="step-head-key">Goal</span> <span class="step-head-text">each number of the production tab read for what it really says, and your history found in <code>integration</code>.</span></p>
+<p class="step-head-line step-head-refresher"><span class="step-head-key">Refresher</span> <span class="step-head-text"><a href="../3-3-deploy-to-integration-and-read-the-log/">Lab 3.3</a></span></p>
+</div>
+<div class="blk blk-do">
+<p class="blk-label">Do</p>
+<ol>
+<li>
+<p>Click the <code>main</code> row, or the <strong>main (production)</strong> tab <span class="pill-ref pill-ref-1">(1)</span></p>
+<p><a class="glightbox" data-type="image" href="../../../_assets/annotated/vscode/dora-metrics-production.png"><img alt="The main (production) tab of the DORA metrics panel, after one release" src="../../../_assets/annotated/vscode/dora-metrics-production.png" /></a></p>
+</li>
+<li>
+<p>Read the tab: the five numbers as tiles <span class="pill-ref pill-ref-2">(2)</span>, the deployments of each week as bars, green for
+   succeeded and red for failed <span class="pill-ref pill-ref-3">(3)</span>, the failed deployments with the time each took to recover
+   <span class="pill-ref pill-ref-4">(4)</span>, and the supplementary metrics <span class="pill-ref pill-ref-5">(5)</span></p>
+</li>
+<li>Scroll down for the rest of those, and for two lists that open on a click: the Pull Requests that
+   took more than 7 days to merge, and the hotfix Pull Requests</li>
+<li>
+<p>Read it number by number, because each one is true and none of them means what a hurried reader
+   would take from it:</p>
+<ul>
+<li><strong>Deployments: 0.1 / week, Low</strong>. One successful job, divided by a period of 90 days that was
+   empty until this week. The rating is about the period, not about you. Pick <strong>Last 30 days</strong> and
+   the same single deployment weighs three times as much</li>
+<li><strong>Lead time (median): 5.7 d, High</strong>. The time your User Stories took to reach production, each
+   one from the creation of its own Pull Request: the number <strong>Time to production</strong> showed on the
+   Overview. Under it, <strong class="ui-text">Pull Requests of this branch alone: 0.1 d</strong> is the life of the release Pull
+   Request, from the <strong>+ PR</strong> chip to the end of its deployment job. A couple of hours, and it would
+   rate Elite. Quoting that one as your lead time would be flattering and wrong: the release was
+   quick, the User Stories it carried had been waiting for days</li>
+<li><strong>Failure rate: 0 %, Elite</strong>, and <strong>Rework: 0 %, Elite</strong>, over one deployment. One red job next
+   week and the first reads 50 %</li>
+<li><strong>Recovery (median): No data</strong>. Nothing failed on <code>main</code>, so there is nothing to recover from.
+   <strong>No data</strong> is the honest answer, not an error</li>
+</ul>
+</li>
+<li>
+<p>Now open the <code>integration</code> tab</p>
+</li>
+</ol>
+</div>
+<div class="blk blk-why">
+<p class="blk-label">Why</p>
+<p>You have shipped once, and this tab says exactly that.</p>
+<p>The picture is one learner's evening, and yours will differ in the detail: the dates, a second job
+on <code>main</code> if you merged twice. The shape will not.</p>
+<p><code>integration</code> is where your history is. Over ten deployments, the single failure of <a href="../3-3-deploy-to-integration-and-read-the-log/">Lab 3.3</a> is
+ten points of failure rate. Small numbers move in big steps.</p>
+<p>That is the honest version of this step, and it is also the point. DORA metrics on a pipeline that
+has released once are an empty baseline. They become useful at the fourth or fifth release, when
+the numbers have somewhere to move from: the panel then draws an arrow next to each one and prints
+its value over the previous period. Today the period before is empty, so there is no arrow.</p>
+</div>
+<div class="blk blk-check">
+<p class="blk-label">You should now see</p>
+<ul>
+<li>On <code>main</code>, one deployment, and no arrow next to any number</li>
+<li>On <code>integration</code>, one deployment for every Pull Request merged since you started, and the red job
+  of <a href="../3-3-deploy-to-integration-and-read-the-log/">Lab 3.3</a> in <strong>Failed deployments</strong>, with the time until the next green job</li>
+</ul>
+</div>
+<h3 id="9-keep-the-baseline">9. Keep the baseline<a class="headerlink" href="#9-keep-the-baseline" title="Permanent link">&para;</a></h3>
+<div class="step-head">
+<p class="step-head-line step-head-goal"><span class="step-head-key">Goal</span> <span class="step-head-text">a DORA report in <code>docs/dora/</code>, the baseline <a href="../3-11-capstone-run-a-weekly-release-cycle/">Lab 3.11</a> compares the next one with.</span></p>
+</div>
+<div class="blk blk-do">
+<p class="blk-label">Do</p>
+<ol>
+<li>
+<p>Open <strong>Export</strong> <span class="pill-ref pill-ref-1">(1)</span> and choose <strong>Markdown report</strong> <span class="pill-ref pill-ref-2">(2)</span></p>
+<p><a class="glightbox" data-type="image" href="../../../_assets/annotated/vscode/dora-metrics-export-menu.png"><img alt="The Export menu of the DORA metrics panel, open on Markdown report" src="../../../_assets/annotated/vscode/dora-metrics-export-menu.png" /></a></p>
+</li>
+<li>
+<p>When the command panel has finished, its <strong>DORA Metrics Report</strong> button opens the file</p>
+</li>
+<li>Keep the file where it is</li>
+</ol>
+</div>
+<div class="admonition warning">
+<p class="admonition-title">Careful</p>
+<p>The file is named after the day, so a second export on the same day replaces it: if you go on to
+<a href="../3-11-capstone-run-a-weekly-release-cycle/">Lab 3.11</a> today, note the numbers of <code>integration</code> and <code>main</code> first, or copy the file under another
+name.</p>
+</div>
+<div class="blk blk-why">
+<p class="blk-label">Why</p>
+<p>The numbers on screen are read again each time, so the baseline has to be a file. The other entry,
+<strong>PDF report</strong>, writes a PDF as well.</p>
+<p>The report is a file, <code>docs/dora/dora-report-&lt;date&gt;.md</code>, and <strong>Check my work</strong> looks for it. It is
+rebuilt from the jobs and the Pull Requests whenever you export again, so nothing is committed, and
+<a href="../3-11-capstone-run-a-weekly-release-cycle/">Lab 3.11</a> compares the next one with this one.</p>
+</div>
+<details>
+<summary>Under the hood: where the DORA numbers come from</summary>
+<p>The panel ran:</p>
+<div class="highlight"><pre><span></span><code>sf hardis:doc:dora-report --agent --data-only --compare --period 90 --json
+</code></pre></div>
+<p>and <strong>Export</strong> ran the same command without those flags, in the command panel:</p>
+<div class="highlight"><pre><span></span><code>sf hardis:doc:dora-report --period 90
+</code></pre></div>
+<p>It has <strong>one</strong> source, the git provider, which is the thing to know about it. Until sfdx-hardis
+8.16 the deployments were read from the org; they no longer are, and the command does not log into
+any org:</p>
+<ul>
+<li><strong class="ui-text">A deployment is a run of the deployment job of a major branch</strong>, the one a merge starts. On
+  GitHub that is a run of the <strong>Process Deployment (sfdx-hardis)</strong> workflow triggered by a push to
+  the branch. Runs that no merge started, a scheduled one for instance, are not deployments</li>
+<li><strong class="ui-text">A validation is the deployment check of a Pull Request</strong>, here a run of <strong>Simulate Deployment
+  (sfdx-hardis)</strong>. The <strong>Validation success rate</strong> of the supplementary metrics is built on them</li>
+<li><strong>The Pull Requests</strong> merged into each major branch, and the ones still open</li>
+</ul>
+<p>The jobs are told apart by their name. In a project that renamed them, when no run of a branch is
+named as a deployment, every run a push to that branch started counts as one.</p>
+<p>It measures every major branch, which means every <code>config/branches/.sfdx-hardis.&lt;branch&gt;.yml</code> of
+the project, when a person runs it. In a CI job it measures the branch of the job, and <code>--branches</code>
+names them explicitly. Then, per branch:</p>
+<ul>
+<li><strong>A merge is deployed</strong> by the successful job of its merge commit, or, when the provider does
+  not say which one that is, by the first successful job started within 14 days of the merge. With
+  neither, the merge date stands for the deployment</li>
+<li><strong>Lead time</strong> is counted per User Story: from the creation of its Pull Request to its deployment
+  in the org of the tab, whatever merge brought it there. The line under it keeps the older
+  reading, the Pull Requests merged into that branch alone, which is also what a notification to
+  Grafana carries</li>
+<li><strong>Rework</strong> takes the larger of two counts, the Pull Requests whose branch starts with <code>hotfix</code>,
+  <code>fix</code> or <code>bugfix</code>, and the successful jobs that follow a failed one within 24 hours, and divides
+  it by the deployments</li>
+<li><strong>A cancelled job</strong> is counted apart and enters no rate</li>
+<li><strong class="ui-text">A job run again on the same commit</strong> replaces its previous result on some providers. On
+  GitHub, <strong>Re-run all jobs</strong> keeps the run and its last result, so the checks that stopped red on
+  purpose in steps 2 and 3 count as green</li>
+</ul>
+<p>How a User Story is followed. No git history is read, only the Pull Requests:</p>
+<ul>
+<li>A Pull Request from a major branch into the next one (<code>uat</code> into <code>preprod</code>) carries every User
+  Story that was in its source branch when it was merged</li>
+<li>A promotion Pull Request, the selective kind of <a href="../3-10-promote-a-subset-with-promotion-branches/">Lab 3.10</a>, carries the Pull Requests listed in
+  its description and nothing else</li>
+<li>A hotfix merged straight into <code>preprod</code> is counted from <code>preprod</code>. The merge that brings it
+  back down to <code>integration</code> does not send it through the pipeline a second time</li>
+<li>A change cherry-picked by hand is not followed, and neither is one merged more than 90 days
+  before the period</li>
+</ul>
+<p>The steps between the orgs are the <code>mergeTargets</code> of each <code>config/branches/.sfdx-hardis.&lt;branch&gt;.yml</code>.</p>
+<p>One thing to check on any project. Rework recognises a corrective change by its branch name.
+This project names its fix branches <code>fix/</code>, so the hotfix you ship in <a href="../3-7-hotfix-and-retrofit/">Lab 3.7</a> counts, in the
+<strong>Rework</strong> of <code>preprod</code>, the branch it is merged into. Rename that prefix to something else and the
+metric quietly reads zero, with no warning. A number built on branch names is only as good as the
+naming convention, which is worth checking before quoting one at anybody.</p>
+<p>What the three flags of the panel do:</p>
+<ul>
+<li><code>--data-only</code> returns the numbers and writes nothing: no report, no CSV, no notification. The
+  panel draws that answer as it comes and computes nothing itself, so the panel and the report
+  cannot disagree</li>
+<li><code>--compare</code> also computes the period of the same length just before, which is where the arrows
+  and the previous values come from, and what lets a branch say when its data starts</li>
+<li><code>--period</code> is the list at the top of the panel</li>
+</ul>
+<p>Finished jobs do not change, so sfdx-hardis keeps them in <code>~/.sfdx/sfdx-hardis-cache/dora</code>, one file
+per repository, and asks the provider only for the jobs of the last two days and the new ones.
+<strong>Refresh</strong> adds <code>--refresh</code>, which reads everything again. The panel also keeps its last answer,
+to have something to show while the next one is being read.</p>
+<p><strong>Export</strong> writes the report in <code>hardis-report/</code>, copies it to <code>docs/dora/</code>, and adds a CSV of the
+jobs behind the numbers. A run on one branch also sends a notification, to Slack, Teams or Grafana
+when one is configured; a run on your four branches sends none.</p>
+<p>Without a git provider the command fails: there is no fallback on <code>git log</code> any more, and no number
+is better than a wrong one. It also fails, saying which right is missing, when the token cannot
+read the CI jobs. On GitHub that right is <strong>Actions: Read</strong>.</p>
+<p>The numbers are honest in a way a dashboard somebody fills in by hand never is. Nobody can improve
+deployment frequency by editing a spreadsheet. They are also narrower than the DORA names suggest,
+and a release manager quoting them should know which part they cover.</p>
+<!-- command-links:start -->
+<p>Command documentation: <a href="https://sfdx-hardis.cloudity.com/hardis/doc/dora-report/">hardis:doc:dora-report</a></p>
+<!-- command-links:end -->
+</details>
+<div class="blk blk-check">
+<p class="blk-label">You should now see</p>
+<ul>
+<li>The command panel writing the report for the same period: a summary of every branch, then a
+  chapter per branch</li>
+<li><code>docs/dora/dora-report-&lt;date&gt;.md</code> on your disk</li>
+</ul>
+</div>
+<h2 id="what-you-should-see">What you should see<a class="headerlink" href="#what-you-should-see" title="Permanent link">&para;</a></h2>
+<ul class="task-list">
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>preprod</code> and <code>main</code> carrying the release</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> A green <strong>Process Deployment (sfdx-hardis)</strong> run on <code>preprod</code>, then one on <code>main</code></li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> The stories working in <code>helios-prod</code></li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> The <strong>DORA metrics</strong> panel with a row for each of your four branches, and one deployment on <code>main</code></li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> A DORA report in <code>docs/dora/</code></li>
+</ul>
+<details class="troubleshoot">
+<summary>If it goes wrong</summary>
+<p><strong>The Pull Request from <code>uat</code> into <code>preprod</code> has a conflict in <code>config/.sfdx-hardis.yml</code>.</strong>
+Two things together cause it. Your <code>preprod</code> came from a <code>main</code> newer than the course your
+<code>integration</code> started from (<strong>Sync fork</strong> on GitHub moves <code>main</code>), and a course update reached
+<code>integration</code> as a <strong>Squash and merge</strong> instead of the merge commit <strong>Update my course</strong> makes. Git
+then cannot see that both branches carry the same course changes, and it stops where your pipeline
+settings sit next to a line the course changed. Nothing is lost: <code>uat</code> holds the right file. Bring
+<code>preprod</code> into <code>uat</code> through a branch of its own, from the <strong>Command Palette</strong> of VS Code:</p>
+<ol>
+<li><strong>Git: Fetch</strong></li>
+<li><strong>Git: Create Branch From...</strong>, pick <strong>origin/uat</strong>, and name it <code>fix/merge-preprod-into-uat</code></li>
+<li><strong>Git: Merge...</strong>, and pick <strong>origin/preprod</strong>, under <strong>remote branches</strong></li>
+<li>Open <code>config/.sfdx-hardis.yml</code> under <strong>Merge Changes</strong>, click <strong>Accept Current Change</strong> above each
+   conflict, save, click <strong>+</strong> on its row, then <strong>Commit</strong>. Current is <code>uat</code>, which already has the
+   course changes and your settings</li>
+<li><strong>Publish Branch</strong>, then on GitHub open its Pull Request into <code>uat</code>, wait for the checks, and
+   merge it with a merge commit (<strong>Create a merge commit</strong>, under the arrow of the green button),
+   never a squash: a squash brings the conflict back</li>
+</ol>
+<p>The Pull Request into <code>preprod</code> then has no conflict. Its check runs again and stops on the
+deliverability step, as step 2 says.</p>
+<p><strong class="ui-text">The deployment to production fails on a component that worked in preprod.</strong>
+Production has drifted, or has something preprod does not: an extra validation rule, a record type,
+real data that violates a new constraint. Read the error. This is the single most common production
+deployment failure, and it is the argument for keeping preprod as close to production as you can.</p>
+<p><strong>The deployment half-succeeded.</strong>
+Salesforce deployments are atomic per deployment, so this usually means a post-deploy action failed
+after a successful deployment. The metadata is in, the action is not. Re-run the action, do not
+re-run the deployment.</p>
+<p><strong class="ui-text">The DORA metrics panel says "Upgrade sfdx-hardis".</strong>
+The panel needs sfdx-hardis 8.17.0 or later. Click <strong>Open Setup</strong>, upgrade sfdx-hardis there, then
+<strong>Try Again</strong>.</p>
+<p><strong class="ui-text">The panel says "Connect to your git provider".</strong>
+The extension has no connection to GitHub in this VS Code. Click <strong>Connect to Git</strong> and sign in, as
+in <a href="../../level-1-contributor-basics/1-2-create-your-dev-hub-scratch-orgs-and-pipeline/">Lab 1.2</a>. The panel reads the numbers as soon as it is connected.</p>
+<p><strong class="ui-text">The panel says "DORA metrics could not be read".</strong>
+The message under that title is the one of sfdx-hardis, and it names the cause. The one to know on
+a real project says the git provider token cannot read the CI jobs: on GitHub, the token lacks
+<strong>Actions: Read</strong> on the repository. Fix the token, then click <strong>Try Again</strong>.</p>
+<p><strong>A number reads "No data".</strong>
+Nothing to measure, which is not an error: <strong>Recovery</strong> on a branch where no deployment failed, or
+every number of a branch that was not deployed in the period.</p>
+<p><strong class="ui-text">The release you just merged is not in the numbers.</strong>
+Only finished jobs are counted. Wait for the <strong>Process Deployment (sfdx-hardis)</strong> run to end, then
+click <strong>Refresh</strong>.</p>
+<p><strong class="ui-text">Check my work says no DORA report was exported.</strong>
+Reading the panel writes no file. Do step 9: <strong>Export</strong>, then <strong>Markdown report</strong>.</p>
+</details>
+<h2 id="check-your-work">Check your work<a class="headerlink" href="#check-your-work" title="Permanent link">&para;</a></h2>
+<p>Welcome page &gt; <strong>Training: Level 3</strong> &gt; <strong>Check my work</strong>, then pick <strong>Lab 3.6</strong>.</p>
+<h2 id="go-deeper">Go deeper<a class="headerlink" href="#go-deeper" title="Permanent link">&para;</a></h2>
+<ul>
+<li><a href="https://sfdx-hardis.cloudity.com/salesforce-devops-deploy-major-branches/">Deploy to major orgs</a></li>
+<li><a href="https://sfdx-hardis.cloudity.com/hardis/doc/salesforce-devops-dora-report/">DORA Metrics</a></li>
+</ul>
+<p><a class="md-button md-button--primary" href="../3-7-hotfix-and-retrofit/">Next: Lab 3.7 - Production is broken: hotfix and retrofit</a></p>
+
+
+
+
+
+
+
+
+
+  
+  
+
+
+
+  
+
+
+
+
+  <h2 id="__comments">Questions and comments</h2>
+  <script src="https://giscus.app/client.js"
+          data-repo="hardisgroupcom/sfdx-hardis-training"
+          data-repo-id="R_kgDOUcjgQw"
+          data-category="Q&amp;A"
+          data-category-id="DIC_kwDOUcjgQ84DF-lC"
+          data-mapping="pathname"
+          data-strict="1"
+          data-reactions-enabled="1"
+          data-emit-metadata="0"
+          data-input-position="top"
+          data-theme="preferred_color_scheme"
+          data-lang="en"
+          data-loading="lazy"
+          crossorigin="anonymous"
+          async>
+  </script>
+
+  <script>
+    // Keep the Giscus iframe in sync with the palette toggle. It is a
+    // cross-origin frame, so its theme can only be changed by postMessage.
+    (function () {
+      if (window.__giscusThemeSync) {
+        return;
+      }
+      window.__giscusThemeSync = true;
+      var giscusTheme = function () {
+        var scheme = document.body.getAttribute("data-md-color-scheme");
+        return scheme === "slate" ? "dark" : "light";
+      };
+      var apply = function () {
+        var frame = document.querySelector("iframe.giscus-frame");
+        if (frame && frame.contentWindow) {
+          frame.contentWindow.postMessage(
+            { giscus: { setConfig: { theme: giscusTheme() } } },
+            "https://giscus.app"
+          );
+        }
+      };
+      new MutationObserver(apply).observe(document.body, {
+        attributes: true,
+        attributeFilter: ["data-md-color-scheme"]
+      });
+      window.addEventListener("message", function (event) {
+        if (event.origin === "https://giscus.app") {
+          apply();
+        }
+      });
+    })();
+  </script>
+
+                
+              </article>
+            </div>
+          
+          
+  <script>var tabs=__md_get("__tabs");if(Array.isArray(tabs))e:for(var set of document.querySelectorAll(".tabbed-set")){var labels=set.querySelector(".tabbed-labels");for(var tab of tabs)for(var label of labels.getElementsByTagName("label"))if(label.innerText.trim()===tab){var input=document.getElementById(label.htmlFor);input.checked=!0;continue e}}</script>
+
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-circle-arrow-up" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="m16 12-4-4-4 4M12 16V8"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        
+
+
+
+
+
+<footer class="md-footer">
+  
+    
+      
+      <nav class="md-footer__inner md-grid" aria-label="Footer" >
+        
+          
+          <a href="../3-5-promote-to-uat-and-write-release-notes/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Lab 3.5 - Promote to UAT and write the release notes">
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-arrow-left" viewBox="0 0 24 24"><path d="m12 19-7-7 7-7M19 12H5"/></svg>
+            </div>
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Previous
+              </span>
+              <div class="md-ellipsis">
+                Lab 3.5 - Promote to UAT and write the release notes
+              </div>
+            </div>
+          </a>
+        
+        
+          
+          <a href="../3-7-hotfix-and-retrofit/" class="md-footer__link md-footer__link--next" aria-label="Next: Lab 3.7 - Production is broken: hotfix and retrofit">
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Next
+              </span>
+              <div class="md-ellipsis">
+                Lab 3.7 - Production is broken: hotfix and retrofit
+              </div>
+            </div>
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-arrow-right" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+            </div>
+          </a>
+        
+      </nav>
+    
+  
+  <div class="md-footer-meta md-typeset"><div class="md-footer-cloudity md-grid">
+      
+        This course is free. It is offered by
+        <a href="https://cloudity.com/?utm_source=sfdx-hardis-training&amp;utm_medium=referral&amp;utm_campaign=footer" target="_blank" rel="noopener">Cloudity</a>,
+        Salesforce consulting: Agentforce, Revenue Cloud, Field Service, Managed Services, DevOps.
+        <a href="https://cloudity.com/services/?utm_source=sfdx-hardis-training&amp;utm_medium=referral&amp;utm_campaign=footer" target="_blank" rel="noopener">See what we do</a>
+      
+      <button type="button" class="guinea-egg" data-guinea-egg aria-label="Psst. Five times." title="Psst. Five times.">
+        <img src="../../../theme/images/guinea-pig-small.webp" alt="" width="32" height="17">
+      </button>
+    </div>
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      Cloudity and friends
+    </div>
+  
+  
+</div>
+      
+        
+<div class="md-social">
+  
+    
+    
+    
+    
+    <a href="https://github.com/hardisgroupcom/sfdx-hardis" target="_blank" rel="noopener" title="sfdx-hardis on GitHub" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.3.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2026 Fonticons, Inc.--><path fill="currentColor" d="M216.5 362.5c-66-8-112.5-55.5-112.5-117 0-25 9-52 24-70-6.5-16.5-5.5-51.5 2-66 20-2.5 47 8 63 22.5 19-6 39-9 63.5-9s44.5 3 62.5 8.5c15.5-14 43-24.5 63-22 7 13.5 8 48.5 1.5 65.5 16 19 24.5 44.5 24.5 70.5 0 61.5-46.5 108-113.5 116.5 17 11 28.5 35 28.5 62.5v52c0 15 12.5 23.5 27.5 17.5C441 459.5 512 369 512 257 512 115.5 397 0 255.5 0S0 115.5 0 257c0 111 70.5 203 165.5 237.5 13.5 5 26.5-4 26.5-17.5v-40c-7 3-16 5-24 5-33 0-52.5-18-66.5-51.5-5.5-13.5-11.5-21.5-23-23-6-.5-8-3-8-6 0-6 10-10.5 20-10.5 14.5 0 27 9 40 27.5 10 14.5 20.5 21 33 21s20.5-4.5 32-16c8.5-8.5 15-16 21-21"/></svg>
+    </a>
+  
+    
+    
+    
+    
+    <a href="https://sfdx-hardis.cloudity.com/" target="_blank" rel="noopener" title="sfdx-hardis documentation" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.3.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2026 Fonticons, Inc.--><path fill="currentColor" d="M384 512H96c-53 0-96-43-96-96V96C0 43 43 0 96 0h304c26.5 0 48 21.5 48 48v288c0 20.9-13.4 38.7-32 45.3V448c17.7 0 32 14.3 32 32s-14.3 32-32 32zM96 384c-17.7 0-32 14.3-32 32s14.3 32 32 32h256v-64zm32-232c0 13.3 10.7 24 24 24h176c13.3 0 24-10.7 24-24s-10.7-24-24-24H152c-13.3 0-24 10.7-24 24m24 72c-13.3 0-24 10.7-24 24s10.7 24 24 24h176c13.3 0 24-10.7 24-24s-10.7-24-24-24z"/></svg>
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog" role="status" aria-atomic="true">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      
+      
+        
+        
+      <script id="__config" type="application/json">{"annotate":null,"base":"../../..","features":["content.action.edit","content.code.copy","content.tabs.link","navigation.instant","navigation.tracking","navigation.top","navigation.footer","search.suggest","search.highlight","toc.follow"],"redirect":null,"search":"../../../assets/javascripts/workers/search.c47bb847.min.js","tags":null,"translations":{"clipboard.copied":"Copied to clipboard","clipboard.copy":"Copy to clipboard","clipboard.error":"Could not copy to clipboard","search.result.more.one":"1 more on this page","search.result.more.other":"# more on this page","search.result.none":"No matching documents","search.result.one":"1 matching document","search.result.other":"# matching documents","search.result.placeholder":"Type to start searching","search.result.term.missing":"Missing","select.version":"Select version"},"version":null}</script>
+    
+    
+      <script src="../../../assets/javascripts/bundle.10ee5ab6.min.js"></script>
+      
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/tablesort/5.2.1/tablesort.min.js"></script>
+      
+        <script src="../../../theme/javascripts/tables.js"></script>
+      
+        <script src="../../../theme/javascripts/lightbox.js"></script>
+      
+        <script src="../../../theme/javascripts/lab-page.js"></script>
+      
+        <script src="../../../theme/javascripts/after-footer.js"></script>
+      
+        <script src="../../../theme/javascripts/language-switch.js"></script>
+      
+        <script src="../../../theme/javascripts/external-links.js"></script>
+      
+        <script src="../../../theme/javascripts/easter-egg.js"></script>
+      
+    
+  </body>
+</html>

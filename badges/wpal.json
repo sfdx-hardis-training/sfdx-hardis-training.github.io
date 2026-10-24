@@ -1,0 +1,64 @@
+{
+  "recipient": "wilpa42",
+  "badges": [
+    {
+      "type": "Achievement",
+      "level": 1,
+      "name": "sfdx-hardis Contributor Basics",
+      "description": "Delivers a User Story through a Pull Request, end to end.",
+      "issuer": {
+        "name": "Cloudity",
+        "url": "https://cloudity.com",
+        "course": "https://sfdx-hardis-training.cloudity.com"
+      },
+      "issuedOn": "2026-10-17",
+      "issuedAt": "2026-10-17T22:18:03Z",
+      "evidence": [
+        {
+          "type": "Repository",
+          "url": "https://github.com/wilpa42/sfdx-hardis-training.git"
+        },
+        {
+          "type": "ClaimIssue",
+          "url": "https://github.com/hardisgroupcom/sfdx-hardis-training/issues/191"
+        }
+      ],
+      "image": "https://sfdx-hardis-training.cloudity.com/badges/img/wpal-level-1.svg",
+      "bannerImage": "https://sfdx-hardis-training.cloudity.com/badges/img/banner-level-1.svg",
+      "superbadge": false,
+      "checksPassed": 6,
+      "checksTotal": 6
+    },
+    {
+      "type": "Achievement",
+      "level": 2,
+      "name": "sfdx-hardis Contributor Advanced",
+      "description": "Solves deployment errors, declares deployment actions, resolves conflicts.",
+      "issuer": {
+        "name": "Cloudity",
+        "url": "https://cloudity.com",
+        "course": "https://sfdx-hardis-training.cloudity.com"
+      },
+      "issuedOn": "2026-10-22",
+      "issuedAt": "2026-10-22T21:35:06Z",
+      "evidence": [
+        {
+          "type": "Repository",
+          "url": "https://github.com/wilpa42/sfdx-hardis-training.git"
+        },
+        {
+          "type": "ClaimIssue",
+          "url": "https://github.com/hardisgroupcom/sfdx-hardis-training/issues/260"
+        }
+      ],
+      "image": "https://sfdx-hardis-training.cloudity.com/badges/img/wpal-level-2.svg",
+      "bannerImage": "https://sfdx-hardis-training.cloudity.com/badges/img/banner-level-2.svg",
+      "superbadge": false,
+      "checksPassed": 14,
+      "checksTotal": 14
+    }
+  ],
+  "trailblazer": "wpal",
+  "name": "Wilhelm Palichov",
+  "trailblazerName": "Wilhelm Palichov"
+}

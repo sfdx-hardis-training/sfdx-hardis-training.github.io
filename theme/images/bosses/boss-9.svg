@@ -1,0 +1,71 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" role="img" aria-label="Boss">
+  <!-- A boss of world 9: a clean-shaven man with grey hair slicked back, a
+       strong jaw, a serious and confident look, a black suit and an open
+       white shirt. -->
+  <defs>
+    <clipPath id="boss9-round">
+      <circle cx="50" cy="50" r="50"/>
+    </clipPath>
+    <clipPath id="boss9-eyeL">
+      <path d="M36.8 44.6 Q40.6 40.8 44.4 44 Q40.6 46 36.8 44.6 Z"/>
+    </clipPath>
+    <clipPath id="boss9-eyeR">
+      <path d="M55.6 44 Q59.4 40.8 63.2 44.6 Q59.4 46 55.6 44 Z"/>
+    </clipPath>
+    <linearGradient id="boss9-hair" gradientUnits="userSpaceOnUse" x1="0" y1="12" x2="0" y2="29">
+      <stop offset="0" stop-color="#9a9ea3"/>
+      <stop offset="0.6" stop-color="#868a8f"/>
+      <stop offset="1" stop-color="#635d57"/>
+    </linearGradient>
+  </defs>
+  <g clip-path="url(#boss9-round)">
+    <rect width="100" height="100" fill="#f5dde6"/>
+    <!-- Neck, open white shirt, black suit -->
+    <path d="M40.5 62 L59.5 62 L61 88 L39 88 Z" fill="#e5b493"/>
+    <path d="M40.5 64 C45 72 55 72 59.5 64 L59.5 70 C55 76.5 45 76.5 40.5 70 Z" fill="#cf9a7a"/>
+    <path d="M28 100 C30 88 36 80 40 77 L50 96 L60 77 C64 80 70 88 72 100 Z" fill="#f4f4f2"/>
+    <path d="M40.5 72 L36.5 86 L46.5 91 Z" fill="#ffffff" stroke="#d4d6d9" stroke-width="0.8" stroke-linejoin="round"/>
+    <path d="M59.5 72 L63.5 86 L53.5 91 Z" fill="#ffffff" stroke="#d4d6d9" stroke-width="0.8" stroke-linejoin="round"/>
+    <path d="M0 100 L0 88 C6 80 20 76 33 75 L45 100 Z" fill="#1c1c21"/>
+    <path d="M100 100 L100 88 C94 80 80 76 67 75 L55 100 Z" fill="#1c1c21"/>
+    <path d="M33 75 L37 88 L33.5 90 L41 100 M67 75 L63 88 L66.5 90 L59 100" fill="none" stroke="#3b3b44" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/>
+    <!-- Ears -->
+    <ellipse cx="31.8" cy="45" rx="3.2" ry="5.8" fill="#e3b190"/>
+    <ellipse cx="68.2" cy="45" rx="3.2" ry="5.8" fill="#e3b190"/>
+    <!-- The face: long, a full square jaw and a defined chin -->
+    <path d="M50 17 C61.6 17 68 25 68 38 C68 49 68.2 56 67.2 61.6 C66.2 66 62.4 70.4 57.6 72.6 C55.4 73.8 53 74.4 50 74.4 C47 74.4 44.6 73.8 42.4 72.6 C37.6 70.4 33.8 66 32.8 61.6 C31.8 56 32 49 32 38 C32 25 38.4 17 50 17 Z" fill="#edbe9e"/>
+    <path d="M33.4 49.6 C34.8 55.4 37.8 59.4 41.6 61.2 C38.6 57.8 36.6 54 35.8 49 Z M66.6 49.6 C65.2 55.4 62.2 59.4 58.4 61.2 C61.4 57.8 63.4 54 64.2 49 Z" fill="#dca384" opacity="0.4"/>
+    <path d="M45.2 56 Q43.2 58.4 43.8 61.2 M54.8 56 Q56.8 58.4 56.2 61.2 M47.2 66.8 Q50 65.8 52.8 66.8" fill="none" stroke="#d8a283" stroke-width="0.9" stroke-linecap="round"/>
+    <!-- Mid grey hair slicked straight back close to the head, darker grey-brown
+         underneath and on the short sides, the temples receding -->
+    <path d="M32.2 42 C31.4 35 31.8 28 33.8 23 L37 25.6 C34.8 29 33.6 35 33.6 42 Z M67.8 42 C68.6 35 68.2 28 66.2 23 L63 25.6 C65.2 29 66.4 35 66.4 42 Z" fill="#5f5953"/>
+    <path d="M33.4 29.6 C32.6 21.6 37.4 14.6 45.4 12.6 C48.4 11.8 52 11.8 55 12.4 C62 13.6 66.8 18.4 67.2 23.8 C67.4 25.8 67.2 27.6 66.6 29.4 C65.6 27.6 64 26.4 62 25.8 C58 24.6 54 24 50 24 C47.6 24 46.4 24.4 45 24.6 C42.6 24.6 40 25 38 25.8 C36 26.4 34.4 27.8 33.4 29.6 Z" fill="url(#boss9-hair)"/>
+    <path d="M38.6 25.6 C39.6 20.6 42.4 16.4 46.6 13.8 M45 24.6 C45.8 20.2 47.8 16.4 51 13.4 M52.6 24 C53.4 19.8 55.4 16.4 58.4 14.4 M59.6 25 C60.6 21.6 62.4 18.8 65 17.2" fill="none" stroke="#6c6f74" stroke-width="0.9" stroke-linecap="round"/>
+    <path d="M42 25 C42.8 20.8 45 17 48.6 14.4 M56 24.4 C57 20.8 59 17.8 62 15.8" fill="none" stroke="#adb1b5" stroke-width="0.7" stroke-linecap="round"/>
+    <!-- Straight eyebrows set low over deep-set eyes -->
+    <path d="M37.4 42 Q40.6 40.8 44 41.6 M56 41.6 Q59.4 40.8 62.6 42" fill="none" stroke="#d29b7b" stroke-width="0.8" stroke-linecap="round"/>
+    <path d="M35.2 40 Q40 38.4 46 39.6" fill="none" stroke="#574b44" stroke-width="2.3" stroke-linecap="round"/>
+    <path d="M54 39.4 Q60 37.6 64.8 39.4" fill="none" stroke="#574b44" stroke-width="2.3" stroke-linecap="round"/>
+    <!-- Narrowed, confident hazel eyes -->
+    <path d="M36.8 44.6 Q40.6 40.8 44.4 44 Q40.6 46 36.8 44.6 Z" fill="#ffffff"/>
+    <path d="M55.6 44 Q59.4 40.8 63.2 44.6 Q59.4 46 55.6 44 Z" fill="#ffffff"/>
+    <g clip-path="url(#boss9-eyeL)">
+      <circle cx="40.8" cy="43.7" r="2" fill="#6b5036"/>
+      <circle cx="40.8" cy="43.7" r="0.95" fill="#231912"/>
+    </g>
+    <g clip-path="url(#boss9-eyeR)">
+      <circle cx="59.2" cy="43.7" r="2" fill="#6b5036"/>
+      <circle cx="59.2" cy="43.7" r="0.95" fill="#231912"/>
+    </g>
+    <circle cx="41.5" cy="43" r="0.55" fill="#ffffff"/>
+    <circle cx="59.9" cy="43" r="0.55" fill="#ffffff"/>
+    <path d="M36.4 44.6 Q40.6 40.2 44.8 43.8 M55.2 43.8 Q59.4 40.2 63.6 44.6" fill="none" stroke="#33261f" stroke-width="1.5" stroke-linecap="round"/>
+    <path d="M37.8 46.6 Q40.6 47.4 43.4 46.4 M56.6 46.4 Q59.4 47.4 62.2 46.6" fill="none" stroke="#d6a080" stroke-width="0.8" stroke-linecap="round"/>
+    <!-- A straight, strong nose -->
+    <path d="M50.4 43 C50.8 47 52.2 51 51.8 54" fill="none" stroke="#cf9777" stroke-width="1.2" stroke-linecap="round"/>
+    <path d="M47 54.6 Q50 56.6 53 54.6" fill="none" stroke="#c48b6c" stroke-width="1.2" stroke-linecap="round"/>
+    <!-- Thin lips, a hint of a smile -->
+    <path d="M45.8 61.8 Q50 63.8 54.4 61.6 Q50 62.6 45.8 61.8 Z" fill="#d0968a"/>
+    <path d="M43.8 61 Q50 62 56.4 60.6" fill="none" stroke="#9c5f55" stroke-width="1.3" stroke-linecap="round"/>
+  </g>
+</svg>

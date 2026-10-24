@@ -1,0 +1,91 @@
+<!doctype html>
+<!--
+  Guinea Run on its own, for the VS Code extension: its Guinea Run panel shows
+  this page in a frame, so the game is fetched only when someone opens it and
+  the extension ships nothing of it.
+
+    play.html?lang=fr&from=vscode
+
+  The page that holds the frame hears, through postMessage, { source:
+  "guinea-run", type: "exit" } when the player closes the game, and { type:
+  "openExternal", url } for each link: in a frame a lab link would otherwise
+  replace the game. Opened on its own, the game plays the same.
+-->
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Guinea Run</title>
+    <!-- A share of this page shows the course card, like every other page of the site -->
+    <meta property="og:title" content="Guinea Run">
+    <meta property="og:image" content="https://sfdx-hardis-training.cloudity.com/_assets/social/course.png">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <style>
+      @font-face {
+        font-family: "Open Sans";
+        font-style: normal;
+        font-weight: 300 800;
+        font-display: swap;
+        src: url("../../stylesheets/fonts/open-sans-latin.woff2") format("woff2");
+      }
+
+      @font-face {
+        font-family: "JetBrains Mono";
+        font-style: normal;
+        font-weight: 100 800;
+        font-display: swap;
+        src: url("../../stylesheets/fonts/jetbrains-mono-latin.woff2") format("woff2");
+      }
+
+      html,
+      body {
+        height: 100%;
+        margin: 0;
+        background: #032d60;
+      }
+    </style>
+  </head>
+  <body>
+    <script type="module">
+      const params = new URLSearchParams(location.search);
+      const lang = params.get("lang") === "fr" ? "fr" : "en";
+      const framed = window.parent !== window;
+      document.documentElement.lang = lang;
+
+      function tell(message) {
+        if (framed) {
+          window.parent.postMessage(Object.assign({ source: "guinea-run" }, message), "*");
+        }
+      }
+
+      document.addEventListener(
+        "click",
+        (event) => {
+          const link = event.target.closest && event.target.closest("a[href]");
+          if (link && framed && /^https?:/.test(link.href)) {
+            event.preventDefault();
+            tell({ type: "openExternal", url: link.href });
+          }
+        },
+        true
+      );
+
+      const base = new URL("./", location.href).href;
+      const game = await import(base + "game.js");
+      game.start({
+        lang,
+        trigger: params.get("from") === "vscode" ? "vscode" : "embed",
+        base,
+        track: () => {},
+        onExit: () => {
+          tell({ type: "exit" });
+          if (!framed) {
+            location.href = new URL("../../../" + (lang === "fr" ? "fr/" : "en/"), location.href).href;
+          }
+        }
+      });
+      tell({ type: "ready" });
+    </script>
+  </body>
+</html>
