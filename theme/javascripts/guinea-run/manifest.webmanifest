@@ -1,0 +1,17 @@
+{
+  "name": "Guinea Run",
+  "short_name": "Guinea Run",
+  "description": "Carry US-014 through the pipeline, from a laptop with nothing installed to production. The game of the sfdx-hardis training, by Cloudity.",
+  "start_url": "play.html?from=app",
+  "scope": "./",
+  "display": "fullscreen",
+  "orientation": "any",
+  "background_color": "#032d60",
+  "theme_color": "#032d60",
+  "related_applications": [{ "platform": "webapp", "url": "https://sfdx-hardis-training.cloudity.com/theme/javascripts/guinea-run/manifest.webmanifest" }],
+  "icons": [
+    { "src": "icons/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "icons/icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}

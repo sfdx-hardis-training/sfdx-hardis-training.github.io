@@ -1,0 +1,20 @@
+# Guinea Run sounds
+
+The guinea pig in Guinea Run is a real one. These clips are cut, normalised and re-encoded from recordings on Wikimedia Commons, all released into the public domain by their author:
+
+| Clip | Source |
+| --- | --- |
+| `wheek-1.mp3`, `wheek-2.mp3`, `wheek-3.mp3`, `hungry.mp3` | [Guinea Pig Feeding Wheek.ogg](https://commons.wikimedia.org/wiki/File:Guinea_Pig_Feeding_Wheek.ogg) |
+| `happy.mp3` | [Guinea Pig Happy.ogg](https://commons.wikimedia.org/wiki/File:Guinea_Pig_Happy.ogg) |
+| `scared.mp3` | [Guinea Pig In Distress.ogg](https://commons.wikimedia.org/wiki/File:Guinea_Pig_In_Distress.ogg) |
+| `annoyed.mp3` | [Guinea Pig Keep Away.ogg](https://commons.wikimedia.org/wiki/File:Guinea_Pig_Keep_Away.ogg) |
+| `chirp.mp3` | [Guinea Pig Chirping.ogg](https://commons.wikimedia.org/wiki/File:Guinea_Pig_Chirping.ogg) |
+
+More wheeks, for the jumps, are cut from recordings on Freesound, all released under CC0 (public domain) by their authors:
+
+| Clip | Source |
+| --- | --- |
+| `wheek-4.mp3`, `wheek-5.mp3`, `wheek-7.mp3` | [Guineapig](https://freesound.org/s/435748/) by RICHERlandTV |
+| `wheek-11.mp3`, `wheek-12.mp3` | [guinea_pig.wav](https://freesound.org/s/580283/) by Hatayde |
+
+The other sounds of the game are played by the browser (`core/sound.js`).

@@ -1,0 +1,2043 @@
+/*
+ * Guinea Run, over the whole page, in the style of the Lightning Design System.
+ * Loaded by game.js only when the game opens. A world adds its own styles from
+ * its module (CSS), and they leave with it.
+ *
+ * The overlay keeps clear of the notch and the home bar (env(safe-area-inset-*))
+ * and uses 100dvh, so the phone's address bar never hides the buttons.
+ */
+html.guinea-run-open,
+html.guinea-run-open body {
+  overflow: hidden;
+  overscroll-behavior: none;
+}
+
+.guinea-run {
+  --gr-brand: #0176d3;
+  --gr-brand-dark: #014486;
+  --gr-navy: #032d60;
+  --gr-text: #181818;
+  --gr-weak: #444444;
+  --gr-border: #c9c9c9;
+  --gr-light: #f3f3f3;
+  --gr-success: #2e844a;
+  --gr-error: #ea001e;
+  --gr-warning: #fe9339;
+  --gr-purple: #9050e9;
+  position: fixed;
+  inset: 0;
+  z-index: 10000;
+  width: 100vw;
+  height: 100vh;
+  height: 100dvh;
+  overflow: hidden;
+  background: linear-gradient(#0b5cab, #1b96ff 45%, #cfe9fe 75%, #eef4ff);
+  color: var(--gr-text);
+  font-family: "Open Sans", -apple-system, "Segoe UI", roboto, arial, sans-serif;
+  font-size: 15px;
+  line-height: 1.4;
+  touch-action: none;
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-tap-highlight-color: transparent;
+  outline: none;
+}
+
+.guinea-run *,
+.guinea-run *::before,
+.guinea-run *::after {
+  box-sizing: border-box;
+}
+
+.guinea-run .gr-canvas {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+/* A world's own HTML: over the 3D view, under the HUD */
+.guinea-run .gr-layer {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.guinea-run .gr-layer > * {
+  pointer-events: auto;
+}
+
+/* The top: the Path of the branches, then the score and the badges */
+.guinea-run .gr-top {
+  position: absolute;
+  top: calc(env(safe-area-inset-top, 0px) + 10px);
+  left: calc(env(safe-area-inset-left, 0px) + 10px);
+  right: calc(env(safe-area-inset-right, 0px) + 150px);
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  pointer-events: none;
+}
+
+.guinea-run:not([data-state="playing"]):not([data-state="paused"]):not([data-state="celebrating"]) .gr-top {
+  visibility: hidden;
+}
+
+.guinea-run .gr-path {
+  display: flex;
+  max-width: 720px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  filter: drop-shadow(0 2px 3px rgba(3, 45, 96, 0.25));
+}
+
+.guinea-run .gr-path[hidden] {
+  display: none;
+}
+
+.guinea-run .gr-path li {
+  position: relative;
+  flex: 1 1 0;
+  min-width: 0;
+  margin: 0 0 0 -6px;
+  padding: 6px 8px 6px 16px;
+  background: #e5e5e5;
+  color: var(--gr-weak);
+  font-size: 12px;
+  font-weight: 700;
+  line-height: 1.3;
+  text-align: center;
+  clip-path: polygon(0 0, calc(100% - 10px) 0, 100% 50%, calc(100% - 10px) 100%, 0 100%, 10px 50%);
+  transition: background 0.3s;
+}
+
+.guinea-run .gr-path li:first-child {
+  margin-left: 0;
+  padding-left: 10px;
+  border-radius: 14px 0 0 14px;
+  clip-path: polygon(0 0, calc(100% - 10px) 0, 100% 50%, calc(100% - 10px) 100%, 0 100%);
+}
+
+.guinea-run .gr-path li span {
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.guinea-run .gr-path li.is-done {
+  background: var(--gr-success);
+  color: #ffffff;
+}
+
+.guinea-run .gr-path li.is-done span::before {
+  content: "\2713  ";
+}
+
+.guinea-run .gr-path li.is-current {
+  background: var(--gr-brand);
+  color: #ffffff;
+}
+
+.guinea-run .gr-bar,
+.guinea-run .gr-extra {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.guinea-run .gr-extra:empty {
+  display: none;
+}
+
+.guinea-run .gr-pill {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 3px 10px;
+  border: 1px solid var(--gr-border);
+  border-radius: 4px;
+  background: #ffffff;
+  box-shadow: 0 2px 2px rgba(0, 0, 0, 0.1);
+  font-size: 13px;
+  font-weight: 700;
+  line-height: 1.5;
+  white-space: nowrap;
+}
+
+.guinea-run .gr-world {
+  /* A block, not a flex box, or the ellipsis never shows */
+  display: block;
+  max-width: 260px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  color: var(--gr-navy);
+}
+
+.guinea-run .gr-attempts {
+  color: var(--gr-error);
+  letter-spacing: 2px;
+}
+
+.guinea-run .gr-slot {
+  display: inline-block;
+  width: 22px;
+  height: 22px;
+}
+
+.guinea-run .gr-slot img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  opacity: 0.25;
+  filter: grayscale(1);
+  transition: opacity 0.3s, filter 0.3s;
+}
+
+.guinea-run .gr-slot.is-earned img {
+  opacity: 1;
+  filter: none;
+  animation: gr-pop 0.4s ease-out;
+}
+
+/* Sound, pause and close, top right */
+.guinea-run .gr-corner {
+  position: absolute;
+  top: calc(env(safe-area-inset-top, 0px) + 8px);
+  right: calc(env(safe-area-inset-right, 0px) + 8px);
+  z-index: 3;
+  display: flex;
+  gap: 6px;
+}
+
+.guinea-run:not([data-state="playing"]) .gr-corner .gr-pause {
+  display: none;
+}
+
+.guinea-run .gr-button {
+  min-height: 40px;
+  padding: 6px 16px;
+  border: 1px solid var(--gr-border);
+  border-radius: 4px;
+  background: #ffffff;
+  color: var(--gr-brand);
+  font: inherit;
+  font-weight: 700;
+  font-size: 15px;
+  line-height: 1.2;
+  cursor: pointer;
+  touch-action: manipulation;
+}
+
+.guinea-run .gr-button:hover {
+  background: var(--gr-light);
+}
+
+.guinea-run .gr-button:focus-visible,
+.guinea-run a:focus-visible,
+.guinea-run .gr-link:focus-visible {
+  outline: 2px solid var(--gr-brand);
+  outline-offset: 2px;
+}
+
+.guinea-run .gr-button.gr-primary {
+  background: var(--gr-brand);
+  border-color: var(--gr-brand);
+  color: #ffffff;
+}
+
+.guinea-run .gr-button.gr-primary:hover {
+  background: var(--gr-brand-dark);
+}
+
+.guinea-run .gr-button.gr-small {
+  min-height: 34px;
+  padding: 4px 14px;
+  font-size: 14px;
+}
+
+.guinea-run .gr-icon {
+  min-width: 44px;
+  min-height: 44px;
+  padding: 6px;
+  color: var(--gr-navy);
+}
+
+.guinea-run .gr-icon.is-muted {
+  color: var(--gr-weak);
+}
+
+.guinea-run .gr-link {
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--gr-brand);
+  font: inherit;
+  font-size: 13px;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.guinea-run a {
+  color: var(--gr-brand);
+}
+
+/* The screens, as Lightning modals */
+.guinea-run .gr-panel {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  transform: translate(-50%, -50%);
+  width: min(500px, calc(100vw - 32px));
+  max-height: calc(100dvh - 90px);
+  border-radius: 4px;
+  background: #ffffff;
+  box-shadow: 0 2px 30px rgba(3, 45, 96, 0.45);
+  text-align: center;
+  touch-action: pan-y;
+  user-select: text;
+  -webkit-user-select: text;
+}
+
+.guinea-run .gr-panel.gr-wide {
+  width: min(1040px, calc(100vw - 24px));
+  max-height: calc(100dvh - 40px);
+}
+
+.guinea-run .gr-panel[hidden] {
+  display: none;
+}
+
+/* The intro card leaves the top half to the world behind it */
+.guinea-run[data-state="intro"] .gr-panel {
+  top: auto;
+  bottom: calc(env(safe-area-inset-bottom, 0px) + 12px);
+  transform: translateX(-50%);
+  max-height: 62dvh;
+}
+
+.guinea-run .gr-modal-header {
+  padding: 12px 18px;
+  border-bottom: 2px solid var(--gr-border);
+}
+
+.guinea-run .gr-modal-header h2 {
+  margin: 0;
+  color: var(--gr-text);
+  font-size: 21px;
+  font-weight: 400;
+  line-height: 1.25;
+}
+
+.guinea-run .gr-modal-body {
+  padding: 12px 20px;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+
+.guinea-run .gr-modal-footer {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  justify-content: flex-end;
+  padding: 10px 16px;
+  border-top: 2px solid var(--gr-border);
+  background: var(--gr-light);
+}
+
+.guinea-run .gr-modal-footer:empty {
+  display: none;
+}
+
+.guinea-run .gr-modal-body p {
+  margin: 6px 0;
+  font-size: 15px;
+  line-height: 1.45;
+}
+
+.guinea-run .gr-drawing {
+  font-size: 13px !important;
+}
+
+.guinea-run .gr-muted {
+  color: var(--gr-weak);
+}
+
+.guinea-run .gr-score {
+  font-size: 22px !important;
+  font-weight: 700;
+}
+
+.guinea-run .gr-result-stars,
+.guinea-run .gr-stars {
+  color: #ffb020;
+  letter-spacing: 2px;
+}
+
+.guinea-run .gr-result-stars {
+  margin: 0 !important;
+  font-size: 34px !important;
+  line-height: 1.1 !important;
+}
+
+/* The guinea pig of the cards: a picture of the 3D model */
+.guinea-run .gr-logo .gr-pig {
+  display: block;
+  width: 132px;
+  height: 69px;
+  margin: 0 auto;
+  background: url("../../images/guinea-pig.webp") center / contain no-repeat;
+}
+
+/* A world done: it popcorns like crazy, the way a happy guinea pig does */
+.guinea-run .gr-logo--happy {
+  padding-top: 34px;
+}
+
+.guinea-run .gr-logo--happy .gr-pig {
+  transform-origin: 50% 100%;
+  animation: gr-popcorn 1.5s cubic-bezier(0.3, 0, 0.35, 1) infinite;
+}
+
+.guinea-run .gr-logo--sad .gr-pig {
+  transform: rotate(-8deg);
+  filter: grayscale(0.5);
+}
+
+.guinea-run .gr-rule {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  margin: 10px 0;
+  padding: 10px 12px;
+  border-left: 4px solid var(--gr-brand);
+  border-radius: 0 4px 4px 0;
+  background: #eef4ff;
+  text-align: left;
+  font-size: 15px;
+}
+
+.guinea-run .gr-rule strong {
+  color: var(--gr-brand);
+  font-size: 12px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.guinea-run .gr-rule--tip {
+  border-left-color: var(--gr-warning);
+  background: #fff4e8;
+}
+
+.guinea-run .gr-rule--tip strong {
+  color: #a96404;
+}
+
+.guinea-run .gr-rule--info {
+  margin-top: 10px;
+  border-left-color: #706e6b;
+  background: #f3f3f3;
+}
+
+.guinea-run .gr-rule--info strong {
+  color: #444444;
+}
+
+.guinea-run .gr-install-link {
+  align-self: flex-start;
+  margin-top: 8px;
+  text-decoration: none;
+}
+
+.guinea-run .gr-install[hidden],
+.guinea-run .gr-install-link[hidden] {
+  display: none;
+}
+
+/* On the map, under the modes: the offer stays in sight without pushing the worlds far down */
+.guinea-run .gr-install--map {
+  margin: 0 0 12px;
+  padding: 8px 12px;
+  font-size: 14px;
+}
+
+.guinea-run .gr-star-goals {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 4px 14px;
+  margin: 6px 0;
+  padding: 0;
+  list-style: none;
+  color: var(--gr-weak);
+  font-size: 13px;
+}
+
+.guinea-run .gr-star-goals li.is-earned {
+  color: #a96404;
+  font-weight: 700;
+}
+
+.guinea-run .gr-keys {
+  margin: 8px 0 6px;
+  padding: 8px 12px;
+  border-left: 4px solid var(--gr-border);
+  background: var(--gr-light);
+  list-style: none;
+  font-size: 13px;
+  line-height: 1.5;
+  text-align: left;
+}
+
+.guinea-run .gr-keys li {
+  margin: 1px 0;
+}
+
+.guinea-run .gr-toggle {
+  display: inline-flex;
+  gap: 8px;
+  align-items: center;
+  margin: 2px 0;
+  font-size: 13px;
+  cursor: pointer;
+}
+
+.guinea-run .gr-toggle input {
+  width: 18px;
+  height: 18px;
+  accent-color: var(--gr-brand);
+}
+
+.guinea-run .gr-small-title {
+  margin: 10px 0 2px !important;
+  color: var(--gr-weak);
+  font-size: 12px !important;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.guinea-run .gr-labs {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  font-size: 14px;
+}
+
+.guinea-run .gr-labs li {
+  margin: 2px 0;
+}
+
+.guinea-run .gr-teaser {
+  margin-top: 14px !important;
+  color: var(--gr-error);
+  font-style: italic;
+  font-weight: 700;
+}
+
+/* The map */
+.guinea-run .gr-map {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+  margin: 8px 0;
+  padding: 0;
+  list-style: none;
+  text-align: left;
+}
+
+.guinea-run .gr-card {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 10px 12px;
+  border: 1px solid var(--gr-border);
+  border-top: 4px solid var(--gr-brand);
+  border-radius: 4px;
+  background: #ffffff;
+}
+
+.guinea-run .gr-card.is-done {
+  border-top-color: var(--gr-success);
+}
+
+.guinea-run .gr-card.is-locked {
+  border-top-color: var(--gr-border);
+  background: var(--gr-light);
+  color: var(--gr-weak);
+}
+
+.guinea-run .gr-card-head {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.guinea-run .gr-card-number {
+  display: flex;
+  flex: 0 0 34px;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
+  border-radius: 8px;
+  background: var(--gr-navy);
+  color: #ffffff;
+  font-size: 17px;
+  font-weight: 800;
+}
+
+.guinea-run .gr-card.is-locked .gr-card-number {
+  background: #a0a0a0;
+}
+
+.guinea-run .gr-card-titles {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.guinea-run .gr-card-titles strong {
+  font-size: 15px;
+  line-height: 1.25;
+}
+
+.guinea-run .gr-card-style {
+  color: var(--gr-weak);
+  font-size: 12px;
+}
+
+.guinea-run .gr-card-pitch {
+  flex: 1 1 auto;
+  margin: 0 !important;
+  font-size: 13px !important;
+  line-height: 1.4 !important;
+}
+
+.guinea-run .gr-card-foot {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 10px;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 13px;
+}
+
+.guinea-run .gr-lock {
+  color: var(--gr-weak);
+  font-weight: 700;
+}
+
+.guinea-run .gr-map-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 20px;
+  align-items: center;
+  justify-content: center;
+}
+
+.guinea-run .gr-badges {
+  display: flex;
+  justify-content: center;
+  gap: 14px;
+  margin: 8px 0 4px;
+}
+
+.guinea-run .gr-badge {
+  width: 84px;
+  margin: 0;
+  font-size: 11px;
+  line-height: 1.3;
+  color: var(--gr-weak);
+}
+
+.guinea-run .gr-badge img {
+  display: block;
+  width: 56px;
+  height: 56px;
+  margin: 0 auto 4px;
+  opacity: 0.25;
+  filter: grayscale(1);
+}
+
+.guinea-run .gr-badge.is-earned {
+  color: var(--gr-text);
+  font-weight: 700;
+}
+
+.guinea-run .gr-badge.is-earned img {
+  opacity: 1;
+  filter: none;
+}
+
+/* What just happened, as a Lightning toast */
+.guinea-run .gr-toast {
+  position: absolute;
+  top: calc(env(safe-area-inset-top, 0px) + 104px);
+  left: 50%;
+  z-index: 2;
+  max-width: calc(100vw - 32px);
+  padding: 8px 16px 8px 14px;
+  border-radius: 4px;
+  background: #747474;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.25);
+  color: #ffffff;
+  font-size: 15px;
+  font-weight: 700;
+  text-align: center;
+  opacity: 0;
+  transform: translate(-50%, -8px);
+  transition: opacity 0.15s, transform 0.15s;
+  pointer-events: none;
+}
+
+.guinea-run .gr-toast--show {
+  opacity: 1;
+  transform: translate(-50%, 0);
+}
+
+.guinea-run .gr-toast--good {
+  background: var(--gr-success);
+}
+
+.guinea-run .gr-toast--bad {
+  background: var(--gr-error);
+}
+
+.guinea-run .gr-toast--power {
+  background: var(--gr-purple);
+}
+
+/* The cast, as chat bubbles on the right */
+.guinea-run .gr-chat {
+  position: absolute;
+  top: calc(env(safe-area-inset-top, 0px) + 64px);
+  right: calc(env(safe-area-inset-right, 0px) + 10px);
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  width: min(320px, calc(100vw - 20px));
+  pointer-events: none;
+}
+
+.guinea-run .gr-bubble {
+  display: flex;
+  gap: 8px;
+  align-items: flex-start;
+  padding: 8px 10px;
+  border: 1px solid var(--gr-border);
+  border-radius: 12px 12px 12px 2px;
+  background: #ffffff;
+  box-shadow: 0 2px 8px rgba(3, 45, 96, 0.25);
+  font-size: 13px;
+  line-height: 1.35;
+  animation: gr-slide-in 0.25s ease-out;
+  transition: opacity 0.4s;
+}
+
+.guinea-run .gr-bubble.is-leaving {
+  opacity: 0;
+}
+
+.guinea-run .gr-bubble strong {
+  display: block;
+  font-size: 12px;
+}
+
+.guinea-run .gr-avatar {
+  display: flex;
+  flex: 0 0 30px;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  color: #ffffff;
+  font-size: 11px;
+  font-weight: 800;
+}
+
+/* A member of the cast with a cartoon face instead of initials */
+.guinea-run .gr-avatar--mariia,
+.guinea-run .gr-avatar--romain {
+  flex-basis: 38px;
+  width: 38px;
+  height: 38px;
+  background: url("../../images/mariia.svg") center / cover no-repeat;
+}
+
+.guinea-run .gr-avatar--romain {
+  background-image: url("../../images/romain.svg");
+}
+
+/* Someone outside the cast with a portrait (a pinball admin) */
+.guinea-run .gr-avatar--portrait {
+  flex-basis: 38px;
+  width: 38px;
+  height: 38px;
+  background-position: center;
+  background-size: cover;
+  background-repeat: no-repeat;
+}
+
+/* Victor's note */
+.guinea-run .gr-note {
+  position: absolute;
+  top: 38%;
+  left: 50%;
+  z-index: 3;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  width: min(300px, calc(100vw - 40px));
+  padding: 14px 16px;
+  background: #fff3a8;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+  color: #3e2f00;
+  font-family: "Segoe Print", "Comic Sans MS", cursive;
+  font-size: 15px;
+  transform: translate(-50%, -50%) rotate(-3deg);
+  animation: gr-note-in 0.4s cubic-bezier(0.2, 1.4, 0.4, 1);
+  transition: opacity 0.4s;
+  pointer-events: none;
+}
+
+.guinea-run .gr-note strong {
+  font-family: "Open Sans", arial, sans-serif;
+  font-size: 12px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.guinea-run .gr-note.is-leaving {
+  opacity: 0;
+}
+
+/* A deployment log, bottom left */
+.guinea-run .gr-ticker {
+  position: absolute;
+  left: calc(env(safe-area-inset-left, 0px) + 10px);
+  bottom: calc(env(safe-area-inset-bottom, 0px) + 12px);
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  max-width: min(560px, calc(100vw - 20px));
+  pointer-events: none;
+}
+
+.guinea-run.gr-show-buttons[data-state="playing"] .gr-ticker {
+  bottom: calc(env(safe-area-inset-bottom, 0px) + 90px);
+}
+
+.guinea-run .gr-ticker:empty {
+  display: none;
+}
+
+.guinea-run .gr-tick {
+  padding: 2px 8px;
+  border-radius: 3px;
+  background: rgba(3, 45, 96, 0.85);
+  color: #7cfc9a;
+  font-family: "JetBrains Mono", consolas, monospace;
+  font-size: 12px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  animation: gr-slide-in 0.2s ease-out;
+  transition: opacity 0.4s;
+}
+
+.guinea-run .gr-tick.is-leaving {
+  opacity: 0;
+}
+
+/* A level is done: the Cloudity logo, and the badge */
+.guinea-run .gr-celebrate {
+  position: absolute;
+  inset: 0;
+  z-index: 4;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: radial-gradient(circle at 50% 45%, rgba(255, 255, 255, 0.55), rgba(3, 45, 96, 0.55) 70%);
+  cursor: pointer;
+  animation: gr-fade-in 0.3s ease-out;
+}
+
+.guinea-run .gr-celebrate.is-leaving {
+  opacity: 0;
+  transition: opacity 0.45s;
+}
+
+.guinea-run .gr-cel-card {
+  position: relative;
+  width: min(380px, calc(100vw - 40px));
+  padding: 18px 20px 14px;
+  border-radius: 4px;
+  background: #ffffff;
+  box-shadow: 0 6px 40px rgba(3, 45, 96, 0.5);
+  text-align: center;
+  animation: gr-card-in 0.45s cubic-bezier(0.2, 1.4, 0.4, 1);
+}
+
+.guinea-run .gr-cel-brand {
+  margin: -18px -20px 12px;
+  padding: 14px 0 12px;
+  border-radius: 4px 4px 0 0;
+  background: var(--gr-navy);
+}
+
+.guinea-run .gr-cel-logo {
+  display: block;
+  width: 150px;
+  height: auto;
+  margin: 0 auto;
+  animation: gr-drop 0.6s 0.1s cubic-bezier(0.3, 1.6, 0.5, 1) both;
+}
+
+.guinea-run .gr-cel-level {
+  margin: 0 0 8px;
+  color: var(--gr-brand);
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.guinea-run .gr-cel-badge {
+  position: relative;
+  width: 150px;
+  height: 150px;
+  margin: 0 auto;
+  overflow: hidden;
+  perspective: 600px;
+}
+
+.guinea-run .gr-cel-badge img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  animation: gr-spin-in 1.3s 0.35s cubic-bezier(0.2, 0.9, 0.3, 1.1) both;
+}
+
+.guinea-run .gr-shine {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(115deg, transparent 35%, rgba(255, 255, 255, 0.75) 50%, transparent 65%);
+  transform: translateX(-120%);
+  animation: gr-shine 1s 1.6s ease-in-out both;
+  pointer-events: none;
+}
+
+.guinea-run .gr-cel-earned {
+  margin: 10px 0 0;
+  color: var(--gr-success);
+  font-size: 15px;
+  font-weight: 700;
+  animation: gr-fade-in 0.4s 1.4s both;
+}
+
+.guinea-run .gr-cel-name {
+  margin: 2px 0 8px;
+  font-size: 18px;
+  font-weight: 700;
+  animation: gr-fade-in 0.4s 1.5s both;
+}
+
+.guinea-run .gr-cel-hint {
+  margin: 0;
+  color: var(--gr-weak);
+  font-size: 12px;
+}
+
+.guinea-run .gr-flyer {
+  position: absolute;
+  z-index: 5;
+  transform-origin: center;
+  transition: transform 0.65s cubic-bezier(0.5, 0, 0.3, 1);
+  pointer-events: none;
+}
+
+.guinea-run .gr-confetti {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.guinea-run .gr-confetti i {
+  position: absolute;
+  top: -20px;
+  width: 9px;
+  height: 14px;
+  border-radius: 2px;
+  animation-name: gr-confetti;
+  animation-timing-function: linear;
+  animation-fill-mode: both;
+}
+
+/* The pads: shown on touch screens, or when asked for */
+.guinea-run .gr-controls {
+  position: absolute;
+  left: calc(env(safe-area-inset-left, 0px) + 12px);
+  right: calc(env(safe-area-inset-right, 0px) + 12px);
+  bottom: calc(env(safe-area-inset-bottom, 0px) + 12px);
+  z-index: 2;
+  display: none;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.guinea-run.gr-show-buttons[data-state="playing"] .gr-controls {
+  display: flex;
+}
+
+.guinea-run .gr-pad {
+  flex: 1 1 0;
+  max-width: 110px;
+  min-height: 64px;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.88);
+  color: var(--gr-navy);
+  font-size: 22px;
+}
+
+.guinea-run .gr-pad[hidden] {
+  display: none;
+}
+
+.guinea-run .gr-pad:active {
+  background: var(--gr-brand);
+  color: #ffffff;
+}
+
+/* Ten worlds: two rows of five on a wide screen; on three columns the last
+   world, the watch over production, takes the whole last row */
+@media (min-width: 1100px) {
+  .guinea-run .gr-map {
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+  }
+
+  .guinea-run .gr-card {
+    padding: 10px;
+  }
+
+  .guinea-run .gr-card-head {
+    gap: 8px;
+  }
+
+  .guinea-run .gr-card-number {
+    flex-basis: 28px;
+    width: 28px;
+    height: 28px;
+    font-size: 15px;
+  }
+
+  .guinea-run .gr-card-titles strong {
+    font-size: 14px;
+  }
+
+  .guinea-run .gr-card-style {
+    font-size: 11px;
+  }
+
+  .guinea-run .gr-card-pitch {
+    font-size: 12.5px !important;
+  }
+}
+
+@media (min-width: 861px) and (max-width: 1099px) {
+  .guinea-run .gr-card:last-child:nth-child(3n + 1) {
+    grid-column: 1 / -1;
+  }
+}
+
+@media (max-width: 860px) {
+  .guinea-run .gr-map {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 600px) {
+  .guinea-run .gr-map {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .guinea-run .gr-top {
+    right: calc(env(safe-area-inset-right, 0px) + 150px);
+  }
+
+  /* A phone shows the step it is on, the others shrink to chevrons */
+  .guinea-run .gr-path li:not(.is-current) {
+    flex: 0 0 22px;
+  }
+
+  .guinea-run .gr-path li:not(.is-current) span {
+    visibility: hidden;
+  }
+
+  .guinea-run .gr-world {
+    max-width: 150px;
+  }
+
+  /* Below the mute and close buttons, which would sit on the title */
+  .guinea-run .gr-panel,
+  .guinea-run .gr-panel.gr-wide {
+    top: calc(50% + 28px);
+    max-height: calc(100dvh - 76px);
+  }
+
+  .guinea-run .gr-toast {
+    top: calc(env(safe-area-inset-top, 0px) + 150px);
+    font-size: 14px;
+  }
+
+  /* Under the toast, over the scene: world panels and pads live at the bottom */
+  .guinea-run .gr-chat {
+    top: calc(env(safe-area-inset-top, 0px) + 220px);
+    opacity: 0.94;
+  }
+
+  .guinea-run .gr-icon {
+    min-width: 40px;
+    min-height: 40px;
+  }
+}
+
+@media (orientation: landscape) and (max-height: 500px) {
+  .guinea-run .gr-pad {
+    min-height: 54px;
+  }
+
+  .guinea-run .gr-panel {
+    max-height: calc(100dvh - 30px);
+  }
+
+  .guinea-run[data-state="intro"] .gr-panel {
+    max-height: 80dvh;
+  }
+
+  .guinea-run .gr-logo {
+    display: none;
+  }
+
+  .guinea-run .gr-cel-badge {
+    width: 96px;
+    height: 96px;
+  }
+
+  .guinea-run .gr-cel-logo {
+    width: 96px;
+  }
+}
+
+@keyframes gr-popcorn {
+  0%,
+  100% {
+    transform: translateY(0) rotate(0deg) scale(1, 1);
+  }
+
+  6% {
+    transform: translateY(0) rotate(0deg) scale(1.08, 0.88);
+  }
+
+  16% {
+    transform: translateY(-32px) rotate(-16deg) scale(1, 1);
+  }
+
+  24% {
+    transform: translateY(-34px) rotate(12deg) scale(-1, 1);
+  }
+
+  32% {
+    transform: translateY(0) rotate(0deg) scale(1, 1);
+  }
+
+  36% {
+    transform: translateY(0) rotate(0deg) scale(1.1, 0.86);
+  }
+
+  46% {
+    transform: translateY(-18px) rotate(10deg) scale(1, 1);
+  }
+
+  54% {
+    transform: translateY(0) rotate(0deg) scale(1, 1);
+  }
+
+  60% {
+    transform: translateY(0) rotate(0deg) scale(1.08, 0.88);
+  }
+
+  70% {
+    transform: translateY(-40px) rotate(-20deg) scale(-1, 1);
+  }
+
+  78% {
+    transform: translateY(-26px) rotate(18deg) scale(1, 1);
+  }
+
+  86% {
+    transform: translateY(0) rotate(0deg) scale(1, 1);
+  }
+
+  90% {
+    transform: translateY(0) rotate(0deg) scale(1.1, 0.86);
+  }
+}
+
+@keyframes gr-pop {
+  50% {
+    transform: scale(1.5);
+  }
+}
+
+@keyframes gr-fade-in {
+  from {
+    opacity: 0;
+  }
+}
+
+@keyframes gr-slide-in {
+  from {
+    opacity: 0;
+    transform: translateX(16px);
+  }
+}
+
+@keyframes gr-note-in {
+  from {
+    opacity: 0;
+    transform: translate(-50%, -50%) rotate(-12deg) scale(0.6);
+  }
+}
+
+@keyframes gr-card-in {
+  from {
+    opacity: 0;
+    transform: scale(0.7);
+  }
+}
+
+@keyframes gr-drop {
+  from {
+    opacity: 0;
+    transform: translateY(-40px);
+  }
+}
+
+@keyframes gr-spin-in {
+  from {
+    opacity: 0;
+    transform: scale(0.1) rotateY(-720deg);
+  }
+
+  70% {
+    opacity: 1;
+    transform: scale(1.12) rotateY(0deg);
+  }
+
+  to {
+    transform: scale(1) rotateY(0deg);
+  }
+}
+
+@keyframes gr-shine {
+  to {
+    transform: translateX(120%);
+  }
+}
+
+@keyframes gr-confetti {
+  from {
+    transform: translate(0, 0) rotate(0deg);
+  }
+
+  to {
+    transform: translate(var(--gr-drift), 105vh) rotate(var(--gr-spin));
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .guinea-run *,
+  .guinea-run .gr-celebrate {
+    animation: none !important;
+    transition: none !important;
+  }
+
+  .guinea-run .gr-shine {
+    display: none;
+  }
+}
+
+/* What to do right now: one bright line that stays under the top bar */
+.guinea-run .gr-goal {
+  align-self: flex-start;
+  max-width: min(640px, 100%);
+  padding: 6px 14px 6px 10px;
+  border-radius: 999px;
+  background: #fff8d6;
+  box-shadow: 0 3px 0 #f0b400, 0 4px 10px rgba(3, 45, 96, 0.25);
+  color: #032d60;
+  font-size: 15px;
+  font-weight: 700;
+  line-height: 1.35;
+}
+
+.guinea-run .gr-goal::before {
+  content: "➜";
+  display: inline-block;
+  margin-right: 8px;
+  color: #dd7a01;
+}
+
+.guinea-run .gr-goal[hidden] {
+  display: none;
+}
+
+.guinea-run .gr-goal.is-new {
+  animation: gr-goal-pop 0.45s ease-out;
+}
+
+@keyframes gr-goal-pop {
+  0% {
+    transform: scale(0.85);
+    background: #ffe27a;
+  }
+  60% {
+    transform: scale(1.06);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+/* A big instruction in the middle of the screen */
+.guinea-run .gr-coach {
+  position: absolute;
+  top: 26%;
+  left: 50%;
+  z-index: 3;
+  max-width: min(560px, calc(100vw - 32px));
+  padding: 14px 26px;
+  border: 4px solid #ffffff;
+  border-radius: 22px;
+  background: linear-gradient(180deg, #ffd84d, #ffb400);
+  box-shadow: 0 6px 0 #c77d00, 0 10px 30px rgba(3, 45, 96, 0.35);
+  color: #032d60;
+  font-size: clamp(20px, 3.4vw, 30px);
+  font-weight: 800;
+  line-height: 1.2;
+  text-align: center;
+  opacity: 0;
+  transform: translate(-50%, -50%) scale(0.6);
+  pointer-events: none;
+}
+
+.guinea-run .gr-coach.is-shown {
+  animation: gr-coach-in 0.35s cubic-bezier(0.2, 1.6, 0.4, 1) forwards;
+}
+
+@keyframes gr-coach-in {
+  to {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+  }
+}
+
+/* How to play: three numbered steps on the world card */
+.guinea-run .gr-how {
+  display: grid;
+  gap: 6px;
+  margin: 4px 0 12px;
+  padding: 0;
+  list-style: none;
+  counter-reset: gr-how;
+  text-align: left;
+}
+
+.guinea-run .gr-how li {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  padding: 8px 12px;
+  border-radius: 10px;
+  background: #eef4ff;
+  color: #032d60;
+  font-size: 15px;
+  font-weight: 600;
+  counter-increment: gr-how;
+}
+
+.guinea-run .gr-how li::before {
+  content: counter(gr-how);
+  display: inline-flex;
+  flex: 0 0 28px;
+  align-items: center;
+  justify-content: center;
+  height: 28px;
+  border-radius: 50%;
+  background: #0176d3;
+  color: #ffffff;
+  font-weight: 800;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .guinea-run .gr-coach.is-shown {
+    animation: none;
+    opacity: 1;
+    transform: translate(-50%, -50%);
+  }
+}
+
+/* Why a move was wrong: an orange tip box above the pads */
+.guinea-run .gr-tipbar {
+  position: absolute;
+  bottom: calc(env(safe-area-inset-bottom, 0px) + 24px);
+  left: 50%;
+  z-index: 3;
+  display: flex;
+  gap: 10px;
+  align-items: baseline;
+  max-width: min(620px, calc(100vw - 24px));
+  padding: 12px 16px;
+  border-radius: 14px;
+  background: #fff4e5;
+  box-shadow: 0 4px 0 #dd7a01, 0 8px 24px rgba(3, 45, 96, 0.3);
+  color: #3e2b02;
+  font-size: 16px;
+  line-height: 1.4;
+  opacity: 0;
+  transform: translate(-50%, 16px);
+  transition: opacity 0.2s, transform 0.2s;
+  pointer-events: none;
+}
+
+.guinea-run .gr-tipbar.is-shown {
+  opacity: 1;
+  transform: translate(-50%, 0);
+}
+
+.guinea-run .gr-tipbar strong {
+  flex: 0 0 auto;
+  color: #a96404;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.guinea-run.gr-show-buttons .gr-tipbar {
+  bottom: calc(env(safe-area-inset-bottom, 0px) + 96px);
+}
+
+/* The coach and the tip belong to the play, never to a card or a menu */
+.guinea-run:not([data-state="playing"]) .gr-coach,
+.guinea-run:not([data-state="playing"]) .gr-tipbar {
+  display: none;
+}
+
+/* The map: one happy colour per world */
+.guinea-run .gr-card[data-world="0"] { --gr-card: #06a59a; }
+.guinea-run .gr-card[data-world="1"] { --gr-card: #0176d3; }
+.guinea-run .gr-card[data-world="2"] { --gr-card: #ff5d2d; }
+.guinea-run .gr-card[data-world="3"] { --gr-card: #9050e9; }
+.guinea-run .gr-card[data-world="4"] { --gr-card: #2e844a; }
+.guinea-run .gr-card[data-world="5"] { --gr-card: #e3066a; }
+.guinea-run .gr-card[data-world="6"] { --gr-card: #dd7a01; }
+.guinea-run .gr-card[data-world="7"] { --gr-card: #3a49da; }
+.guinea-run .gr-card[data-world="8"] { --gr-card: #032d60; }
+.guinea-run .gr-card[data-world="9"] { --gr-card: #c23934; }
+
+.guinea-run .gr-card {
+  border: 2px solid color-mix(in srgb, var(--gr-card, #0176d3) 22%, #ffffff);
+  border-top: 6px solid var(--gr-card, #0176d3);
+  border-radius: 14px;
+  background: linear-gradient(180deg, color-mix(in srgb, var(--gr-card, #0176d3) 9%, #ffffff), #ffffff 60%);
+  box-shadow: 0 3px 0 color-mix(in srgb, var(--gr-card, #0176d3) 25%, #ffffff);
+  transition: transform 0.15s, box-shadow 0.15s;
+}
+
+.guinea-run .gr-card:not(.is-locked):hover {
+  transform: translateY(-3px);
+  box-shadow: 0 7px 0 color-mix(in srgb, var(--gr-card, #0176d3) 30%, #ffffff), 0 10px 20px rgba(3, 45, 96, 0.15);
+}
+
+.guinea-run .gr-card.is-done {
+  border-top-color: var(--gr-card, #0176d3);
+}
+
+.guinea-run .gr-card .gr-card-number {
+  border-radius: 50%;
+  background: var(--gr-card, #0176d3);
+  box-shadow: 0 3px 0 color-mix(in srgb, var(--gr-card, #0176d3) 60%, #000000);
+}
+
+.guinea-run .gr-card-style {
+  align-self: flex-start;
+  margin-top: 2px;
+  padding: 1px 8px;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--gr-card, #0176d3) 14%, #ffffff);
+  color: color-mix(in srgb, var(--gr-card, #0176d3) 75%, #000000);
+  font-weight: 700;
+}
+
+.guinea-run .gr-card .gr-primary {
+  border-color: var(--gr-card, #0176d3);
+  border-radius: 999px;
+  background: var(--gr-card, #0176d3);
+  box-shadow: 0 3px 0 color-mix(in srgb, var(--gr-card, #0176d3) 60%, #000000);
+}
+
+.guinea-run .gr-card.is-locked {
+  border-color: #dddbda;
+  background: #f3f3f3;
+  box-shadow: none;
+  filter: grayscale(0.7);
+}
+
+.guinea-run .gr-card.is-done .gr-stars {
+  color: #ffb400;
+  font-size: 16px;
+}
+
+.guinea-run[data-state="map"] .gr-modal-header {
+  background: linear-gradient(90deg, #0176d3, #9050e9 55%, #e3066a);
+}
+
+.guinea-run[data-state="map"] .gr-modal-header h2 {
+  color: #ffffff;
+  font-weight: 800;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .guinea-run .gr-card {
+    transition: none;
+  }
+}
+
+@media (max-width: 600px) {
+  /* Below the top bar, the goal line and the toast on a phone */
+  .guinea-run .gr-coach {
+    top: 44%;
+  }
+}
+
+/*
+ * A phone: the middle of the screen belongs to what is coming. The top keeps
+ * the path, the score, the world's own panel and the goal, all compact; the
+ * coach speaks in the goal line; toasts, tips and chat sit just above the pads.
+ */
+@media (max-width: 600px) {
+  .guinea-run[data-state="playing"] .gr-world,
+  .guinea-run[data-state="playing"] .gr-shelf {
+    display: none;
+  }
+
+  .guinea-run .gr-top {
+    gap: 4px;
+  }
+
+  .guinea-run .gr-pill {
+    padding: 2px 8px;
+    font-size: 12px;
+  }
+
+  .guinea-run .gr-extra {
+    zoom: 0.8;
+  }
+
+  .guinea-run .gr-goal {
+    padding: 4px 10px 4px 8px;
+    font-size: 13px;
+  }
+
+  .guinea-run .gr-goal.is-coach {
+    background: linear-gradient(180deg, #ffd84d, #ffb400);
+    box-shadow: 0 3px 0 #c77d00, 0 4px 10px rgba(3, 45, 96, 0.25);
+    font-size: 14px;
+    font-weight: 800;
+  }
+
+  .guinea-run .gr-coach {
+    display: none !important;
+  }
+
+  /* Messages: just under the goal line by default, over the sky... */
+  .guinea-run .gr-toast {
+    top: calc(var(--gr-top-end, 160px) + 6px);
+    max-width: 86vw;
+    padding: 6px 12px;
+    font-size: 13px;
+  }
+
+  .guinea-run .gr-tipbar {
+    top: calc(var(--gr-top-end, 160px) + 6px);
+    bottom: auto;
+    padding: 8px 12px;
+    font-size: 13px;
+  }
+
+  .guinea-run .gr-chat {
+    top: calc(var(--gr-top-end, 160px) + 48px);
+    bottom: auto;
+    left: calc(env(safe-area-inset-left, 0px) + 10px);
+    width: auto;
+    opacity: 0.95;
+  }
+
+  .guinea-run.gr-show-buttons .gr-tipbar,
+  .guinea-run.gr-show-buttons .gr-chat {
+    bottom: auto;
+  }
+
+  /* After a mistake the tip carries the error's own title: one box, not two */
+  .guinea-run .gr-tipbar.is-shown ~ .gr-toast {
+    opacity: 0;
+  }
+
+  .guinea-run .gr-tipbar {
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  .guinea-run .gr-tipbar strong {
+    text-transform: none;
+    letter-spacing: 0;
+  }
+
+  /* ...or just above the pads, for the worlds whose track runs up the middle */
+  .guinea-run[data-messages="bottom"] .gr-toast {
+    top: auto;
+    bottom: calc(env(safe-area-inset-bottom, 0px) + 24px);
+  }
+
+  .guinea-run[data-messages="bottom"].gr-show-buttons .gr-toast {
+    bottom: calc(env(safe-area-inset-bottom, 0px) + 100px);
+  }
+
+  .guinea-run[data-messages="bottom"] .gr-tipbar,
+  .guinea-run[data-messages="bottom"] .gr-chat {
+    top: auto;
+    bottom: calc(env(safe-area-inset-bottom, 0px) + 66px);
+  }
+
+  .guinea-run[data-messages="bottom"].gr-show-buttons .gr-tipbar,
+  .guinea-run[data-messages="bottom"].gr-show-buttons .gr-chat {
+    bottom: calc(env(safe-area-inset-bottom, 0px) + 142px);
+  }
+
+  /* One bubble at a time, and small */
+  .guinea-run .gr-chat .gr-bubble:not(:last-child) {
+    display: none;
+  }
+
+  .guinea-run .gr-bubble {
+    font-size: 12px;
+  }
+}
+
+/* ---------- The end credits: a roll on the navy of the pipeline, then the final card ---------- */
+
+.guinea-run .gr-panel.gr-roll-panel {
+  background: var(--gr-navy);
+  color: #ffffff;
+}
+
+.guinea-run .gr-roll-panel .gr-modal-header h2 {
+  color: #ffffff;
+}
+
+.guinea-run .gr-roll-panel .gr-modal-body {
+  padding: 0;
+  overflow: hidden;
+}
+
+.guinea-run .gr-roll {
+  position: relative;
+  height: min(520px, calc(100dvh - 190px));
+  overflow: hidden;
+  touch-action: none;
+  mask-image: linear-gradient(transparent, #000000 12%, #000000 88%, transparent);
+}
+
+.guinea-run .gr-roll.is-still {
+  overflow-y: auto;
+  touch-action: pan-y;
+  mask-image: none;
+}
+
+.guinea-run .gr-roll-track {
+  padding: 0 20px;
+  will-change: transform;
+}
+
+.guinea-run .gr-roll-block {
+  margin: 0 0 34px;
+}
+
+.guinea-run .gr-roll-block h3 {
+  margin: 0 0 8px;
+  color: #90d0fe;
+  font-size: 13px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.guinea-run .gr-roll-block p {
+  margin: 4px 0;
+  font-size: 15px;
+  line-height: 1.4;
+}
+
+.guinea-run .gr-roll .gr-logo {
+  display: block;
+}
+
+.guinea-run .gr-roll-game {
+  font-size: 26px !important;
+  font-weight: 700;
+}
+
+.guinea-run .gr-roll-names {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 6px 16px;
+  margin: 12px 0 0;
+  padding: 0;
+  list-style: none;
+  font-size: 14px;
+}
+
+.guinea-run .gr-roll-logo {
+  display: block;
+  width: 150px;
+  margin: 0 auto 8px;
+}
+
+.guinea-run .gr-roll-by {
+  font-weight: 700;
+}
+
+.guinea-run .gr-roll-contact {
+  display: inline-block;
+  margin: 12px 0 4px;
+  text-decoration: none;
+}
+
+.guinea-run .gr-roll-panel .gr-roll-contact {
+  border-color: #ffffff;
+  background: #ffffff;
+  color: var(--gr-navy);
+}
+
+.guinea-run .gr-roll-thanks {
+  margin-top: 18px !important;
+  font-size: 18px !important;
+}
+
+.guinea-run .gr-roll-cta .gr-roll-contact {
+  margin-top: 8px;
+}
+
+@media (max-width: 600px) {
+  .guinea-run .gr-roll {
+    height: calc(100dvh - 150px);
+  }
+
+  .guinea-run .gr-roll-names {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ---------- The Hall of Fame ---------- */
+
+.guinea-run .gr-hof-open {
+  margin-top: 4px;
+}
+
+/* A top 5 score to send: the box on the end card, the dot on the map button */
+.guinea-run .gr-hof-invite {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 6px;
+  margin: 10px 0;
+  padding: 10px 12px;
+  border: 2px solid #f2a900;
+  border-radius: 6px;
+  background: #fff8e1;
+  text-align: left;
+  font-size: 15px;
+  animation: gr-fade-in 0.4s ease-out;
+}
+
+.guinea-run .gr-hof-invite[hidden] {
+  display: none;
+}
+
+.guinea-run .gr-hof-invite-title {
+  color: #8a5a00;
+  font-size: 13px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.guinea-run .gr-hof-invite .gr-hof-message {
+  margin: 0;
+}
+
+.guinea-run .gr-hof-open.is-marked {
+  position: relative;
+}
+
+.guinea-run .gr-hof-open.is-marked::after {
+  content: "";
+  position: absolute;
+  top: -4px;
+  right: -4px;
+  width: 12px;
+  height: 12px;
+  border: 2px solid #ffffff;
+  border-radius: 50%;
+  background: #f2a900;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .guinea-run .gr-hof-invite {
+    animation: none;
+  }
+}
+
+.guinea-run .gr-hof-tabs {
+  display: flex;
+  gap: 6px;
+  overflow-x: auto;
+  padding: 2px 2px 8px;
+  margin-bottom: 4px;
+  scrollbar-width: thin;
+}
+
+.guinea-run .gr-hof-tabs .gr-button {
+  flex: 0 0 auto;
+  min-width: 36px;
+}
+
+.guinea-run .gr-hof-tabs .gr-button.is-active {
+  background: var(--gr-brand);
+  border-color: var(--gr-brand);
+  color: #ffffff;
+}
+
+.guinea-run .gr-hof-list {
+  list-style: none;
+  text-align: left;
+  margin: 0 0 12px;
+  padding: 0;
+}
+
+.guinea-run .gr-hof-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 5px 8px;
+  border-bottom: 1px solid var(--gr-light);
+  font-size: 14px;
+}
+
+.guinea-run .gr-hof-row.is-you {
+  background: #eef4ff;
+  border-radius: 4px;
+  font-weight: 700;
+}
+
+.guinea-run .gr-hof-rank {
+  width: 22px;
+  text-align: right;
+  color: var(--gr-weak);
+  font-variant-numeric: tabular-nums;
+}
+
+.guinea-run .gr-hof-avatar {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: var(--gr-light);
+  flex: 0 0 auto;
+}
+
+.guinea-run .gr-hof-handle {
+  flex: 1 1 auto;
+  text-align: left;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.guinea-run .gr-hof-badge {
+  padding: 1px 6px;
+  border-radius: 10px;
+  background: var(--gr-purple);
+  color: #ffffff;
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.guinea-run .gr-hof-stars,
+.guinea-run .gr-hof-time {
+  color: var(--gr-weak);
+  font-size: 12px;
+  white-space: nowrap;
+}
+
+.guinea-run .gr-hof-stars {
+  color: #dd7a01;
+}
+
+.guinea-run .gr-hof-score {
+  min-width: 52px;
+  text-align: right;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+.guinea-run .gr-hof-send {
+  border-top: 1px solid var(--gr-border);
+  padding-top: 8px;
+}
+
+.guinea-run .gr-hof-field {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px 10px;
+  margin-bottom: 8px;
+  font-size: 14px;
+}
+
+.guinea-run .gr-hof-field input {
+  flex: 1 1 160px;
+  min-width: 0;
+  padding: 6px 10px;
+  border: 1px solid var(--gr-border);
+  border-radius: 4px;
+  font: inherit;
+  /* 16px: a phone does not zoom into a box it can read */
+  font-size: 16px;
+}
+
+.guinea-run .gr-hof-link[aria-disabled="true"] {
+  opacity: 0.45;
+  pointer-events: none;
+}
+
+.guinea-run .gr-hof-message:empty {
+  display: none;
+}
+
+.guinea-run .gr-hof-privacy {
+  font-size: 12px;
+}
+
+.guinea-run .gr-bonuses {
+  list-style: none;
+  margin: 0 0 6px;
+  padding: 0;
+  font-size: 14px;
+  color: var(--gr-weak);
+}
+
+.guinea-run .gr-bonuses li {
+  margin: 1px 0;
+}
+
+.guinea-run .gr-speed {
+  color: var(--gr-success);
+  font-weight: 700;
+}
+
+@media (max-width: 600px) {
+  .guinea-run .gr-hof-time {
+    display: none;
+  }
+
+  .guinea-run .gr-hof-row {
+    gap: 6px;
+    padding: 5px 4px;
+  }
+}
+
+/* ---------- The modes ---------- */
+
+.guinea-run .gr-modes {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 6px 8px;
+  margin: 0 0 10px;
+}
+
+.guinea-run .gr-modes .gr-small-title {
+  margin: 0 4px 0 0;
+}
+
+.guinea-run .gr-modes .gr-button.is-active {
+  background: var(--gr-brand);
+  border-color: var(--gr-brand);
+  color: #ffffff;
+}
+
+.guinea-run .gr-mode-hint {
+  flex-basis: 100%;
+  text-align: center;
+  font-size: 13px;
+}
+
+.guinea-run .gr-mode-line {
+  font-weight: 700;
+  color: var(--gr-error);
+}
+
+.guinea-run .gr-hof-mode {
+  padding: 1px 5px;
+  border-radius: 4px;
+  font-size: 11px;
+  font-weight: 700;
+  color: #ffffff;
+}
+
+.guinea-run .gr-hof-mode--normal {
+  background: var(--gr-warning);
+}
+
+.guinea-run .gr-hof-mode--hard {
+  background: var(--gr-error);
+}
+
+/* The bonus table: its wide card under the worlds, and its line on the final card */
+.guinea-run .gr-card[data-world="pinball"] { --gr-card: #dd7a01; }
+
+.guinea-run .gr-bonus-card {
+  margin: 4px 0 8px;
+  text-align: left;
+  background: linear-gradient(120deg, color-mix(in srgb, #dd7a01 16%, #ffffff), #ffffff 55%, color-mix(in srgb, #9050e9 12%, #ffffff));
+}
+
+.guinea-run .gr-bonus-cta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 10px;
+  align-items: center;
+}
+
+.guinea-run .gr-bonus-cta strong {
+  flex-basis: 100%;
+}

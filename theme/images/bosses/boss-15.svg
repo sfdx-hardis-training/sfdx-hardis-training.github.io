@@ -1,0 +1,55 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" role="img" aria-label="Boss">
+  <!-- A man with a shaved head and very short dark hair, thick dark
+       eyebrows, a neat short dark beard, a neutral look and a black
+       crew-neck t-shirt. -->
+  <defs>
+    <clipPath id="boss15-round">
+      <circle cx="50" cy="50" r="50"/>
+    </clipPath>
+    <linearGradient id="boss15-head" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#f4cdb5"/>
+      <stop offset="0.45" stop-color="#eebfa5"/>
+    </linearGradient>
+  </defs>
+  <g clip-path="url(#boss15-round)">
+    <rect width="100" height="100" fill="#d5dde6"/>
+    <!-- The long neck and the black t-shirt -->
+    <path d="M38 68 L62 68 L63 90 L37 90 Z" fill="#e3b094"/>
+    <path d="M38.4 70 C43 76 57 76 61.6 70 L62 77 C57 81 43 81 38 77 Z" fill="#c99478"/>
+    <path d="M0 100 L0 90 C8 86 22 83 34 82 C38 91 62 91 66 82 C78 83 92 86 100 90 L100 100 Z" fill="#1b1b1e"/>
+    <path d="M34 82 C38 91.6 62 91.6 66 82" fill="none" stroke="#2f2f35" stroke-width="2.2" stroke-linecap="round"/>
+    <!-- Ears, standing out a little -->
+    <ellipse cx="28.2" cy="43" rx="3.6" ry="6.6" fill="#e5b398"/>
+    <ellipse cx="71.8" cy="43" rx="3.6" ry="6.6" fill="#e5b398"/>
+    <path d="M27.4 39.6 Q25.6 43 27.6 47 M72.6 39.6 Q74.4 43 72.4 47" fill="none" stroke="#c98d72" stroke-width="0.8" stroke-linecap="round"/>
+    <!-- The tall shaved head -->
+    <path d="M29.6 42 C28.6 24 38 12 50 12 C62 12 71.4 24 70.4 42 C70.2 51 68.6 58 65.6 64 C62 71.4 56.4 76 50 76 C43.6 76 38 71.4 34.4 64 C31.4 58 29.8 51 29.6 42 Z" fill="url(#boss15-head)"/>
+    <!-- Very short dark hair on the sides and around the crown -->
+    <path d="M29.7 41 C29.2 26 37 12.2 50 12.2 C63 12.2 70.8 26 70.3 41 L68.2 41 C68.4 32 66.6 25 62.4 20.4 C58.6 16.6 54.4 15 50 15 C45.6 15 41.4 16.6 37.6 20.4 C33.4 25 31.6 32 31.8 41 Z" fill="#2f2a27" opacity="0.42"/>
+    <ellipse cx="44.4" cy="20.4" rx="6" ry="2.6" fill="#f9dcc9" opacity="0.6"/>
+    <!-- A neat short dark beard and moustache, denser over the lip and on the chin -->
+    <path d="M30.2 49 C31 55 32.4 60 34.6 64.4 C38.2 71.8 43.6 77 50 77 C56.4 77 61.8 71.8 65.4 64.4 C67.6 60 69 55 69.8 49 C67.8 52 65 54 61.6 55 C58 52.4 54 51.6 50 51.8 C46 51.6 42 52.4 38.4 55 C35 54 32.2 52 30.2 49 Z M29.7 41 L31.8 41 L32.6 51 L30.3 50.6 Z M70.3 41 L68.2 41 L67.4 51 L69.7 50.6 Z" fill="#5c504a"/>
+    <path d="M40.6 56 C44 52.6 56 52.6 59.4 56 C56 56.8 44 56.8 40.6 56 Z" fill="#463b35"/>
+    <!-- Thick dark eyebrows, angled -->
+    <path d="M34 32.8 Q37.4 29.8 41 29.6 Q43.8 29.6 45.6 30.8" fill="none" stroke="#2a201c" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M54.4 30.8 Q56.2 29.6 59 29.6 Q62.6 29.8 66 32.8" fill="none" stroke="#2a201c" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/>
+    <!-- Hazel eyes under heavy lids -->
+    <path d="M36.8 39 Q41 35.4 45.2 38.6 Q41 40.8 36.8 39 Z M54.8 38.6 Q59 35.4 63.2 39 Q59 40.8 54.8 38.6 Z" fill="#ffffff"/>
+    <circle cx="41" cy="38.3" r="2.1" fill="#7a5a3a"/>
+    <circle cx="59" cy="38.3" r="2.1" fill="#7a5a3a"/>
+    <circle cx="41" cy="38.3" r="0.95" fill="#221811"/>
+    <circle cx="59" cy="38.3" r="0.95" fill="#221811"/>
+    <circle cx="41.7" cy="37.6" r="0.55" fill="#ffffff"/>
+    <circle cx="59.7" cy="37.6" r="0.55" fill="#ffffff"/>
+    <path d="M36.4 39 Q41 34.8 45.6 38.4 M54.4 38.4 Q59 34.8 63.6 39" fill="none" stroke="#2e221c" stroke-width="1.3" stroke-linecap="round"/>
+    <path d="M37.6 36 Q41 34 44.8 35.6 M55.2 35.6 Q59 34 62.4 36" fill="none" stroke="#d49c84" stroke-width="0.8" stroke-linecap="round"/>
+    <path d="M38 41.8 Q41 43 44 41.8 M56 41.8 Q59 43 62 41.8" fill="none" stroke="#d9a28a" stroke-width="0.8" stroke-linecap="round"/>
+    <!-- A long nose -->
+    <path d="M49.6 40 C50 44 51.8 47.6 51.4 50.4" fill="none" stroke="#cf9276" stroke-width="1.2" stroke-linecap="round"/>
+    <path d="M46 50.6 Q50 53.6 54 50.6" fill="none" stroke="#c48468" stroke-width="1.2" stroke-linecap="round"/>
+    <!-- Full lips, a neutral mouth -->
+    <path d="M42.6 58.6 Q50 60.2 57.4 58.6 Q55 63.2 50 63.2 Q45 63.2 42.6 58.6 Z" fill="#d98e8c"/>
+    <path d="M42 58.4 Q46 56.4 50 57.4 Q54 56.4 58 58.4 Q50 59.8 42 58.4 Z" fill="#c27674"/>
+    <path d="M42.4 58.6 Q50 60 57.6 58.6" fill="none" stroke="#9a5452" stroke-width="0.9" stroke-linecap="round"/>
+  </g>
+</svg>

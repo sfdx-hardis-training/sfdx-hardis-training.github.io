@@ -1,0 +1,36 @@
+{
+  "recipient": "gdecaen",
+  "badges": [
+    {
+      "type": "Achievement",
+      "level": 1,
+      "name": "sfdx-hardis Contributor Basics",
+      "description": "Delivers a User Story through a Pull Request, end to end.",
+      "issuer": {
+        "name": "Cloudity",
+        "url": "https://cloudity.com",
+        "course": "https://sfdx-hardis-training.cloudity.com"
+      },
+      "issuedOn": "2026-10-14",
+      "issuedAt": "2026-10-14T09:50:00Z",
+      "evidence": [
+        {
+          "type": "Repository",
+          "url": "https://github.com/gdecaen/sfdx-hardis-training.git"
+        },
+        {
+          "type": "ClaimIssue",
+          "url": "https://github.com/hardisgroupcom/sfdx-hardis-training/issues/156"
+        }
+      ],
+      "image": "https://sfdx-hardis-training.cloudity.com/badges/img/gdecaen-level-1.svg",
+      "bannerImage": "https://sfdx-hardis-training.cloudity.com/badges/img/banner-level-1.svg",
+      "superbadge": false,
+      "checksPassed": 6,
+      "checksTotal": 6
+    }
+  ],
+  "trailblazer": "gdecaen",
+  "name": "Guillaume Decaen",
+  "trailblazerName": "Guillaume Decaen"
+}
