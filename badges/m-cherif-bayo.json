@@ -1,0 +1,36 @@
+{
+  "recipient": "cherif-bayo",
+  "badges": [
+    {
+      "type": "Achievement",
+      "level": 1,
+      "name": "sfdx-hardis Contributor Basics",
+      "description": "Delivers a User Story through a Pull Request, end to end.",
+      "issuer": {
+        "name": "Cloudity",
+        "url": "https://cloudity.com",
+        "course": "https://sfdx-hardis-training.cloudity.com"
+      },
+      "issuedOn": "2026-10-10",
+      "issuedAt": "2026-10-10T21:34:08Z",
+      "evidence": [
+        {
+          "type": "Repository",
+          "url": "https://github.com/cherif-bayo/sfdx-hardis-training.git"
+        },
+        {
+          "type": "ClaimIssue",
+          "url": "https://github.com/hardisgroupcom/sfdx-hardis-training/issues/109"
+        }
+      ],
+      "image": "https://sfdx-hardis-training.cloudity.com/badges/img/m-cherif-bayo-level-1.svg",
+      "bannerImage": "https://sfdx-hardis-training.cloudity.com/badges/img/banner-level-1.svg",
+      "superbadge": false,
+      "checksPassed": 6,
+      "checksTotal": 6
+    }
+  ],
+  "trailblazer": "m-cherif-bayo",
+  "name": "Cherif BAYO",
+  "trailblazerName": "Cherif BAYO"
+}

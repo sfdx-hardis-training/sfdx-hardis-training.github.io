@@ -1,0 +1,36 @@
+{
+  "recipient": "maxi1934",
+  "badges": [
+    {
+      "type": "Achievement",
+      "level": 1,
+      "name": "sfdx-hardis Contributor Basics",
+      "description": "Delivers a User Story through a Pull Request, end to end.",
+      "issuer": {
+        "name": "Cloudity",
+        "url": "https://cloudity.com",
+        "course": "https://sfdx-hardis-training.cloudity.com"
+      },
+      "issuedOn": "2026-10-21",
+      "issuedAt": "2026-10-21T01:03:09Z",
+      "evidence": [
+        {
+          "type": "Repository",
+          "url": "https://github.com/maxi1934/sfdx-hardis-training.git"
+        },
+        {
+          "type": "ClaimIssue",
+          "url": "https://github.com/hardisgroupcom/sfdx-hardis-training/issues/234"
+        }
+      ],
+      "image": "https://sfdx-hardis-training.cloudity.com/badges/img/mpose12-level-1.svg",
+      "bannerImage": "https://sfdx-hardis-training.cloudity.com/badges/img/banner-level-1.svg",
+      "superbadge": false,
+      "checksPassed": 6,
+      "checksTotal": 6
+    }
+  ],
+  "trailblazer": "mpose12",
+  "name": "Maximiliano Pose Moglia",
+  "trailblazerName": "Maximiliano Pose Moglia"
+}

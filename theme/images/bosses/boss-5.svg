@@ -1,0 +1,69 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" role="img" aria-label="Boss">
+  <!-- A woman with long wavy dark blond hair parted in the middle, blue-grey
+       eyes, a gentle smile, a grey blazer over a navy top and a thin
+       necklace. -->
+  <defs>
+    <clipPath id="boss5-round">
+      <circle cx="50" cy="50" r="50"/>
+    </clipPath>
+    <linearGradient id="boss5-hair" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#9a6f45"/>
+      <stop offset="0.45" stop-color="#b88a57"/>
+      <stop offset="1" stop-color="#d7b27c"/>
+    </linearGradient>
+    <linearGradient id="boss5-locks" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#a77a4b"/>
+      <stop offset="0.5" stop-color="#bf915c"/>
+      <stop offset="1" stop-color="#e0bd86"/>
+    </linearGradient>
+  </defs>
+  <g clip-path="url(#boss5-round)">
+    <rect width="100" height="100" fill="#c9ecec"/>
+    <!-- The long hair behind the head -->
+    <path d="M50 11 C38 11 29 17 27 30 C25 40 27 48 22 56 C17 64 23 72 20 80 C17 88 22 94 20 100 L80 100 C78 94 83 88 80 80 C77 72 83 64 78 56 C73 48 75 40 73 30 C71 17 62 11 50 11 Z" fill="url(#boss5-hair)"/>
+    <!-- Neck, the navy top and the grey blazer -->
+    <path d="M43 62 L57 62 L58 84 L42 84 Z" fill="#efc7b1"/>
+    <path d="M30 100 L33 86 C40 89 60 89 67 86 L70 100 Z" fill="#1f2a48"/>
+    <path d="M33 86 C40 89 60 89 67 86" fill="none" stroke="#2c3961" stroke-width="1.2"/>
+    <path d="M4 100 C7 86 18 78.5 33 77.5 L38 100 Z M96 100 C93 86 82 78.5 67 77.5 L62 100 Z" fill="#a3a2a0"/>
+    <path d="M33 77.5 L38 100 M67 77.5 L62 100" fill="none" stroke="#8a8987" stroke-width="1.2"/>
+    <path d="M43 62 Q50 70 57 62 L57.4 68 Q50 72.5 42.6 68 Z" fill="#e6b6a0"/>
+    <!-- Thin necklace -->
+    <path d="M43.5 77 Q50 85.5 56.5 77" fill="none" stroke="#e6d3a3" stroke-width="0.6"/>
+    <circle cx="50" cy="83.2" r="0.9" fill="#e6d3a3"/>
+    <!-- The face, oval with a narrow chin -->
+    <path d="M31.5 42 C31.5 27 40 21 50 21 C60 21 68.5 27 68.5 42 C68.5 55 59 68 50 68 C41 68 31.5 55 31.5 42 Z" fill="#f6d6c2"/>
+    <!-- Hair in front: a middle parting, waves falling on the shoulders -->
+    <path d="M49 14 C41 14 32 21 30.5 37 C29.5 47 32 53 27 61 C22 69 28 76 23 84 C20 90 24 95 21 100 L37 100 C35 94 38 88 36 81 C34 73 37 66 35 58 C34 50 34 43 34.5 38 C36 29 42 21 49 17.5 Z" fill="url(#boss5-locks)"/>
+    <path d="M49 14 C59 14 68 21 69.5 37 C70.5 47 68 53 73 61 C78 69 72 76 77 84 C80 90 76 95 79 100 L63 100 C65 94 62 88 64 81 C66 73 63 66 65 58 C66 50 66 43 65.5 38 C64 29 57 21 49 17.5 Z" fill="url(#boss5-locks)"/>
+    <g fill="none" stroke="#e2c493" stroke-width="1.1" stroke-linecap="round">
+      <path d="M45 17 C39 21 35 28 34 36"/>
+      <path d="M53 17 C59 21 63 28 65 36"/>
+      <path d="M31.5 50 C31 56 27 61 27 67 C27 73 30 77 27 83 C25 88 27 93 25 98"/>
+      <path d="M68.5 50 C69 56 73 61 73 67 C73 73 70 77 73 83 C75 88 73 93 75 98"/>
+      <path d="M21 62 C18 70 23 76 21 82 C19 88 22 94 21 99"/>
+      <path d="M79 62 C82 70 77 76 79 82 C81 88 78 94 79 99"/>
+    </g>
+    <!-- Eyebrows -->
+    <path d="M36.5 36.2 Q41 33.4 46.5 35.4 M53.5 35.4 Q59 33.4 63.5 36.2" fill="none" stroke="#8a6040" stroke-width="1.7" stroke-linecap="round"/>
+    <!-- Blue-grey eyes -->
+    <path d="M37.6 42 Q42 38.4 46.2 42 Q42 43.6 37.6 42 Z M53.8 42 Q58 38.4 62.4 42 Q58 43.6 53.8 42 Z" fill="#ffffff"/>
+    <circle cx="42" cy="41.6" r="2.2" fill="#6f8ba3"/>
+    <circle cx="58" cy="41.6" r="2.2" fill="#6f8ba3"/>
+    <circle cx="42" cy="41.6" r="1" fill="#26303b"/>
+    <circle cx="58" cy="41.6" r="1" fill="#26303b"/>
+    <circle cx="42.7" cy="40.9" r="0.6" fill="#ffffff"/>
+    <circle cx="58.7" cy="40.9" r="0.6" fill="#ffffff"/>
+    <path d="M37.4 42 Q42 37.8 46.4 41.8 M53.6 41.8 Q58 37.8 62.6 42" fill="none" stroke="#4a3428" stroke-width="1.2" stroke-linecap="round"/>
+    <path d="M39 45.2 Q42 46.2 45 45.2 M55 45.2 Q58 46.2 61 45.2" fill="none" stroke="#e4b29c" stroke-width="0.9" stroke-linecap="round"/>
+    <!-- Soft cheeks -->
+    <ellipse cx="37" cy="51" rx="4.4" ry="2.8" fill="#f1a39a" opacity="0.3"/>
+    <ellipse cx="63" cy="51" rx="4.4" ry="2.8" fill="#f1a39a" opacity="0.3"/>
+    <!-- Nose -->
+    <path d="M50.4 42.5 Q50.8 47.5 49.2 50 Q50.4 51.4 52.2 50.6" fill="none" stroke="#dca58c" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/>
+    <!-- A gentle smile showing the teeth a little -->
+    <path d="M43.6 56 Q50 58.2 56.4 56 Q53.6 61 50 61 Q46.4 61 43.6 56 Z" fill="#cf7479"/>
+    <path d="M44.8 56.6 Q50 58.4 55.2 56.6 L54.6 57.8 Q50 59.4 45.4 57.8 Z" fill="#ffffff"/>
+    <path d="M43.6 56 Q50 58.2 56.4 56" fill="none" stroke="#b4565f" stroke-width="1" stroke-linecap="round"/>
+  </g>
+</svg>
