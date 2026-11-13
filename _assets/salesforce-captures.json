@@ -1,0 +1,186 @@
+{
+  "_comment": "Salesforce screens a learner has to click through. Captured by scripts/build/capture-salesforce.mjs over CDP, annotated by scripts/build/annotate.mjs. Nothing is ever saved in the org: a capture walks forward and leaves by navigating away.",
+  "org": "helios-uat",
+  "_org_comment": "Setup has to be in English, and that follows the user, not the URL: Salesforce ignores ?language= for a logged-in user. helios-dev holds the same Helios metadata but its only human user is French, so the captures are read from the UAT org, which carries the same objects, permission sets, rule and records.",
+  "lookups": {
+    "crewPermSetId": "SELECT Id FROM PermissionSet WHERE Name = 'Helios_Delivery_Crew' LIMIT 1",
+    "installationId": "SELECT Id FROM Installation__c WHERE Name = 'INST-00001' LIMIT 1",
+    "crewWarningFlowId": "SELECT ActiveVersionId FROM FlowDefinitionView WHERE ApiName = 'Installation_Crew_Warning'",
+    "assignCrewFlowId": "SELECT ActiveVersionId FROM FlowDefinitionView WHERE ApiName = 'Installation_Assign_Crew'"
+  },
+  "captures": [
+    {
+      "name": "object-manager-fields",
+      "path": "/lightning/setup/ObjectManager/Installation__c/FieldsAndRelationships/view",
+      "waitFor": "button:has-text('New')",
+      "width": 1720,
+      "height": 950,
+      "clip": {
+        "x": 12,
+        "y": 150,
+        "width": 1696,
+        "height": 790
+      }
+    },
+    {
+      "name": "new-field-type",
+      "skip": "The whole new field wizard lives under /p/setup/field/, and every /p/setup/ page answers Insufficient Privileges to the session `sf org open` hands out. Retake these four from a browser signed in with a password.",
+      "path": "/p/setup/field/NewCustomFieldStageManager?entity=Installation__c"
+    },
+    {
+      "name": "new-field-details",
+      "skip": "Step 2 of the wizard, unreachable for the same reason as new-field-type.",
+      "click": ["input[name='goNext']"]
+    },
+    {
+      "name": "new-field-security",
+      "skip": "Step 3 of the wizard, unreachable for the same reason as new-field-type.",
+      "click": ["input[name='goNext']"]
+    },
+    {
+      "name": "new-field-layouts",
+      "skip": "Step 4 of the wizard, unreachable for the same reason as new-field-type. Never click past it: the next button on step 4 is Save.",
+      "click": ["input[name='goNext']"]
+    },
+    {
+      "name": "permission-set-object-settings",
+      "path": "/lightning/setup/PermSets/page?address=%2F{{crewPermSetId}}",
+      "frame": "iframe",
+      "click": ["a:has-text('Object Settings')", "a:has-text('Installations')"],
+      "after": "text=Field Permissions",
+      "width": 1720,
+      "height": 1250,
+      "scrollTo": "text=Field Permissions",
+      "clip": {
+        "x": 272,
+        "y": 252,
+        "width": 640,
+        "height": 790
+      }
+    },
+    {
+      "name": "installation-record",
+      "path": "/lightning/app/c__Helios_Delivery/r/Installation__c/{{installationId}}/view",
+      "waitFor": "text=Panel delivery timeline",
+      "settle": 4000,
+      "clip": {
+        "x": 0,
+        "y": 96,
+        "width": 1440,
+        "height": 470
+      }
+    },
+    {
+      "name": "validation-rule",
+      "path": "/lightning/setup/ObjectManager/Installation__c/ValidationRules/view",
+      "waitFor": "text=Installation_Date_Not_Past",
+      "width": 1720,
+      "height": 1400,
+      "clip": {
+        "x": 12,
+        "y": 150,
+        "width": 1696,
+        "height": 850
+      }
+    },
+    {
+      "name": "flow-builder-crew-warning",
+      "_comment": "Lab 2.2 step 2: the flow as it ships, in Flow Builder. Nothing is saved: the builder is only opened.",
+      "path": "/builder_platform_interaction/flowBuilder.app?flowId={{crewWarningFlowId}}",
+      "width": 1600,
+      "height": 950,
+      "load": 15000
+    },
+    {
+      "name": "flow-builder-start-conditions",
+      "_comment": "Lab 2.2 step 2.1: the entry conditions of the Start element, opened with Edit and left without saving.",
+      "path": "/builder_platform_interaction/flowBuilder.app?flowId={{crewWarningFlowId}}",
+      "width": 1600,
+      "height": 950,
+      "load": 15000,
+      "click": ["text=Edit >> nth=0"],
+      "settle": 3000
+    },
+    {
+      "name": "flow-builder-formula",
+      "_comment": "Lab 2.2 step 2.2: the crewTooSmall formula, opened from the Toolbox, with the description and the formula the lab asks for typed in, and left without Done.",
+      "path": "/builder_platform_interaction/flowBuilder.app?flowId={{crewWarningFlowId}}",
+      "width": 1600,
+      "height": 950,
+      "load": 15000,
+      "click": ["button[title*='Toolbox']", "text=crewTooSmall"],
+      "settle": 3000,
+      "hide": [".slds-popover_tooltip", "[role='tooltip']"],
+      "clip": {
+        "x": 380,
+        "y": 140,
+        "width": 840,
+        "height": 600
+      },
+      "fillAfter": [
+        [
+          "textarea.slds-textarea >> nth=0",
+          "True when eight panels a person do not cover the job, and no warning was sent yet"
+        ],
+        [
+          "textarea[name='Formula']",
+          "AND(\n  {!$Record.Crew_Size__c} * 8 < {!$Record.Panels_Required__c},\n  NOT({!$Record.Crew_Warning_Sent__c})\n)"
+        ]
+      ]
+    },
+    {
+      "name": "flow-builder-add-element",
+      "_comment": "Lab 2.2 step 2.3: the Add Element menu of the + after Create Warning Task. Nothing is added.",
+      "path": "/builder_platform_interaction/flowBuilder.app?flowId={{crewWarningFlowId}}",
+      "width": 1600,
+      "height": 1250,
+      "load": 15000,
+      "mouse": [[476, 808]],
+      "settle": 3000
+    },
+    {
+      "name": "crew-capacity-records",
+      "_comment": "Lab 2.4 step 1: the list of the 12 Crew Capacity records that Create my lab records made. The object has no tab, and this address opens its list all the same. Needs an org holding the records: taken with --org helios-dev right after Create my lab records.",
+      "path": "/lightning/o/Crew_Capacity__c/list?filterName=All",
+      "width": 1440,
+      "height": 900,
+      "load": 12000,
+      "settle": 3000,
+      "clip": {
+        "x": 0,
+        "y": 90,
+        "width": 1440,
+        "height": 620
+      }
+    },
+    {
+      "name": "flow-builder-assign-crew",
+      "_comment": "Lab 2.7 step 1: the Installation Assign Crew flow in Auto-Layout, with the Flat Roof Minimum decision after Move To Scheduled. Taken with --org helios-dev right after step 1 of the lab, when the flow holds the learner's rule and not the cap yet. Switching the canvas to Auto-Layout only changes the view: nothing is saved.",
+      "path": "/builder_platform_interaction/flowBuilder.app?flowId={{assignCrewFlowId}}",
+      "width": 1600,
+      "height": 950,
+      "load": 15000,
+      "settle": 3000,
+      "hide": [".slds-popover_tooltip", "[role='tooltip']"],
+      "click": ["button:has-text('Free-Form')", "text=Auto-Layout"]
+    },
+    {
+      "name": "flow-builder-assign-crew-full",
+      "_comment": "Lab 2.7 step 7.3: the same flow zoomed to fit, so the flat roof rule and the cap under it are both in view: the minimum first, the cap last. Fit to view is the second button of the zoom bar, bottom left of the canvas, in window pixels. Nothing is saved.",
+      "path": "/builder_platform_interaction/flowBuilder.app?flowId={{assignCrewFlowId}}",
+      "width": 1600,
+      "height": 950,
+      "load": 15000,
+      "click": ["button:has-text('Free-Form')", "text=Auto-Layout"],
+      "mouse": [[57, 890]],
+      "settle": 3000,
+      "hide": [".slds-popover_tooltip", "[role='tooltip']"],
+      "clip": {
+        "x": 560,
+        "y": 215,
+        "width": 480,
+        "height": 700
+      }
+    }
+  ]
+}
