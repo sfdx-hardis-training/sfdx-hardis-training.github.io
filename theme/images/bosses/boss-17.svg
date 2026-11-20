@@ -1,0 +1,63 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" role="img" aria-label="Boss">
+  <!-- A boss of world 9: a man with short ginger-blond hair combed back, light
+       blue eyes, a long full beard of ginger and grey, a big smile, a plain
+       blue t-shirt. -->
+  <defs>
+    <clipPath id="boss17-round">
+      <circle cx="50" cy="50" r="50"/>
+    </clipPath>
+    <radialGradient id="boss17-beard" cx="0.5" cy="0.5" r="0.62">
+      <stop offset="0" stop-color="#ddd2c4"/>
+      <stop offset="0.55" stop-color="#cfb69b"/>
+      <stop offset="1" stop-color="#bb875e"/>
+    </radialGradient>
+  </defs>
+  <g clip-path="url(#boss17-round)">
+    <rect width="100" height="100" fill="#b9e6f5"/>
+    <!-- The plain blue t-shirt -->
+    <path d="M2 100 C4 87 17 79.6 34 77 L66 77 C83 79.6 96 87 98 100 Z" fill="#6494d6"/>
+    <path d="M34 77.4 C38 84.6 62 84.6 66 77.4" fill="none" stroke="#5281c4" stroke-width="2.2" stroke-linecap="round"/>
+    <!-- Ears -->
+    <ellipse cx="27.8" cy="47" rx="4" ry="6.4" fill="#eaae98"/>
+    <ellipse cx="72.2" cy="47" rx="4" ry="6.4" fill="#eaae98"/>
+    <path d="M27.6 44 Q25.6 47 28 50.6 M72.4 44 Q74.4 47 72 50.6" fill="none" stroke="#cf8f78" stroke-width="0.9" stroke-linecap="round"/>
+    <!-- The broad face -->
+    <path d="M29 42 C29 27 38 20 50 20 C62 20 71 27 71 42 C71.4 54 70 62 66 68 C62 73.6 56.4 76 50 76 C43.6 76 38 73.6 34 68 C30 62 28.6 54 29 42 Z" fill="#f2c1a9"/>
+    <path d="M42 30.6 Q50 29.4 58 30.6" fill="none" stroke="#e2a991" stroke-width="0.8" stroke-linecap="round"/>
+    <!-- Short ginger-blond hair combed up and back, a full square top -->
+    <path d="M28.4 43 C27 35 27 28 28.8 23 C30.4 18 34 14.6 39 13 C41.6 10.8 45.4 10 48.8 10.8 C52 9.6 56.6 10 59.2 11.8 C64.6 12.6 68.8 16 70.8 20.8 C72.8 26 73 34 71.6 43 C70.8 38.4 69.8 35 68.4 32.6 C67.6 29 65 26.6 61.2 25.8 C57.6 25 53.6 24.8 50 25 C46.4 24.8 42.4 25 38.8 26 C35.2 26.8 32.6 29 31.8 32.6 C30.4 35 29.4 38.4 28.4 43 Z" fill="#a86d47"/>
+    <path d="M33.4 25 C34.6 20 38.2 16.6 43.2 15 M42 24.4 C44 19.6 48.8 16.2 54.6 15.6 M53 24.4 C56.4 20.8 61.2 19.4 66 20.6" fill="none" stroke="#c3895b" stroke-width="1" stroke-linecap="round"/>
+    <!-- Light ginger eyebrows -->
+    <path d="M34.8 39.6 Q40 36.6 45.4 38.6" fill="none" stroke="#b5764d" stroke-width="1.8" stroke-linecap="round"/>
+    <path d="M54.6 38.6 Q60 36.6 65.2 39.6" fill="none" stroke="#b5764d" stroke-width="1.8" stroke-linecap="round"/>
+    <!-- Light blue eyes, creased by the smile -->
+    <path d="M37 44.8 Q40.8 41.6 44.6 44.6 Q40.8 47.2 37 44.8 Z" fill="#ffffff"/>
+    <path d="M55.4 44.6 Q59.2 41.6 63 44.8 Q59.2 47.2 55.4 44.6 Z" fill="#ffffff"/>
+    <circle cx="40.8" cy="44.4" r="1.7" fill="#6aa2d2"/>
+    <circle cx="59.2" cy="44.4" r="1.7" fill="#6aa2d2"/>
+    <circle cx="40.8" cy="44.4" r="0.8" fill="#1f2a33"/>
+    <circle cx="59.2" cy="44.4" r="0.8" fill="#1f2a33"/>
+    <circle cx="41.4" cy="43.8" r="0.5" fill="#ffffff"/>
+    <circle cx="59.8" cy="43.8" r="0.5" fill="#ffffff"/>
+    <path d="M36.6 44.8 Q40.8 41 45 44.4 M55 44.4 Q59.2 41 63.4 44.8" fill="none" stroke="#5a3a2a" stroke-width="1.4" stroke-linecap="round"/>
+    <path d="M37.4 47.8 Q40.8 49.4 44.2 47.8 M55.8 47.8 Q59.2 49.4 62.6 47.8 M35.2 44.8 L33 44 M35.4 46.4 L33.2 47 M64.8 44.8 L67 44 M64.6 46.4 L66.8 47" fill="none" stroke="#d6957d" stroke-width="0.85" stroke-linecap="round"/>
+    <!-- Rosy cheeks -->
+    <ellipse cx="35" cy="52.4" rx="4.8" ry="3.2" fill="#e8796f" opacity="0.38"/>
+    <ellipse cx="65" cy="52.4" rx="4.8" ry="3.2" fill="#e8796f" opacity="0.38"/>
+    <!-- A strong nose with a rounded tip -->
+    <path d="M47.8 45.2 C47.4 49.2 45.2 51.4 44.6 53.8 C44.4 56.6 47 57.6 50 57.4 C53 57.6 55.6 56.6 55.4 53.8 C54.8 51.4 52.6 49.2 52.2 45.2 Z" fill="#e7a990"/>
+    <path d="M44.8 54.2 C45 56.4 47.2 56.8 48.4 56.2 M55.2 54.2 C55 56.4 52.8 56.8 51.6 56.2" fill="none" stroke="#c7836c" stroke-width="0.9" stroke-linecap="round"/>
+    <ellipse cx="50.6" cy="53.6" rx="1.7" ry="1.2" fill="#f5cab5"/>
+    <!-- The long full beard: ginger on the cheeks, grey and white in the middle -->
+    <path d="M29.4 46 C28.4 58 29.8 68 33 76.4 C35.6 83 39.6 88.2 44.6 90.8 C46.6 91.8 48.6 92.2 50 92.2 C51.4 92.2 53.4 91.8 55.4 90.8 C60.4 88.2 64.4 83 67 76.4 C70.2 68 71.6 58 70.6 46 C69.4 53 66.4 58 62.4 59.6 C59.6 58.2 56.6 57.6 53.4 58 C51.6 57.4 48.4 57.4 46.6 58 C43.4 57.6 40.4 58.2 37.6 59.6 C33.6 58 30.6 53 29.4 46 Z" fill="url(#boss17-beard)"/>
+    <path d="M32 56 C32.6 62 34.4 67 37 71.6 M35 63 C35.6 69 37.6 74.6 40.6 79.6 M38.6 73 C39.6 78 41.6 82 44.6 85.6 M68 56 C67.4 62 65.6 67 63 71.6 M65 63 C64.4 69 62.4 74.6 59.4 79.6 M61.4 73 C60.4 78 58.4 82 55.4 85.6 M47.4 84 C48 86.6 48.8 88.6 49.8 90.4 M52.6 84 C52 86.6 51.2 88.6 50.2 90.4" fill="none" stroke="#b07a52" stroke-width="0.75" stroke-linecap="round"/>
+    <path d="M42.4 71 C43 75 44.4 78.6 46.4 82 M46.8 72.4 C47.2 76.4 48 80 49.2 83 M53.2 72.4 C52.8 76.4 52 80 50.8 83 M57.6 71 C57 75 55.6 78.6 53.6 82" fill="none" stroke="#efe9e0" stroke-width="0.75" stroke-linecap="round"/>
+    <!-- The big smile -->
+    <path d="M41.8 63.4 Q50 65.8 58.2 63.4 Q55.4 67.8 50 68 Q44.6 67.8 41.8 63.4 Z" fill="#8a3338"/>
+    <path d="M42.8 63.8 Q50 66 57.2 63.8 L56.6 65.2 Q50 66.8 43.4 65.2 Z" fill="#ffffff"/>
+    <path d="M45 66.6 Q50 68.2 55 66.6 Q50 69 45 66.6 Z" fill="#d9707a"/>
+    <!-- Thick grey-white moustache, drooping into the beard -->
+    <path d="M38.6 63.8 C39.6 59.6 44.4 57.4 50 58.8 C55.6 57.4 60.4 59.6 61.4 63.8 C60.8 65.6 59.8 66.6 58.8 67.2 C58.4 64.4 56 62.8 50 63 C44 62.8 41.6 64.4 41.2 67.2 C40.2 66.6 39.2 65.6 38.6 63.8 Z" fill="#e3dacd"/>
+    <path d="M42 60.6 Q45 59.4 48 60.4 M52 60.4 Q55 59.4 58 60.6" fill="none" stroke="#c8b8a4" stroke-width="0.8" stroke-linecap="round"/>
+  </g>
+</svg>

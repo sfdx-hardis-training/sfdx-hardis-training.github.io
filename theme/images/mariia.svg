@@ -1,0 +1,54 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" role="img" aria-label="Mariia">
+  <!-- Mariia Pyvovarchuk, the teammate of Guinea Run, as a cartoon for her chat
+       bubbles: long wavy honey hair with a side parting, brown eyes, a small
+       smile, a sage green top. -->
+  <defs>
+    <clipPath id="mariia-round">
+      <circle cx="50" cy="50" r="50"/>
+    </clipPath>
+    <linearGradient id="mariia-hair" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#bf7c4b"/>
+      <stop offset="0.5" stop-color="#d39a62"/>
+      <stop offset="1" stop-color="#e6b77f"/>
+    </linearGradient>
+  </defs>
+  <g clip-path="url(#mariia-round)">
+    <rect width="100" height="100" fill="#e9dcfb"/>
+    <!-- The hair behind the head and over the shoulders -->
+    <path d="M25 32 C17 46 23 58 16 70 C11 80 17 90 12 100 L88 100 C84 90 89 80 84 70 C78 60 84 48 76 32 C70 14 56 9 48 10 C36 11 28 19 25 32 Z" fill="url(#mariia-hair)"/>
+    <!-- Neck and the sage green top -->
+    <path d="M42 66 L58 66 L59 80 L41 80 Z" fill="#efc6ad"/>
+    <path d="M16 100 C18 86 30 79 42 77 C46 82 54 82 58 77 C70 79 82 86 84 100 Z" fill="#a7b98b"/>
+    <path d="M42 77 C46 83 54 83 58 77" fill="none" stroke="#8fa173" stroke-width="1.4"/>
+    <!-- The face -->
+    <ellipse cx="50" cy="46" rx="21.5" ry="23.5" fill="#f7d9c6"/>
+    <!-- Hair in front: a side parting, the long fringe swept to one side -->
+    <path d="M40 14 C53 13 69 20 74.5 40 C70 33 62 28.5 54 27.5 C47 26.8 42 24 40 14 Z" fill="#c98a55"/>
+    <path d="M41 14.5 C34 17 28 27 28.5 43 C30.5 33 35 26 41 21 Z" fill="#c98a55"/>
+    <path d="M44 16 C52 18 62 23 68 31" fill="none" stroke="#e7b882" stroke-width="1.3" stroke-linecap="round"/>
+    <path d="M29.5 38 C25 48 31 56 26 66 C22 74 27 82 22 92 C31 85 28 76 32 68 C36 58 31 50 33 42 Z" fill="#c98a55"/>
+    <path d="M71 36 C77 46 71 56 76 66 C80 74 75 82 80 93 C71 86 74 76 69 68 C64 58 69 48 67.5 41 Z" fill="#c98a55"/>
+    <path d="M73 50 C76 58 73 64 76 72" fill="none" stroke="#e7b882" stroke-width="1.1" stroke-linecap="round"/>
+    <path d="M27 54 C25 62 28 68 25 76" fill="none" stroke="#e7b882" stroke-width="1.1" stroke-linecap="round"/>
+    <!-- Eyebrows -->
+    <path d="M37.5 37 Q42 34.6 46 36.4" fill="none" stroke="#a06a43" stroke-width="1.5" stroke-linecap="round"/>
+    <path d="M54 36.4 Q58 34.6 62.5 37" fill="none" stroke="#a06a43" stroke-width="1.5" stroke-linecap="round"/>
+    <!-- Smiling brown eyes -->
+    <ellipse cx="42" cy="43" rx="3.2" ry="3.4" fill="#5a3a26"/>
+    <ellipse cx="58" cy="43" rx="3.2" ry="3.4" fill="#5a3a26"/>
+    <circle cx="43.1" cy="41.8" r="1.1" fill="#ffffff"/>
+    <circle cx="59.1" cy="41.8" r="1.1" fill="#ffffff"/>
+    <path d="M38.2 42 Q42 38.6 45.8 42" fill="none" stroke="#3c2618" stroke-width="1.3" stroke-linecap="round"/>
+    <path d="M54.2 42 Q58 38.6 61.8 42" fill="none" stroke="#3c2618" stroke-width="1.3" stroke-linecap="round"/>
+    <path d="M39 46.6 Q42 47.8 45 46.6" fill="none" stroke="#e7b9a3" stroke-width="1"/>
+    <path d="M55 46.6 Q58 47.8 61 46.6" fill="none" stroke="#e7b9a3" stroke-width="1"/>
+    <!-- Rosy cheeks -->
+    <ellipse cx="36.5" cy="52" rx="4.6" ry="3" fill="#f19b93" opacity="0.45"/>
+    <ellipse cx="63.5" cy="52" rx="4.6" ry="3" fill="#f19b93" opacity="0.45"/>
+    <!-- Nose -->
+    <path d="M49 47.5 Q50.6 51.6 48.2 52.4" fill="none" stroke="#d9a58b" stroke-width="1.3" stroke-linecap="round"/>
+    <!-- A small, slightly lopsided smile -->
+    <path d="M42.5 57 Q50 62.6 58.6 56.4 Q50 60 42.5 57 Z" fill="#d06f78"/>
+    <path d="M42.5 57 Q50 62.6 58.6 56.4" fill="none" stroke="#b4565f" stroke-width="1.2" stroke-linecap="round"/>
+  </g>
+</svg>

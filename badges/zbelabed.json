@@ -1,0 +1,36 @@
+{
+  "recipient": "belabedzakariae",
+  "badges": [
+    {
+      "type": "Achievement",
+      "level": 1,
+      "name": "sfdx-hardis Contributor Basics",
+      "description": "Delivers a User Story through a Pull Request, end to end.",
+      "issuer": {
+        "name": "Cloudity",
+        "url": "https://cloudity.com",
+        "course": "https://sfdx-hardis-training.cloudity.com"
+      },
+      "issuedOn": "2026-10-17",
+      "issuedAt": "2026-10-17T13:03:57Z",
+      "evidence": [
+        {
+          "type": "Repository",
+          "url": "https://github.com/belabedzakariae/sfdx-hardis-training.git"
+        },
+        {
+          "type": "ClaimIssue",
+          "url": "https://github.com/hardisgroupcom/sfdx-hardis-training/issues/183"
+        }
+      ],
+      "image": "https://sfdx-hardis-training.cloudity.com/badges/img/zbelabed-level-1.svg",
+      "bannerImage": "https://sfdx-hardis-training.cloudity.com/badges/img/banner-level-1.svg",
+      "superbadge": false,
+      "checksPassed": 6,
+      "checksTotal": 6
+    }
+  ],
+  "trailblazer": "zbelabed",
+  "name": "Zakariae Belabed",
+  "trailblazerName": "Zakariae Belabed"
+}
