@@ -1,0 +1,92 @@
+{
+  "recipient": "BlackFox9144",
+  "badges": [
+    {
+      "type": "Achievement",
+      "level": 1,
+      "name": "sfdx-hardis Contributor Basics",
+      "description": "Delivers a User Story through a Pull Request, end to end.",
+      "issuer": {
+        "name": "Cloudity",
+        "url": "https://cloudity.com",
+        "course": "https://sfdx-hardis-training.cloudity.com"
+      },
+      "issuedOn": "2026-11-05",
+      "issuedAt": "2026-11-05T14:17:48Z",
+      "evidence": [
+        {
+          "type": "Repository",
+          "url": "https://github.com/BlackFox9144/sfdx-hardis-training.git"
+        },
+        {
+          "type": "ClaimIssue",
+          "url": "https://github.com/hardisgroupcom/sfdx-hardis-training/issues/366"
+        }
+      ],
+      "image": "https://sfdx-hardis-training.cloudity.com/badges/img/ygorvel-level-1.svg",
+      "bannerImage": "https://sfdx-hardis-training.cloudity.com/badges/img/banner-level-1.svg",
+      "superbadge": false,
+      "checksPassed": 6,
+      "checksTotal": 6
+    },
+    {
+      "type": "Achievement",
+      "level": 2,
+      "name": "sfdx-hardis Contributor Advanced",
+      "description": "Solves deployment errors, declares deployment actions, resolves conflicts.",
+      "issuer": {
+        "name": "Cloudity",
+        "url": "https://cloudity.com",
+        "course": "https://sfdx-hardis-training.cloudity.com"
+      },
+      "issuedOn": "2026-11-17",
+      "issuedAt": "2026-11-17T09:36:26Z",
+      "evidence": [
+        {
+          "type": "Repository",
+          "url": "https://github.com/BlackFox9144/sfdx-hardis-training.git"
+        },
+        {
+          "type": "ClaimIssue",
+          "url": "https://github.com/hardisgroupcom/sfdx-hardis-training/issues/405"
+        }
+      ],
+      "image": "https://sfdx-hardis-training.cloudity.com/badges/img/ygorvel-level-2.svg",
+      "bannerImage": "https://sfdx-hardis-training.cloudity.com/badges/img/banner-level-2.svg",
+      "superbadge": false,
+      "checksPassed": 14,
+      "checksTotal": 14
+    },
+    {
+      "type": "Achievement",
+      "level": 3,
+      "name": "sfdx-hardis Release Manager",
+      "description": "Owns the pipeline, the releases, the hotfixes and the monitoring.",
+      "issuer": {
+        "name": "Cloudity",
+        "url": "https://cloudity.com",
+        "course": "https://sfdx-hardis-training.cloudity.com"
+      },
+      "issuedOn": "2026-11-26",
+      "issuedAt": "2026-11-26T16:57:09Z",
+      "evidence": [
+        {
+          "type": "Repository",
+          "url": "https://github.com/BlackFox9144/sfdx-hardis-training.git"
+        },
+        {
+          "type": "ClaimIssue",
+          "url": "https://github.com/hardisgroupcom/sfdx-hardis-training/issues/447"
+        }
+      ],
+      "image": "https://sfdx-hardis-training.cloudity.com/badges/img/ygorvel-level-3.svg",
+      "bannerImage": "https://sfdx-hardis-training.cloudity.com/badges/img/banner-level-3.svg",
+      "superbadge": true,
+      "checksPassed": 46,
+      "checksTotal": 46
+    }
+  ],
+  "trailblazer": "ygorvel",
+  "name": "Yann Gorvel",
+  "trailblazerName": "Yann Gorvel"
+}

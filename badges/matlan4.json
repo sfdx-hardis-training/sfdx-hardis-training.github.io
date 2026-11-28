@@ -1,0 +1,36 @@
+{
+  "recipient": "Miko101",
+  "badges": [
+    {
+      "type": "Achievement",
+      "level": 1,
+      "name": "sfdx-hardis Contributor Basics",
+      "description": "Delivers a User Story through a Pull Request, end to end.",
+      "issuer": {
+        "name": "Cloudity",
+        "url": "https://cloudity.com",
+        "course": "https://sfdx-hardis-training.cloudity.com"
+      },
+      "issuedOn": "2026-10-12",
+      "issuedAt": "2026-10-12T14:11:03Z",
+      "evidence": [
+        {
+          "type": "Repository",
+          "url": "https://github.com/Miko101/sfdx-hardis-training.git"
+        },
+        {
+          "type": "ClaimIssue",
+          "url": "https://github.com/hardisgroupcom/sfdx-hardis-training/issues/134"
+        }
+      ],
+      "image": "https://sfdx-hardis-training.cloudity.com/badges/img/matlan4-level-1.svg",
+      "bannerImage": "https://sfdx-hardis-training.cloudity.com/badges/img/banner-level-1.svg",
+      "superbadge": false,
+      "checksPassed": 6,
+      "checksTotal": 6
+    }
+  ],
+  "trailblazer": "matlan4",
+  "name": "Michael Atlan",
+  "trailblazerName": "Michael Atlan"
+}

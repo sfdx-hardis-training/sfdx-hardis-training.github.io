@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 60 30" width="60" height="30" role="img" aria-label="France">
+  <path d="M0,0 h60 v30 h-60 z" fill="#ffffff"/>
+  <path d="M0,0 h20 v30 h-20 z" fill="#002395"/>
+  <path d="M40,0 h20 v30 h-20 z" fill="#ed2939"/>
+</svg>
